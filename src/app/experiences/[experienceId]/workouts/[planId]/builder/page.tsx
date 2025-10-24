@@ -265,7 +265,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
       </div>
       
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
       {/* Days Panel */}
       <Card>
         <div className="p-4 md:p-5">
@@ -471,28 +471,6 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
         </div>
       </Card>
 
-      {/* Exercise Details Panel */}
-      <Card>
-        <div className="p-4 md:p-5">
-          <h3 className="font-semibold text-base flex items-center gap-2 mb-5">
-            <Info className="w-4 h-4 text-accent" />
-            Exercise Details
-          </h3>
-          {editingExercise ? (
-            <ExerciseForm
-              exercise={editingExercise}
-              onSave={(data) => updateExercise.mutate(data)}
-              onCancel={() => setEditingExercise(null)}
-              isLoading={updateExercise.isPending}
-            />
-          ) : (
-            <div className="text-center py-8">
-              <Dumbbell className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <div className="text-sm opacity-70">Select an exercise to view details</div>
-            </div>
-          )}
-        </div>
-      </Card>
 
       {/* New Day Dialog */}
       <Dialog.Root open={newDayOpen} onOpenChange={setNewDayOpen}>
@@ -525,7 +503,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
       </Dialog.Root>
 
       {/* Edit Day Dialog */}
-      <Dialog.Root open={!!editingDay && !editingExercise} onOpenChange={(open) => {
+      <Dialog.Root open={!!editingDay} onOpenChange={(open) => {
         if (!open) {
           setEditingDay(null)
           setEditingDayName('')
@@ -577,6 +555,24 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
             onSave={(data) => createExercise.mutate(data)}
             onCancel={() => setNewExerciseOpen(false)}
             isLoading={createExercise.isPending}
+          />
+        </Dialog.Content>
+      </Dialog.Root>
+
+      {/* Edit Exercise Dialog */}
+      <Dialog.Root open={!!editingExercise} onOpenChange={(open) => {
+        if (!open) setEditingExercise(null)
+      }}>
+        <Dialog.Content>
+          <Dialog.Title>Edit Exercise</Dialog.Title>
+          <ExerciseForm
+            exercise={editingExercise}
+            onSave={(data) => {
+              updateExercise.mutate(data)
+              setEditingExercise(null)
+            }}
+            onCancel={() => setEditingExercise(null)}
+            isLoading={updateExercise.isPending}
           />
         </Dialog.Content>
       </Dialog.Root>
