@@ -1,0 +1,3 @@
+{
+  "/(whop-api)/api/experience/[experienceId]/workouts/[planId]/days/route": "app/(whop-api)/api/experience/[experienceId]/workouts/[planId]/days/route.js"
+}

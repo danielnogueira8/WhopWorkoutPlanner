@@ -1,0 +1,22 @@
+{
+  "/(whop-api)/api/experience/[experienceId]/dashboard/activity/route": "app/(whop-api)/api/experience/[experienceId]/dashboard/activity/route.js",
+  "/(whop-api)/api/experience/[experienceId]/dashboard/recent-assignments/route": "app/(whop-api)/api/experience/[experienceId]/dashboard/recent-assignments/route.js",
+  "/(whop-api)/api/experience/[experienceId]/dashboard/stats/route": "app/(whop-api)/api/experience/[experienceId]/dashboard/stats/route.js",
+  "/(whop-api)/api/experience/[experienceId]/inbox/route": "app/(whop-api)/api/experience/[experienceId]/inbox/route.js",
+  "/(whop-api)/api/experience/[experienceId]/nutrition/route": "app/(whop-api)/api/experience/[experienceId]/nutrition/route.js",
+  "/(whop-api)/api/experience/[experienceId]/route": "app/(whop-api)/api/experience/[experienceId]/route.js",
+  "/(whop-api)/api/experience/[experienceId]/user/route": "app/(whop-api)/api/experience/[experienceId]/user/route.js",
+  "/(whop-api)/api/experience/[experienceId]/users/route": "app/(whop-api)/api/experience/[experienceId]/users/route.js",
+  "/(whop-api)/api/experience/[experienceId]/workouts/[planId]/days/route": "app/(whop-api)/api/experience/[experienceId]/workouts/[planId]/days/route.js",
+  "/(whop-api)/api/experience/[experienceId]/workouts/[planId]/route": "app/(whop-api)/api/experience/[experienceId]/workouts/[planId]/route.js",
+  "/(whop-api)/api/experience/[experienceId]/workouts/route": "app/(whop-api)/api/experience/[experienceId]/workouts/route.js",
+  "/experiences/[experienceId]/clients/page": "app/experiences/[experienceId]/clients/page.js",
+  "/experiences/[experienceId]/dashboard/page": "app/experiences/[experienceId]/dashboard/page.js",
+  "/experiences/[experienceId]/inbox/page": "app/experiences/[experienceId]/inbox/page.js",
+  "/experiences/[experienceId]/my-workouts/page": "app/experiences/[experienceId]/my-workouts/page.js",
+  "/experiences/[experienceId]/nutrition-plans/page": "app/experiences/[experienceId]/nutrition-plans/page.js",
+  "/experiences/[experienceId]/nutrition/page": "app/experiences/[experienceId]/nutrition/page.js",
+  "/experiences/[experienceId]/page": "app/experiences/[experienceId]/page.js",
+  "/experiences/[experienceId]/workouts/[planId]/builder/page": "app/experiences/[experienceId]/workouts/[planId]/builder/page.js",
+  "/experiences/[experienceId]/workouts/page": "app/experiences/[experienceId]/workouts/page.js"
+}

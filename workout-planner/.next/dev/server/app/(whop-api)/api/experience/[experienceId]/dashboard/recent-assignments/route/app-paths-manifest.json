@@ -1,0 +1,3 @@
+{
+  "/(whop-api)/api/experience/[experienceId]/dashboard/recent-assignments/route": "app/(whop-api)/api/experience/[experienceId]/dashboard/recent-assignments/route.js"
+}

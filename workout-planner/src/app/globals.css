@@ -1,0 +1,56 @@
+@import "frosted-ui/styles.css";
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --accent-color: #10b981; /* emerald-500 */
+  --accent-light: #fafefb; /* extremely light emerald tint */
+}
+
+[data-theme="dark"] {
+  --background: #171717; /* Frosted UI default dark background */
+  --foreground: #ffffff; /* Frosted UI default dark foreground */
+  --accent-color: #059669; /* A slightly darker emerald for dark mode (emerald-600) */
+  --accent-light: #064e3b; /* A very dark, subtle emerald tint for dark mode (emerald-900) */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent-color);
+  --color-accent-light: var(--accent-light);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Force emerald green on solid buttons with our custom class */
+button[class*="!bg-accent"],
+.rt-Button[class*="!bg-accent"],
+[data-accent-color] button[class*="!bg-accent"] {
+  background-color: var(--accent-color) !important;
+}
+
+button[class*="!bg-accent"]:hover,
+.rt-Button[class*="!bg-accent"]:hover,
+[data-accent-color] button[class*="!bg-accent"]:hover {
+  background-color: color-mix(in srgb, var(--accent-color) 90%, black) !important;
+}
+
+button[class*="!text-white"],
+.rt-Button[class*="!text-white"] {
+  color: white !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}

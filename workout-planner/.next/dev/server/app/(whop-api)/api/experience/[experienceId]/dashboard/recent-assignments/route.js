@@ -1,0 +1,13 @@
+var R=require("../../../../../../../chunks/[turbopack]_runtime.js")("server/app/(whop-api)/api/experience/[experienceId]/dashboard/recent-assignments/route.js")
+R.c("server/chunks/2e7f8_@supabase_node-fetch_lib_index_e1069967.js")
+R.c("server/chunks/2e7f8_next_dist_14350586._.js")
+R.c("server/chunks/2e7f8_tr46_95248935._.js")
+R.c("server/chunks/2e7f8_@supabase_storage-js_dist_module_49238ed1._.js")
+R.c("server/chunks/2e7f8_@supabase_auth-js_dist_module_2f582d73._.js")
+R.c("server/chunks/2e7f8_drizzle-orm_78622d1d._.js")
+R.c("server/chunks/2e7f8_zod_7f30caac._.js")
+R.c("server/chunks/2e7f8_b080871c._.js")
+R.c("server/chunks/[root-of-the-server]__ba841775._.js")
+R.c("server/chunks/a12cd_experience_[experienceId]_dashboard_recent-assignments_route_actions_6bb76961.js")
+R.m("[project]/whopWorkoutPlanner/workout-planner/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/whopWorkoutPlanner/workout-planner/src/app/(whop-api)/api/experience/[experienceId]/dashboard/recent-assignments/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)")
+module.exports=R.m("[project]/whopWorkoutPlanner/workout-planner/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/whopWorkoutPlanner/workout-planner/src/app/(whop-api)/api/experience/[experienceId]/dashboard/recent-assignments/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)").exports

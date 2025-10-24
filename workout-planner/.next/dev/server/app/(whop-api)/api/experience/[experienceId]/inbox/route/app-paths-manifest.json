@@ -1,0 +1,3 @@
+{
+  "/(whop-api)/api/experience/[experienceId]/inbox/route": "app/(whop-api)/api/experience/[experienceId]/inbox/route.js"
+}

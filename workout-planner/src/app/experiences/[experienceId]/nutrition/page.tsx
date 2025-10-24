@@ -1,0 +1,194 @@
+'use client'
+
+import { useQuery } from '@tanstack/react-query'
+import { Card, Button } from 'frosted-ui'
+import { Calendar, Apple, CheckCircle, Clock, TrendingUp, Target } from 'lucide-react'
+import Link from 'next/link'
+import { useWhop } from '~/components/whop-context'
+import { nutritionPlansQuery } from '~/components/nutrition/queries'
+
+export default function NutritionPage() {
+  const { experience, user } = useWhop()
+  const { data: plans, isLoading } = useQuery(nutritionPlansQuery(experience.id))
+
+  // Filter to only show plans assigned to this user
+  const userPlans = plans?.filter(plan => 
+    plan.assignedUsers?.some(assignment => assignment.whopUserId === user.id)
+  ) ?? []
+
+  const totalPlans = userPlans.length
+  const completedPlans = userPlans.filter(plan => 
+    plan.assignedUsers?.find(assignment => assignment.whopUserId === user.id)?.completedAt
+  ).length
+  const totalDays = userPlans.reduce((sum, plan) => sum + (plan.daysCount || 0), 0)
+
+  const stats = [
+    {
+      icon: Apple,
+      label: 'Assigned Plans',
+      value: totalPlans,
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-50 dark:bg-blue-950'
+    },
+    {
+      icon: CheckCircle,
+      label: 'Completed',
+      value: completedPlans,
+      color: 'text-green-600',
+      bgColor: 'bg-green-50 dark:bg-green-950'
+    },
+    {
+      icon: Calendar,
+      label: 'Total Days',
+      value: totalDays,
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-50 dark:bg-purple-950'
+    },
+    {
+      icon: TrendingUp,
+      label: 'Progress',
+      value: totalPlans > 0 ? `${Math.round((completedPlans / totalPlans) * 100)}%` : '0%',
+      color: 'text-orange-600',
+      bgColor: 'bg-orange-50 dark:bg-orange-950'
+    }
+  ]
+
+  if (isLoading) {
+    return (
+      <div className="p-4 md:p-6">
+        <div className="text-sm opacity-70">Loading your nutrition plans...</div>
+      </div>
+    )
+  }
+
+  if (userPlans.length === 0) {
+    return (
+      <div className="p-4 md:p-6">
+        <div className="text-center py-12">
+          <Apple className="w-16 h-16 mx-auto text-accent mb-4" />
+          <h2 className="text-xl font-semibold mb-2">No Nutrition Plans Assigned</h2>
+          <p className="text-sm opacity-70 mb-6">
+            You don't have any nutrition plans assigned yet. Contact your trainer to get started!
+          </p>
+          <Link href={`/experiences/${experience.id}/inbox`}>
+            <Button variant="outline">
+              <Target className="w-4 h-4 mr-2 text-accent" />
+              Contact Trainer
+            </Button>
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="p-4 md:p-6">
+      {/* Header */}
+      <div className="mb-4 md:mb-6">
+        <h1 className="text-xl md:text-2xl font-bold">My Nutrition</h1>
+        <p className="text-sm opacity-70 mt-1">Track your nutrition journey and progress</p>
+      </div>
+
+      {/* Stats Overview */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
+        {stats.map((stat, index) => {
+          const Icon = stat.icon
+          return (
+            <Card key={index}>
+              <div className="p-3 md:p-4">
+                <div className="flex justify-between items-start mb-2">
+                  <p className="text-xs md:text-sm opacity-70">{stat.label}</p>
+                  <Icon className="w-4 h-4 text-accent" />
+                </div>
+                <p className="text-lg md:text-2xl font-bold">{stat.value}</p>
+              </div>
+            </Card>
+          )
+        })}
+      </div>
+
+      {/* Nutrition Plans */}
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold">Your Nutrition Plans</h2>
+        <div className="grid gap-4">
+          {userPlans.map((plan) => {
+            const assignment = plan.assignedUsers?.find(a => a.whopUserId === user.id)
+            const isCompleted = !!assignment?.completedAt
+            const assignedDate = assignment?.assignedAt ? new Date(assignment.assignedAt) : null
+            
+            return (
+              <Card key={plan.id}>
+                <div className="p-4 md:p-5">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h3 className="font-semibold">{plan.title}</h3>
+                        {isCompleted && (
+                          <div className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 text-xs rounded-full">
+                            Completed
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-4 text-sm opacity-70">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4 text-accent" />
+                          {plan.daysCount || 0} days
+                        </div>
+                        {assignedDate && (
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-4 h-4 text-accent" />
+                            Assigned {assignedDate.toLocaleDateString()}
+                          </div>
+                        )}
+                      </div>
+                      {plan.description && (
+                        <p className="text-sm opacity-70 mt-2">{plan.description}</p>
+                      )}
+                    </div>
+                    <div className="flex gap-2">
+                      <Link href={`/experiences/${experience.id}/nutrition-plans/${plan.id}`}>
+                        <Button variant="outline" size="sm">
+                          View Plan
+                        </Button>
+                      </Link>
+                      {!isCompleted && (
+                        <Link href={`/experiences/${experience.id}/nutrition-plans/${plan.id}/track`}>
+                          <Button size="sm">
+                            Start Plan
+                          </Button>
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="mt-8">
+        <Card>
+          <div className="p-4 md:p-5">
+            <h3 className="font-semibold mb-3">Quick Actions</h3>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link href={`/experiences/${experience.id}/inbox`}>
+                <Button variant="outline" className="w-full sm:w-auto">
+                  <Target className="w-4 h-4 mr-2 text-accent" />
+                  Contact Trainer
+                </Button>
+              </Link>
+              <Link href={`/experiences/${experience.id}/nutrition-plans`}>
+                <Button variant="outline" className="w-full sm:w-auto">
+                  <Apple className="w-4 h-4 mr-2 text-accent" />
+                  View All Plans
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  )
+}
