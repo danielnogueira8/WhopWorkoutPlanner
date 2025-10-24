@@ -71,7 +71,7 @@ export default function NutritionPlansPage() {
           <div className="text-sm opacity-70">Experience</div>
           <div className="text-lg md:text-xl font-semibold">{experience.name}</div>
         </div>
-        <Dialog.Root open={newPlanOpen} onOpenChange={setNewPlanOpen} modal={true}>
+        <Dialog.Root open={newPlanOpen} onOpenChange={setNewPlanOpen}>
           <Dialog.Trigger>
             <Button variant="solid" className="!bg-accent hover:!bg-accent/90 !text-white">New Nutrition Plan</Button>
           </Dialog.Trigger>
@@ -148,7 +148,7 @@ export default function NutritionPlansPage() {
         </Card>
       </div>
 
-      <Dialog.Root open={!!editPlanId} onOpenChange={(open) => { if (!open) { setEditPlanId(null); setEditPlanTitle(""); } }} modal={true}>
+      <Dialog.Root open={!!editPlanId} onOpenChange={(open) => { if (!open) { setEditPlanId(null); setEditPlanTitle(""); } }}>
         <Dialog.Content>
           <Dialog.Title>Edit nutrition plan</Dialog.Title>
           <div className="mt-4">
@@ -163,7 +163,7 @@ export default function NutritionPlansPage() {
         </Dialog.Content>
       </Dialog.Root>
 
-      <Dialog.Root open={!!deletePlanId} onOpenChange={(open) => { if (!open) { setDeletePlanId(null); setDeletePlanTitle(""); } }} modal={true}>
+      <Dialog.Root open={!!deletePlanId} onOpenChange={(open) => { if (!open) { setDeletePlanId(null); setDeletePlanTitle(""); } }}>
         <Dialog.Content>
           <Dialog.Title>Delete nutrition plan</Dialog.Title>
           <div className="mt-4">
