@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Card, TextField, Dialog } from 'frosted-ui'
 import { useState, use, useEffect } from 'react'
-import { Calendar, Plus, Dumbbell, Clock, Info, GripVertical, Copy, Edit, Trash2, X } from 'lucide-react'
+import { Calendar, Plus, Dumbbell, Clock, Info, GripVertical, Edit, Trash2, X } from 'lucide-react'
 import {
   DndContext,
   closestCenter,
@@ -434,13 +434,6 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
                               onClick={() => setEditingExercise(exercise)}
                             >
                               <Edit className="w-3 h-3" />
-                            </Button>
-                            <Button
-                              size="2"
-                              variant="soft"
-                              onClick={() => setEditingExercise(exercise)}
-                            >
-                              <Copy className="w-3 h-3" />
                             </Button>
                             <Button
                               size="2"
