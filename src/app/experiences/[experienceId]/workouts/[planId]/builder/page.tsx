@@ -82,14 +82,20 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
         console.log('Optimistic update - old data:', old)
         console.log('Optimistic update - dayIds:', dayIds)
         
-        // Reorder based on the dayIds array
-        const ordered = dayIds.map(id => old.find(day => day.id === id)).filter(Boolean) as WorkoutDay[]
-        console.log('Optimistic update - ordered:', ordered)
+        // Create a completely new array to ensure React detects the change
+        const newDays = dayIds.map((id, index) => {
+          const day = old.find(d => d.id === id)
+          if (!day) return null
+          // Create a new object with updated dayIndex
+          return {
+            ...day,
+            dayIndex: index
+          }
+        }).filter(Boolean) as WorkoutDay[]
         
-        // Update dayIndex for each day
-        const updated = ordered.map((day, index) => ({ ...day, dayIndex: index }))
-        console.log('Optimistic update - updated:', updated)
-        return updated
+        console.log('Optimistic update - new days:', newDays)
+        console.log('Optimistic update - dayIndex values:', newDays.map(d => ({ id: d.id, name: d.name, dayIndex: d.dayIndex })))
+        return newDays
       })
       
       // Return a context object with the snapshotted value
