@@ -11,7 +11,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export default function DashboardPage() {
   const { access, experience } = useWhop()
-  const isAdmin = access.accessLevel === 'owner' || access.accessLevel === 'admin'
+  const isAdmin = (access as any).accessLevel === 'owner' || (access as any).accessLevel === 'admin'
   const [newPlanOpen, setNewPlanOpen] = useState(false)
   const [newPlanTitle, setNewPlanTitle] = useState('')
   const qc = useQueryClient()
