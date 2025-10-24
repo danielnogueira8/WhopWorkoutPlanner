@@ -4,6 +4,25 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Card, TextField, Dialog } from 'frosted-ui'
 import { useState, use, useEffect } from 'react'
 import { Calendar, Plus, Dumbbell, Clock, Info, GripVertical, Copy, Edit, Trash2, X } from 'lucide-react'
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core'
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
+import {
+  useSortable,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { useWhop } from '~/components/whop-context'
 import { 
   planDaysQuery,
@@ -16,6 +35,7 @@ import {
   updateExerciseMutation,
   deleteExerciseMutation,
   exerciseMaxWeightQuery,
+  reorderDaysMutation,
   type WorkoutDay,
   type WorkoutExercise
 } from '~/components/workouts/queries'
@@ -37,6 +57,37 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
   const [editingExercise, setEditingExercise] = useState<WorkoutExercise | null>(null)
   const [inlineEditingId, setInlineEditingId] = useState<string | null>(null)
   const qc = useQueryClient()
+
+  // Drag and drop sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  )
+
+  // Reorder mutation
+  const reorderDays = useMutation({
+    ...reorderDaysMutation(experience.id, planId),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['plan-days', experience.id, planId] })
+    },
+  })
+
+  // Handle drag end
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+
+    if (over && active.id !== over.id && days) {
+      const oldIndex = days.findIndex((day) => day.id === active.id)
+      const newIndex = days.findIndex((day) => day.id === over.id)
+
+      const newOrder = arrayMove(days, oldIndex, newIndex)
+      const dayIds = newOrder.map(day => day.id)
+      
+      reorderDays.mutate(dayIds)
+    }
+  }
 
   if (!isAdmin) {
     return (
@@ -197,61 +248,33 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
           {isLoadingDays ? (
             <div className="text-sm opacity-70">Loading days...</div>
           ) : (
-            <div className="space-y-3">
-              {(days ?? []).map((day) => {
-                const dayExerciseCount = exercises?.filter(ex => ex.dayId === day.id).length || 0
-                return (
-                  <div
-                    key={day.id}
-                    className={`p-4 rounded-lg cursor-pointer border transition-all duration-200 ${
-                      selectedDayId === day.id 
-                        ? 'border-accent bg-accent/5 shadow-sm' 
-                        : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
-                    }`}
-                    onClick={() => setSelectedDayId(day.id)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <div className="font-medium">{day.name}</div>
-                          {dayExerciseCount > 0 && (
-                            <div className="px-2 py-1 bg-accent/10 text-accent text-xs rounded-full">
-                              {dayExerciseCount} exercise{dayExerciseCount !== 1 ? 's' : ''}
-                            </div>
-                          )}
-                        </div>
-                        <div className="text-xs opacity-70">Day {day.dayIndex + 1}</div>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <GripVertical className="w-4 h-4 text-gray-400 mr-1" />
-                        <Button
-                          size="2"
-                          variant="soft"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setEditingDay(day)
-                            setEditingDayName(day.name)
-                          }}
-                        >
-                          <Edit className="w-3 h-3" />
-                        </Button>
-                        <Button
-                          size="2"
-                          variant="soft"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setEditingDay(day)
-                            deleteDay.mutate()
-                          }}
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext items={days?.map(day => day.id) || []} strategy={verticalListSortingStrategy}>
+                <div className="space-y-3">
+                  {(days ?? []).map((day) => (
+                    <SortableDay
+                      key={day.id}
+                      day={day}
+                      selectedDayId={selectedDayId}
+                      onSelect={setSelectedDayId}
+                      onEdit={(day) => {
+                        setEditingDay(day)
+                        setEditingDayName(day.name)
+                      }}
+                      onDelete={(day) => {
+                        setEditingDay(day)
+                        deleteDay.mutate()
+                      }}
+                      exerciseCount={exercises?.filter(ex => ex.dayId === day.id).length || 0}
+                    />
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
           )}
         </div>
       </Card>
@@ -703,6 +726,89 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
         >
           {isLoading ? 'Saving...' : 'Save'}
         </Button>
+      </div>
+    </div>
+  )
+}
+
+// Sortable Day Component
+interface SortableDayProps {
+  day: WorkoutDay
+  selectedDayId: string | null
+  onSelect: (dayId: string) => void
+  onEdit: (day: WorkoutDay) => void
+  onDelete: (day: WorkoutDay) => void
+  exerciseCount: number
+}
+
+function SortableDay({ day, selectedDayId, onSelect, onEdit, onDelete, exerciseCount }: SortableDayProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: day.id })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  }
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`p-4 rounded-lg cursor-pointer border transition-all duration-200 ${
+        selectedDayId === day.id 
+          ? 'border-accent bg-accent/5 shadow-sm' 
+          : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
+      } ${isDragging ? 'z-50' : ''}`}
+      onClick={() => onSelect(day.id)}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="font-medium">{day.name}</div>
+            {exerciseCount > 0 && (
+              <div className="px-2 py-1 bg-accent/10 text-accent text-xs rounded-full">
+                {exerciseCount} exercise{exerciseCount !== 1 ? 's' : ''}
+              </div>
+            )}
+          </div>
+          <div className="text-xs opacity-70">Day {day.dayIndex + 1}</div>
+        </div>
+        <div className="flex items-center gap-1">
+          <div
+            {...attributes}
+            {...listeners}
+            className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+          >
+            <GripVertical className="w-4 h-4 text-gray-400" />
+          </div>
+          <Button
+            size="2"
+            variant="soft"
+            onClick={(e) => {
+              e.stopPropagation()
+              onEdit(day)
+            }}
+          >
+            <Edit className="w-3 h-3" />
+          </Button>
+          <Button
+            size="2"
+            variant="soft"
+            onClick={(e) => {
+              e.stopPropagation()
+              onDelete(day)
+            }}
+          >
+            <Trash2 className="w-3 h-3" />
+          </Button>
+        </div>
       </div>
     </div>
   )

@@ -364,5 +364,17 @@ export const exerciseMaxWeightQuery = (experienceId: string, exerciseName: strin
 	enabled: !!exerciseName && exerciseName.trim().length > 0,
 })
 
+export const reorderDaysMutation = (experienceId: string, planId: string) => ({
+	mutationFn: async (dayIds: string[]) => {
+		const res = await fetch(getApiUrl(`/api/experience/${experienceId}/workouts/${planId}/days/reorder`), {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ dayIds }),
+		})
+		if (!res.ok) throw new Error('Failed to reorder days')
+		return res.json()
+	},
+})
+
 
 
