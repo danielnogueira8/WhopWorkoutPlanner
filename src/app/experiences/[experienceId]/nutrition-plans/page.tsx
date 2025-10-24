@@ -72,7 +72,7 @@ export default function NutritionPlansPage() {
           <div className="text-lg md:text-xl font-semibold">{experience.name}</div>
         </div>
         <Dialog.Root open={newPlanOpen} onOpenChange={setNewPlanOpen}>
-          <Dialog.Trigger asChild>
+          <Dialog.Trigger>
             <Button variant="solid" className="!bg-accent hover:!bg-accent/90 !text-white">New Nutrition Plan</Button>
           </Dialog.Trigger>
           <Dialog.Content>
