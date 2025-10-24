@@ -121,7 +121,7 @@ export default function NutritionPlansPage() {
                     </div>
                     <div className="flex gap-2">
                       <Button variant="solid" asChild className="!bg-accent hover:!bg-accent/90 !text-white">
-                        <Link href={`/experiences/${experience.id}/nutrition-plans/${p.id}/builder`}>
+                        <Link href={`/experiences/${experience.id}/nutrition-plans/${p.id}/builder` as any}>
                           Build
                         </Link>
                       </Button>
