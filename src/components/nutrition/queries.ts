@@ -54,3 +54,15 @@ export const assignNutritionPlanMutation = (experienceId: string, planId: string
     return res.json()
   },
 })
+
+export const removeNutritionPlanAssignmentMutation = (experienceId: string, planId: string) => ({
+  mutationFn: async (vars: { whopUserId: string }) => {
+    const res = await fetch(`/api/experience/${experienceId}/nutrition/${planId}/assign`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(vars),
+    })
+    if (!res.ok) throw new Error('Failed to remove nutrition plan assignment')
+    return res.json()
+  },
+})

@@ -85,6 +85,21 @@ export const assignPlanMutation = (experienceId: string, planId: string) => ({
 	},
 })
 
+export const removePlanAssignmentMutation = (experienceId: string, planId: string) => ({
+	mutationFn: async (payload: { whopUserId: string }) => {
+		const res = await fetch(
+			getApiUrl(`/api/experience/${experienceId}/workouts/${planId}/assign`),
+			{
+				method: 'DELETE',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(payload),
+			},
+		)
+		if (!res.ok) throw new Error('Failed to remove plan assignment')
+		return res.json()
+	},
+})
+
 export const updatePlanMutation = (experienceId: string, planId: string) => ({
 	mutationFn: async (payload: { title?: string; description?: string | null }) => {
 		const res = await fetch(
@@ -318,6 +333,15 @@ export const recentAssignmentsQuery = (experienceId: string) => ({
 		const res = await fetch(getApiUrl(`/api/experience/${experienceId}/dashboard/recent-assignments`))
 		if (!res.ok) throw new Error('Failed to fetch recent assignments')
 		return res.json() as Promise<{ assignments: RecentAssignment[] }>
+	},
+})
+
+export const userAssignmentsQuery = (experienceId: string, userId: string) => ({
+	queryKey: ['user-assignments', experienceId, userId],
+	queryFn: async () => {
+		const res = await fetch(getApiUrl(`/api/experience/${experienceId}/users/${userId}/assignments`))
+		if (!res.ok) throw new Error('Failed to fetch user assignments')
+		return res.json() as Promise<{ workoutPlans: string[], nutritionPlans: string[] }>
 	},
 })
 

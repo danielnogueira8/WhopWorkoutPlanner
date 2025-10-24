@@ -4,8 +4,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Card, TextField, Dialog } from 'frosted-ui'
 import { useState } from 'react'
 import { useWhop } from '~/components/whop-context'
-import { assignPlanMutation, plansQuery, usersQuery } from '~/components/workouts/queries'
-import { assignNutritionPlanMutation, nutritionPlansQuery } from '~/components/nutrition/queries'
+import { assignPlanMutation, removePlanAssignmentMutation, plansQuery, usersQuery, userAssignmentsQuery } from '~/components/workouts/queries'
+import { assignNutritionPlanMutation, removeNutritionPlanAssignmentMutation, nutritionPlansQuery } from '~/components/nutrition/queries'
 
 export default function ClientsPage() {
   const { access, experience } = useWhop()
@@ -26,13 +26,31 @@ export default function ClientsPage() {
   const { data: users, isLoading: isLoadingUsers } = useQuery({ ...usersQuery(experience.id, userSearch), enabled: isAdmin })
   const { data: plans, isLoading: isLoadingPlans } = useQuery(plansQuery(experience.id))
   const { data: nutritionPlans, isLoading: isLoadingNutritionPlans } = useQuery(nutritionPlansQuery(experience.id))
+  const { data: userAssignments, isLoading: isLoadingAssignments } = useQuery({ 
+    ...userAssignmentsQuery(experience.id, selectedUserId), 
+    enabled: !!selectedUserId 
+  })
 
   const assignPlan = useMutation({
     mutationFn: async (vars: { planId: string; whopUserId: string }) =>
       assignPlanMutation(experience.id, vars.planId).mutationFn({ whopUserId: vars.whopUserId }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['workout-plans', experience.id] })
+      qc.invalidateQueries({ queryKey: ['recent-assignments', experience.id] })
+      qc.invalidateQueries({ queryKey: ['recent-activity', experience.id] })
+      qc.invalidateQueries({ queryKey: ['user-assignments', experience.id, selectedUserId] })
       setAssignUserId('')
+    },
+  })
+
+  const removePlan = useMutation({
+    mutationFn: async (vars: { planId: string; whopUserId: string }) =>
+      removePlanAssignmentMutation(experience.id, vars.planId).mutationFn({ whopUserId: vars.whopUserId }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['workout-plans', experience.id] })
+      qc.invalidateQueries({ queryKey: ['recent-assignments', experience.id] })
+      qc.invalidateQueries({ queryKey: ['recent-activity', experience.id] })
+      qc.invalidateQueries({ queryKey: ['user-assignments', experience.id, selectedUserId] })
     },
   })
 
@@ -41,7 +59,21 @@ export default function ClientsPage() {
       assignNutritionPlanMutation(experience.id, vars.planId).mutationFn({ whopUserId: vars.whopUserId }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['nutrition-plans', experience.id] })
+      qc.invalidateQueries({ queryKey: ['recent-assignments', experience.id] })
+      qc.invalidateQueries({ queryKey: ['recent-activity', experience.id] })
+      qc.invalidateQueries({ queryKey: ['user-assignments', experience.id, selectedUserId] })
       setAssignUserId('')
+    },
+  })
+
+  const removeNutritionPlan = useMutation({
+    mutationFn: async (vars: { planId: string; whopUserId: string }) =>
+      removeNutritionPlanAssignmentMutation(experience.id, vars.planId).mutationFn({ whopUserId: vars.whopUserId }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['nutrition-plans', experience.id] })
+      qc.invalidateQueries({ queryKey: ['recent-assignments', experience.id] })
+      qc.invalidateQueries({ queryKey: ['recent-activity', experience.id] })
+      qc.invalidateQueries({ queryKey: ['user-assignments', experience.id, selectedUserId] })
     },
   })
 
@@ -84,23 +116,37 @@ export default function ClientsPage() {
                 <div className="text-sm opacity-70">Loading plans...</div>
               ) : (
                 <div className="space-y-2">
-                  {(plans ?? []).map((p) => (
-                    <div key={p.id} className="flex items-center justify-between p-2 border rounded">
-                      <div>
-                        <div className="font-medium">{p.title}</div>
-                        <div className="text-xs opacity-70">
-                          {p.daysCount} days • {p.assignedCount} assigned
+                  {(plans ?? []).map((p) => {
+                    const isAssigned = userAssignments?.workoutPlans?.includes(p.id) ?? false
+                    return (
+                      <div key={p.id} className="flex items-center justify-between p-2 border rounded">
+                        <div>
+                          <div className="font-medium">{p.title}</div>
+                          <div className="text-xs opacity-70">
+                            {p.daysCount} days • {p.assignedCount} assigned
+                          </div>
                         </div>
+                        {isAssigned ? (
+                          <Button
+                            size="2"
+                            variant="soft"
+                            disabled={removePlan.isPending}
+                            onClick={() => removePlan.mutate({ planId: p.id, whopUserId: selectedUserId })}
+                          >
+                            Remove
+                          </Button>
+                        ) : (
+                          <Button
+                            size="2"
+                            disabled={assignPlan.isPending}
+                            onClick={() => assignPlan.mutate({ planId: p.id, whopUserId: selectedUserId })}
+                          >
+                            Assign
+                          </Button>
+                        )}
                       </div>
-                      <Button
-                        size="2"
-                        disabled={assignPlan.isPending}
-                        onClick={() => assignPlan.mutate({ planId: p.id, whopUserId: selectedUserId })}
-                      >
-                        Assign
-                      </Button>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </div>
@@ -122,23 +168,37 @@ export default function ClientsPage() {
                 <div className="text-sm opacity-70">Loading nutrition plans...</div>
               ) : (
                 <div className="space-y-2">
-                  {(nutritionPlans ?? []).map((p: any) => (
-                    <div key={p.id} className="flex items-center justify-between p-2 border rounded">
-                      <div>
-                        <div className="font-medium">{p.title}</div>
-                        <div className="text-xs opacity-70">
-                          {p.daysCount || 0} days • {p.assignedCount} assigned
+                  {(nutritionPlans ?? []).map((p: any) => {
+                    const isAssigned = userAssignments?.nutritionPlans?.includes(p.id) ?? false
+                    return (
+                      <div key={p.id} className="flex items-center justify-between p-2 border rounded">
+                        <div>
+                          <div className="font-medium">{p.title}</div>
+                          <div className="text-xs opacity-70">
+                            {p.daysCount || 0} days • {p.assignedCount} assigned
+                          </div>
                         </div>
+                        {isAssigned ? (
+                          <Button
+                            size="2"
+                            variant="soft"
+                            disabled={removeNutritionPlan.isPending}
+                            onClick={() => removeNutritionPlan.mutate({ planId: p.id, whopUserId: selectedUserId })}
+                          >
+                            Remove
+                          </Button>
+                        ) : (
+                          <Button
+                            size="2"
+                            disabled={assignNutritionPlan.isPending}
+                            onClick={() => assignNutritionPlan.mutate({ planId: p.id, whopUserId: selectedUserId })}
+                          >
+                            Assign
+                          </Button>
+                        )}
                       </div>
-                      <Button
-                        size="2"
-                        disabled={assignNutritionPlan.isPending}
-                        onClick={() => assignNutritionPlan.mutate({ planId: p.id, whopUserId: selectedUserId })}
-                      >
-                        Assign
-                      </Button>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </div>
