@@ -10,7 +10,7 @@ import { createNutritionPlanMutation, nutritionPlansQuery, updateNutritionPlanMu
 
 export default function NutritionPlansPage() {
   const { experience, user, access } = useWhop();
-  const isAdmin = access.accessLevel === "owner" || access.accessLevel === "admin";
+  const isAdmin = (access as any).accessLevel === "owner" || (access as any).accessLevel === "admin";
   const [newPlanOpen, setNewPlanOpen] = useState(false);
   const [newPlanTitle, setNewPlanTitle] = useState("");
   const [editPlanId, setEditPlanId] = useState<string | null>(null);
