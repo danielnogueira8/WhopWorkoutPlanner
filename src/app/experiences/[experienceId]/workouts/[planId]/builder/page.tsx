@@ -673,7 +673,7 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
           <TextField.Input
             type="number"
             placeholder="0"
-            value={sets}
+            value={sets === 0 ? '' : sets}
             onChange={(e: any) => setSets(parseInt(e.target.value) || 0)}
           />
         </div>
@@ -692,7 +692,7 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
           <TextField.Input
             type="number"
             placeholder="0"
-            value={currentWeight}
+            value={currentWeight === 0 ? '' : currentWeight}
             onChange={(e: any) => setCurrentWeight(parseInt(e.target.value) || 0)}
           />
         </div>
@@ -701,7 +701,7 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
           <TextField.Input
             type="number"
             placeholder="0"
-            value={maxWeight}
+            value={maxWeight === 0 ? '' : maxWeight}
             onChange={(e: any) => setMaxWeight(parseInt(e.target.value) || 0)}
             disabled
             className="bg-gray-50 dark:bg-gray-800"
