@@ -69,8 +69,41 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
   // Reorder mutation
   const reorderDays = useMutation({
     ...reorderDaysMutation(experienceId, planId),
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['plan-days', experienceId, planId] })
+    onMutate: async (dayIds) => {
+      // Cancel any outgoing refetches
+      await qc.cancelQueries({ queryKey: ['workout-plan-days', experienceId, planId] })
+      
+      // Snapshot the previous value
+      const previousDays = qc.getQueryData(['workout-plan-days', experienceId, planId])
+      
+      // Optimistically update to the new value
+      qc.setQueryData(['workout-plan-days', experienceId, planId], (old: WorkoutDay[] | undefined) => {
+        if (!old) return old
+        console.log('Optimistic update - old data:', old)
+        console.log('Optimistic update - dayIds:', dayIds)
+        
+        // Reorder based on the dayIds array
+        const ordered = dayIds.map(id => old.find(day => day.id === id)).filter(Boolean) as WorkoutDay[]
+        console.log('Optimistic update - ordered:', ordered)
+        
+        // Update dayIndex for each day
+        const updated = ordered.map((day, index) => ({ ...day, dayIndex: index }))
+        console.log('Optimistic update - updated:', updated)
+        return updated
+      })
+      
+      // Return a context object with the snapshotted value
+      return { previousDays }
+    },
+    onError: (err, dayIds, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousDays) {
+        qc.setQueryData(['workout-plan-days', experienceId, planId], context.previousDays)
+      }
+    },
+    onSettled: () => {
+      // Always refetch after error or success to ensure we're in sync with the server
+      qc.invalidateQueries({ queryKey: ['workout-plan-days', experienceId, planId] })
     },
   })
 
@@ -82,9 +115,12 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
       const oldIndex = days.findIndex((day) => day.id === active.id)
       const newIndex = days.findIndex((day) => day.id === over.id)
 
+      console.log('Drag end:', { active: active.id, over: over.id, oldIndex, newIndex })
+      
       const newOrder = arrayMove(days, oldIndex, newIndex)
       const dayIds = newOrder.map(day => day.id)
       
+      console.log('New order dayIds:', dayIds)
       reorderDays.mutate(dayIds)
     }
   }
