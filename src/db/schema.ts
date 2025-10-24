@@ -39,6 +39,8 @@ export const workoutExercises = pgTable('workout_exercises', {
 	currentWeight: integer('current_weight').notNull().default(0),
 	maxWeight: integer('max_weight').notNull().default(0),
 	weightUnit: text('weight_unit').notNull().default('lbs'),
+	restTime: integer('rest_time').notNull().default(60), // in seconds
+	notes: text('notes'), // coaching cues, form tips
 	orderIndex: integer('order_index').notNull().default(0),
 	createdAt: timestamp('created_at').defaultNow().notNull(),
 	updatedAt: timestamp('updated_at').defaultNow().notNull(),

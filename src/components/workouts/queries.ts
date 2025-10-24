@@ -27,6 +27,8 @@ export type WorkoutExercise = {
 	currentWeight: number
 	maxWeight: number
 	weightUnit: 'lbs' | 'kgs'
+	restTime: number
+	notes?: string
 	orderIndex: number
 }
 
@@ -237,6 +239,8 @@ export const createExerciseMutation = (experienceId: string, planId: string, day
 		currentWeight?: number; 
 		maxWeight?: number; 
 		weightUnit?: 'lbs' | 'kgs';
+		restTime?: number;
+		notes?: string;
 		orderIndex?: number 
 	}) => {
 		const res = await fetch(getApiUrl(`/api/experience/${experienceId}/workouts/${planId}/days/${dayId}/exercises`), {
@@ -257,6 +261,8 @@ export const updateExerciseMutation = (experienceId: string, planId: string, day
 		currentWeight?: number; 
 		maxWeight?: number; 
 		weightUnit?: 'lbs' | 'kgs';
+		restTime?: number;
+		notes?: string;
 		orderIndex?: number 
 	}) => {
 		const res = await fetch(getApiUrl(`/api/experience/${experienceId}/workouts/${planId}/days/${dayId}/exercises/${exerciseId}`), {

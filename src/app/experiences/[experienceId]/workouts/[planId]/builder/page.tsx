@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Card, TextField, Dialog } from 'frosted-ui'
 import { useState, use, useEffect } from 'react'
+import { Calendar, Plus, Dumbbell, Clock, Info, GripVertical, Copy, Edit, Trash2, X } from 'lucide-react'
 import { useWhop } from '~/components/whop-context'
 import { 
   planDaysQuery,
@@ -34,6 +35,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
   const [selectedDayId, setSelectedDayId] = useState<string | null>(null)
   const [newExerciseOpen, setNewExerciseOpen] = useState(false)
   const [editingExercise, setEditingExercise] = useState<WorkoutExercise | null>(null)
+  const [inlineEditingId, setInlineEditingId] = useState<string | null>(null)
   const qc = useQueryClient()
 
   if (!isAdmin) {
@@ -134,15 +136,60 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
           <p className="text-sm opacity-70 mt-2">{plan.description}</p>
         )}
       </div>
+
+      {/* Summary Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <Card>
+          <div className="p-4">
+            <div className="flex items-center gap-3">
+              <Calendar className="w-5 h-5 text-accent" />
+              <div>
+                <div className="text-2xl font-bold">{days?.length || 0}</div>
+                <div className="text-sm opacity-70">Total Days</div>
+              </div>
+            </div>
+          </div>
+        </Card>
+        <Card>
+          <div className="p-4">
+            <div className="flex items-center gap-3">
+              <Dumbbell className="w-5 h-5 text-accent" />
+              <div>
+                <div className="text-2xl font-bold">
+                  {days?.reduce((total, day) => total + (exercises?.length || 0), 0) || 0}
+                </div>
+                <div className="text-sm opacity-70">Total Exercises</div>
+              </div>
+            </div>
+          </div>
+        </Card>
+        <Card>
+          <div className="p-4">
+            <div className="flex items-center gap-3">
+              <Clock className="w-5 h-5 text-accent" />
+              <div>
+                <div className="text-2xl font-bold">
+                  {Math.round((exercises?.reduce((total, ex) => total + (ex.sets * 2), 0) || 0) / 60)}m
+                </div>
+                <div className="text-sm opacity-70">Est. Duration</div>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
       
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
       {/* Days Panel */}
       <Card>
-        <div className="p-3 md:p-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-            <h3 className="font-semibold text-sm md:text-base">Workout Days</h3>
+        <div className="p-4 md:p-5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+            <h3 className="font-semibold text-base flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-accent" />
+              Workout Days
+            </h3>
             <Button variant="solid" onClick={() => setNewDayOpen(true)} className="!bg-accent hover:!bg-accent/90 !text-white">
+              <Plus className="w-4 h-4 mr-2" />
               Add Day
             </Button>
           </div>
@@ -150,49 +197,60 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
           {isLoadingDays ? (
             <div className="text-sm opacity-70">Loading days...</div>
           ) : (
-            <div className="space-y-2">
-              {(days ?? []).map((day) => (
-                <div
-                  key={day.id}
-                  className={`p-3 rounded cursor-pointer border ${
-                    selectedDayId === day.id 
-                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-950' 
-                      : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
-                  }`}
-                  onClick={() => setSelectedDayId(day.id)}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-medium">{day.name}</div>
-                      <div className="text-xs opacity-70">Day {day.dayIndex + 1}</div>
-                    </div>
-                    <div className="flex gap-1">
-                      <Button
-                        size="2"
-                        variant="soft"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setEditingDay(day)
-                          setEditingDayName(day.name)
-                        }}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        size="2"
-                        variant="soft"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setEditingDay(day)
-                          deleteDay.mutate()
-                        }}
-                      >
-                        Delete
-                      </Button>
+            <div className="space-y-3">
+              {(days ?? []).map((day) => {
+                const dayExerciseCount = exercises?.filter(ex => ex.dayId === day.id).length || 0
+                return (
+                  <div
+                    key={day.id}
+                    className={`p-4 rounded-lg cursor-pointer border transition-all duration-200 ${
+                      selectedDayId === day.id 
+                        ? 'border-accent bg-accent/5 shadow-sm' 
+                        : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
+                    }`}
+                    onClick={() => setSelectedDayId(day.id)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <div className="font-medium">{day.name}</div>
+                          {dayExerciseCount > 0 && (
+                            <div className="px-2 py-1 bg-accent/10 text-accent text-xs rounded-full">
+                              {dayExerciseCount} exercise{dayExerciseCount !== 1 ? 's' : ''}
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-xs opacity-70">Day {day.dayIndex + 1}</div>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <GripVertical className="w-4 h-4 text-gray-400 mr-1" />
+                        <Button
+                          size="2"
+                          variant="soft"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setEditingDay(day)
+                            setEditingDayName(day.name)
+                          }}
+                        >
+                          <Edit className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          size="2"
+                          variant="soft"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setEditingDay(day)
+                            deleteDay.mutate()
+                          }}
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
         </div>
@@ -200,13 +258,15 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
 
       {/* Exercises Panel */}
       <Card>
-        <div className="p-4">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold">
+        <div className="p-4 md:p-5">
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="font-semibold text-base flex items-center gap-2">
+              <Dumbbell className="w-4 h-4 text-accent" />
               {selectedDayId ? days?.find(d => d.id === selectedDayId)?.name : 'Select a Day'}
             </h3>
             {selectedDayId && (
               <Button variant="solid" onClick={() => setNewExerciseOpen(true)} className="!bg-accent hover:!bg-accent/90 !text-white">
+                <Plus className="w-4 h-4 mr-2" />
                 Add Exercise
               </Button>
             )}
@@ -217,39 +277,135 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
           ) : isLoadingExercises ? (
             <div className="text-sm opacity-70">Loading exercises...</div>
           ) : (
-            <div className="space-y-2">
-              {(exercises ?? []).map((exercise) => (
-                <div key={exercise.id} className="p-3 border rounded">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="font-medium">{exercise.name}</div>
-                    <div className="flex gap-1">
-                      <Button
-                        size="2"
-                        variant="soft"
-                        onClick={() => setEditingExercise(exercise)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        size="2"
-                        variant="soft"
-                        onClick={() => {
-                          setEditingExercise(exercise)
-                          deleteExercise.mutate()
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    </div>
+            <div className="space-y-3">
+              {(exercises ?? []).map((exercise) => {
+                const isEditing = inlineEditingId === exercise.id
+                const formatRestTime = (seconds: number) => {
+                  if (seconds < 60) return `${seconds}s`
+                  const minutes = Math.floor(seconds / 60)
+                  const remainingSeconds = seconds % 60
+                  return remainingSeconds > 0 ? `${minutes}:${remainingSeconds.toString().padStart(2, '0')}` : `${minutes}m`
+                }
+                
+                return (
+                  <div key={exercise.id} className="p-4 border rounded-lg hover:shadow-sm transition-shadow">
+                    {isEditing ? (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <TextField.Input
+                            placeholder="Exercise name"
+                            value={exercise.name}
+                            onChange={(e) => setEditingExercise({...exercise, name: e.target.value})}
+                            className="flex-1"
+                          />
+                        </div>
+                        <div className="grid grid-cols-3 gap-2">
+                          <TextField.Input
+                            placeholder="Sets"
+                            type="number"
+                            value={exercise.sets}
+                            onChange={(e) => setEditingExercise({...exercise, sets: parseInt(e.target.value) || 0})}
+                          />
+                          <TextField.Input
+                            placeholder="Reps"
+                            value={exercise.reps}
+                            onChange={(e) => setEditingExercise({...exercise, reps: e.target.value})}
+                          />
+                          <TextField.Input
+                            placeholder="Weight"
+                            type="number"
+                            value={exercise.currentWeight}
+                            onChange={(e) => setEditingExercise({...exercise, currentWeight: parseInt(e.target.value) || 0})}
+                          />
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            size="2"
+                            variant="solid"
+                            onClick={() => {
+                              updateExercise.mutate({
+                                name: exercise.name,
+                                sets: exercise.sets,
+                                reps: exercise.reps,
+                                currentWeight: exercise.currentWeight,
+                                weightUnit: exercise.weightUnit,
+                                restTime: exercise.restTime,
+                                notes: exercise.notes
+                              })
+                              setInlineEditingId(null)
+                            }}
+                            className="!bg-accent hover:!bg-accent/90 !text-white"
+                          >
+                            Save
+                          </Button>
+                          <Button
+                            size="2"
+                            variant="soft"
+                            onClick={() => setInlineEditingId(null)}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <Dumbbell className="w-4 h-4 text-accent" />
+                            <div className="font-medium">{exercise.name}</div>
+                            {exercise.notes && (
+                              <Info className="w-3 h-3 text-gray-400" title={exercise.notes} />
+                            )}
+                          </div>
+                          <div className="flex gap-1">
+                            <Button
+                              size="2"
+                              variant="soft"
+                              onClick={() => setInlineEditingId(exercise.id)}
+                            >
+                              <Edit className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              size="2"
+                              variant="soft"
+                              onClick={() => setEditingExercise(exercise)}
+                            >
+                              <Copy className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              size="2"
+                              variant="soft"
+                              onClick={() => {
+                                setEditingExercise(exercise)
+                                deleteExercise.mutate()
+                              }}
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="opacity-70">Sets × Reps</span>
+                            <span className="font-medium">{exercise.sets} × {exercise.reps}</span>
+                          </div>
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="opacity-70">Weight</span>
+                            <span className="font-medium">{exercise.currentWeight} {exercise.weightUnit}</span>
+                          </div>
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="opacity-70 flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              Rest
+                            </span>
+                            <span className="font-medium">{formatRestTime(exercise.restTime)}</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
-                  <div className="grid grid-cols-2 gap-2 text-xs opacity-70">
-                    <div>Sets: {exercise.sets}</div>
-                    <div>Reps: {exercise.reps}</div>
-                    <div>Current: {exercise.currentWeight}lbs</div>
-                    <div>Max: {exercise.maxWeight}lbs</div>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
         </div>
@@ -257,8 +413,11 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
 
       {/* Exercise Details Panel */}
       <Card>
-        <div className="p-4">
-          <h3 className="font-semibold mb-4">Exercise Details</h3>
+        <div className="p-4 md:p-5">
+          <h3 className="font-semibold text-base flex items-center gap-2 mb-5">
+            <Info className="w-4 h-4 text-accent" />
+            Exercise Details
+          </h3>
           {editingExercise ? (
             <ExerciseForm
               exercise={editingExercise}
@@ -267,7 +426,10 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
               isLoading={updateExercise.isPending}
             />
           ) : (
-            <div className="text-sm opacity-70">Select an exercise to edit details</div>
+            <div className="text-center py-8">
+              <Dumbbell className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <div className="text-sm opacity-70">Select an exercise to view details</div>
+            </div>
           )}
         </div>
       </Card>
@@ -377,7 +539,9 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
   const [sets, setSets] = useState(exercise?.sets || 0)
   const [currentWeight, setCurrentWeight] = useState(exercise?.currentWeight || 0)
   const [maxWeight, setMaxWeight] = useState(exercise?.maxWeight || 0)
-  const [weightUnit, setWeightUnit] = useState<'lbs' | 'kgs'>('lbs')
+  const [weightUnit, setWeightUnit] = useState<'lbs' | 'kgs'>(exercise?.weightUnit || 'lbs')
+  const [restTime, setRestTime] = useState(exercise?.restTime || 60)
+  const [notes, setNotes] = useState(exercise?.notes || '')
 
   // Fetch max weight when exercise name changes
   const { data: maxWeightData } = useQuery({
@@ -400,6 +564,8 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
       currentWeight,
       maxWeight,
       weightUnit,
+      restTime,
+      notes,
       orderIndex: exercise?.orderIndex || 0
     })
   }
@@ -477,6 +643,52 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
           <p className="text-xs text-gray-500 mt-1">Calculated from your workout history</p>
         </div>
       </div>
+
+      {/* Rest Time Selector */}
+      <div>
+        <label className="text-sm font-medium mb-2 block flex items-center gap-2">
+          <Clock className="w-4 h-4 text-accent" />
+          Rest Time Between Sets
+        </label>
+        <div className="flex flex-wrap gap-2 mb-2">
+          {[30, 60, 90, 120, 180].map((seconds) => (
+            <Button
+              key={seconds}
+              variant={restTime === seconds ? 'solid' : 'soft'}
+              size="2"
+              onClick={() => setRestTime(seconds)}
+              className={restTime === seconds ? '!bg-accent hover:!bg-accent/90 !text-white' : ''}
+            >
+              {seconds < 60 ? `${seconds}s` : `${Math.floor(seconds / 60)}m${seconds % 60 ? `:${seconds % 60}` : ''}`}
+            </Button>
+          ))}
+        </div>
+        <TextField.Input
+          type="number"
+          placeholder="Custom rest time (seconds)"
+          value={restTime}
+          onChange={(e: any) => setRestTime(parseInt(e.target.value) || 60)}
+          className="w-full"
+        />
+        <p className="text-xs text-gray-500 mt-1">Rest time between sets in seconds</p>
+      </div>
+
+      {/* Notes Field */}
+      <div>
+        <label className="text-sm font-medium mb-2 block flex items-center gap-2">
+          <Info className="w-4 h-4 text-accent" />
+          Notes & Instructions
+        </label>
+        <textarea
+          placeholder="Add coaching cues, form tips, or special instructions..."
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm resize-none"
+          rows={3}
+        />
+        <p className="text-xs text-gray-500 mt-1">Optional: Add form cues or special instructions</p>
+      </div>
+
       <div className="flex justify-end gap-2">
         <Button variant="soft" onClick={onCancel}>
           Cancel
