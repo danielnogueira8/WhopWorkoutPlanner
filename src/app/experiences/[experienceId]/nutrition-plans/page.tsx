@@ -129,7 +129,7 @@ export default function NutritionPlansPage() {
                         Rename
                       </Button>
                       <Button 
-                        variant="outline" 
+                        variant="soft" 
                         onClick={() => { 
                           setDeletePlanId(p.id); 
                           setDeletePlanTitle(p.title); 
