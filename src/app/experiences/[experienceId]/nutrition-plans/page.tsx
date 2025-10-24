@@ -107,7 +107,7 @@ export default function NutritionPlansPage() {
               <div className="text-sm opacity-70">No nutrition plans created yet.</div>
             ) : (
               <div className="space-y-2">
-                {userPlans.map((p) => (
+                {userPlans.map((p: any) => (
                   <div key={p.id} className="flex items-center justify-between">
                     <div>
                       <Link href={`/experiences/${experience.id}/nutrition-plans/${p.id}`} className="font-medium hover:underline">
