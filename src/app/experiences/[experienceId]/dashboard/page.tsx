@@ -263,7 +263,7 @@ export default function DashboardPage() {
               </Dialog.Root>
 
               <Link href={`/experiences/${experience.id}/clients`}>
-                <Button variant="outline" className="w-full flex items-center justify-start text-left">
+                <Button variant="soft" className="w-full flex items-center justify-start text-left">
                   <UserCheck className="w-4 h-4 mr-2 text-accent" />
                   Assign Workout to Client
                 </Button>
