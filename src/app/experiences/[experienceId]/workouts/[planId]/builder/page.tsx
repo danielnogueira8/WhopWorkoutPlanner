@@ -187,7 +187,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
             <Calendar className="w-4 h-4 text-accent" />
             Workout Days
           </h3>
-          <div className="pt-4 pb-5">
+          <div className="pt-3 pb-4">
             <Button variant="solid" size="1" onClick={() => setNewDayOpen(true)} className="!bg-accent hover:!bg-accent/90 !text-white text-xs px-2 py-1">
               <Plus className="w-3 h-3 mr-1" />
               Add Day
@@ -263,7 +263,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
             <Dumbbell className="w-4 h-4 text-accent" />
             {selectedDayId ? days?.find(d => d.id === selectedDayId)?.name : 'Select a Day'}
           </h3>
-          <div className="pt-4 pb-5">
+          <div className="pt-3 pb-4">
             {selectedDayId && (
               <Button variant="solid" size="1" onClick={() => setNewExerciseOpen(true)} className="!bg-accent hover:!bg-accent/90 !text-white text-xs px-2 py-1">
                 <Plus className="w-3 h-3 mr-1" />
