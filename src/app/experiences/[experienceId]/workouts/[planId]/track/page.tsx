@@ -133,7 +133,7 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
                   >
                     <div className="font-medium">{day.name}</div>
                     <div className="text-xs opacity-70">
-                      {day.exercisesCount || 0} exercises
+                      {day.exercises?.length || 0} exercises
                     </div>
                   </button>
                 ))}
