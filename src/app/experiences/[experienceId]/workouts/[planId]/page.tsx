@@ -3,6 +3,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { Card } from 'frosted-ui'
 import { use } from 'react'
+import Link from 'next/link'
+import { ChevronRight, Home } from 'lucide-react'
 import { useWhop } from '~/components/whop-context'
 import { planDetailQuery, type WorkoutPlanDetail } from '~/components/workouts/queries'
 
@@ -12,7 +14,8 @@ interface WorkoutPlanPageProps {
 
 export default function WorkoutPlanPage({ params }: WorkoutPlanPageProps) {
   const { experienceId, planId } = use(params)
-  const { experience } = useWhop()
+  const { experience, access } = useWhop()
+  const isAdmin = (access as any).accessLevel === 'admin'
 
   const { data: plan, isLoading, error } = useQuery(planDetailQuery(experienceId, planId))
 
@@ -34,6 +37,28 @@ export default function WorkoutPlanPage({ params }: WorkoutPlanPageProps) {
 
   return (
     <div className="p-6">
+      {/* Breadcrumb Navigation */}
+      <nav className="mb-4">
+        <div className="flex items-center space-x-2 text-sm">
+          <Link 
+            href={`/experiences/${experienceId}`}
+            className="flex items-center gap-1 text-gray-600 hover:text-accent transition-colors"
+          >
+            <Home className="w-4 h-4" />
+            Home
+          </Link>
+          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <Link 
+            href={isAdmin ? `/experiences/${experienceId}/workouts` : `/experiences/${experienceId}/my-workouts`}
+            className="text-gray-600 hover:text-accent transition-colors"
+          >
+            {isAdmin ? 'Workout Plans' : 'My Workouts'}
+          </Link>
+          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <span className="text-gray-900 font-medium">{plan.title}</span>
+        </div>
+      </nav>
+
       <div className="mb-6">
         <h1 className="text-2xl font-bold">{plan.title}</h1>
         {plan.description && (
