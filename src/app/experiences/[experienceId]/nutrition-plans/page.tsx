@@ -110,7 +110,7 @@ export default function NutritionPlansPage() {
                 {userPlans.map((p: any) => (
                   <div key={p.id} className="flex items-center justify-between">
                     <div>
-                      <Link href={`/experiences/${experience.id}/nutrition-plans/${p.id}`} className="font-medium hover:underline">
+                      <Link href={`/experiences/${experience.id}/nutrition-plans/${p.id}` as string} className="font-medium hover:underline">
                         {p.title}
                       </Link>
                       <div className="text-xs opacity-70">
