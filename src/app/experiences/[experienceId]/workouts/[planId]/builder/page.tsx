@@ -242,7 +242,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
               <Dumbbell className="w-5 h-5 text-accent" />
               <div>
                 <div className="text-2xl font-bold">
-                  {days?.reduce((total, day) => total + (day.exercises?.length || 0), 0) || 0}
+                  {plan?.days?.reduce((total, day) => total + (day.exercises?.length || 0), 0) || 0}
                 </div>
                 <div className="text-sm opacity-70">Total Exercises</div>
               </div>
