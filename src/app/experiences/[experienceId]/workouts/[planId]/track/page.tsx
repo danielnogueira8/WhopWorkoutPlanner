@@ -231,14 +231,14 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
               <div className="flex items-center gap-2">
                 <BookOpen className="w-4 h-4 text-accent" />
                 <span className="text-sm">
-                  {selectedDay ? `${selectedDay.name} - ${totalExercises} exercises` : 'No day selected'}
+                  {selectedDay ? `${selectedDay.name} - ${exercises?.length || 0} exercises` : 'No day selected'}
                 </span>
               </div>
               
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-accent" />
                 <span className="text-sm">
-                  {completedExercises} exercises logged
+                  {exercises?.length || 0} exercises logged
                 </span>
               </div>
 
