@@ -20,7 +20,7 @@ export default function NutritionPage() {
   const completedPlans = userPlans.filter((plan: any) => 
     plan.assignedUsers?.find((assignment: any) => assignment.whopUserId === user.id)?.completedAt
   ).length
-  const totalDays = userPlans.reduce((sum, plan: any) => sum + (plan.daysCount || 0), 0)
+  const totalDays = userPlans.reduce((sum: number, plan: any) => sum + (plan.daysCount || 0), 0)
 
   const stats = [
     {
