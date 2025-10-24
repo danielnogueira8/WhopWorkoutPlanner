@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyUserToken } from '@whop/api'
 import { db } from '~/db'
-import { workoutDays } from '~/db/schema'
+import { workoutPlanDays } from '~/db/schema'
 import { eq, inArray } from 'drizzle-orm'
 import { whop } from '~/lib/whop'
 
@@ -29,9 +29,9 @@ export async function PUT(
     // Update the dayIndex for each day based on the new order
     for (let i = 0; i < dayIds.length; i++) {
       await db
-        .update(workoutDays)
+        .update(workoutPlanDays)
         .set({ dayIndex: i })
-        .where(eq(workoutDays.id, dayIds[i]))
+        .where(eq(workoutPlanDays.id, dayIds[i]))
     }
 
     return NextResponse.json({ success: true })
