@@ -11,15 +11,11 @@ export default function MyWorkoutsPage() {
   const { experience, user } = useWhop()
   const { data: plans, isLoading } = useQuery(plansQuery(experience.id))
 
-  // Filter to only show plans assigned to this user
-  const userPlans = plans?.filter(plan => 
-    plan.assignedUsers?.some(assignment => assignment.whopUserId === user.id)
-  ) ?? []
+  // API already filters to only show plans assigned to this user for non-admin users
+  const userPlans = plans ?? []
 
   const totalWorkouts = userPlans.length
-  const completedWorkouts = userPlans.filter(plan => 
-    plan.assignedUsers?.find(assignment => assignment.whopUserId === user.id)?.completedAt
-  ).length
+  const completedWorkouts = 0 // TODO: Implement completion tracking
   const totalDays = userPlans.reduce((sum, plan) => sum + (plan.daysCount || 0), 0)
 
   const stats = [
@@ -112,9 +108,8 @@ export default function MyWorkoutsPage() {
         <h2 className="text-lg font-semibold">Your Workout Plans</h2>
         <div className="grid gap-4">
           {userPlans.map((plan) => {
-            const assignment = plan.assignedUsers?.find(a => a.whopUserId === user.id)
-            const isCompleted = !!assignment?.completedAt
-            const assignedDate = assignment?.assignedAt ? new Date(assignment.assignedAt) : null
+            const isCompleted = false // TODO: Implement completion tracking
+            const assignedDate = null // TODO: Get assignment date from API
             
             return (
               <Card key={plan.id}>
