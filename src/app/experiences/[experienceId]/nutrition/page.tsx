@@ -146,13 +146,13 @@ export default function NutritionPage() {
                       )}
                     </div>
                     <div className="flex gap-2">
-                      <Link href={`/experiences/${experience.id}/nutrition-plans/${plan.id}`}>
+                      <Link href={`/experiences/${experience.id}/nutrition-plans/${plan.id}` as any}>
                         <Button variant="soft" size="2">
                           View Plan
                         </Button>
                       </Link>
                       {!isCompleted && (
-                        <Link href={`/experiences/${experience.id}/nutrition-plans/${plan.id}/track`}>
+                        <Link href={`/experiences/${experience.id}/nutrition-plans/${plan.id}/track` as any}>
                           <Button size="sm">
                             Start Plan
                           </Button>

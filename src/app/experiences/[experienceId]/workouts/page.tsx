@@ -105,7 +105,7 @@ export default function WorkoutsPage() {
                 {userPlans.map((p) => (
                   <div key={p.id} className="flex items-center justify-between">
                     <div>
-                      <Link href={`/experiences/${experience.id}/workouts/${p.id}`} className="font-medium hover:underline">
+                      <Link href={`/experiences/${experience.id}/workouts/${p.id}` as any} className="font-medium hover:underline">
                         {p.title}
                       </Link>
                       <div className="text-xs opacity-70">
@@ -115,7 +115,7 @@ export default function WorkoutsPage() {
                     {isAdmin && (
                       <div className="flex gap-2">
                         <Button variant="solid" asChild className="!bg-accent hover:!bg-accent/90 !text-white">
-                          <Link href={`/experiences/${experience.id}/workouts/${p.id}/builder`}>
+                          <Link href={`/experiences/${experience.id}/workouts/${p.id}/builder` as any}>
                             Build
                           </Link>
                         </Button>
