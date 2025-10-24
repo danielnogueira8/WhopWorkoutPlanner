@@ -345,5 +345,15 @@ export const userAssignmentsQuery = (experienceId: string, userId: string) => ({
 	},
 })
 
+export const exerciseMaxWeightQuery = (experienceId: string, exerciseName: string) => ({
+	queryKey: ['exercise-max-weight', experienceId, exerciseName],
+	queryFn: async () => {
+		const res = await fetch(getApiUrl(`/api/experience/${experienceId}/exercises/${encodeURIComponent(exerciseName)}/max-weight`))
+		if (!res.ok) throw new Error('Failed to fetch max weight')
+		return res.json() as Promise<{ maxWeight: number }>
+	},
+	enabled: !!exerciseName && exerciseName.trim().length > 0,
+})
+
 
 

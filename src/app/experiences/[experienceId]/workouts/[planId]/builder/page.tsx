@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Card, TextField, Dialog } from 'frosted-ui'
-import { useState, use } from 'react'
+import { useState, use, useEffect } from 'react'
 import { useWhop } from '~/components/whop-context'
 import { 
   planDaysQuery,
@@ -14,6 +14,7 @@ import {
   createExerciseMutation,
   updateExerciseMutation,
   deleteExerciseMutation,
+  exerciseMaxWeightQuery,
   type WorkoutDay,
   type WorkoutExercise
 } from '~/components/workouts/queries'
@@ -370,11 +371,25 @@ interface ExerciseFormProps {
 }
 
 function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormProps) {
+  const { experience } = useWhop()
   const [name, setName] = useState(exercise?.name || '')
   const [reps, setReps] = useState(exercise?.reps || 0)
   const [sets, setSets] = useState(exercise?.sets || 0)
   const [currentWeight, setCurrentWeight] = useState(exercise?.currentWeight || 0)
   const [maxWeight, setMaxWeight] = useState(exercise?.maxWeight || 0)
+
+  // Fetch max weight when exercise name changes
+  const { data: maxWeightData } = useQuery({
+    ...exerciseMaxWeightQuery(experience.id, name),
+    enabled: !!name && name.trim().length > 0
+  })
+
+  // Update max weight when data is fetched
+  useEffect(() => {
+    if (maxWeightData?.maxWeight && maxWeightData.maxWeight > 0) {
+      setMaxWeight(maxWeightData.maxWeight)
+    }
+  }, [maxWeightData])
 
   const handleSave = () => {
     onSave({
@@ -394,31 +409,46 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
         value={name}
         onChange={(e: any) => setName(e.target.value)}
       />
-      <div className="grid grid-cols-2 gap-2">
-        <TextField.Input
-          type="number"
-          placeholder="Sets"
-          value={sets}
-          onChange={(e: any) => setSets(parseInt(e.target.value) || 0)}
-        />
-        <TextField.Input
-          type="number"
-          placeholder="Reps"
-          value={reps}
-          onChange={(e: any) => setReps(parseInt(e.target.value) || 0)}
-        />
-        <TextField.Input
-          type="number"
-          placeholder="Current Weight (lbs)"
-          value={currentWeight}
-          onChange={(e: any) => setCurrentWeight(parseInt(e.target.value) || 0)}
-        />
-        <TextField.Input
-          type="number"
-          placeholder="Max Weight (lbs)"
-          value={maxWeight}
-          onChange={(e: any) => setMaxWeight(parseInt(e.target.value) || 0)}
-        />
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="text-sm font-medium mb-1 block">Sets</label>
+          <TextField.Input
+            type="number"
+            placeholder="0"
+            value={sets}
+            onChange={(e: any) => setSets(parseInt(e.target.value) || 0)}
+          />
+        </div>
+        <div>
+          <label className="text-sm font-medium mb-1 block">Reps</label>
+          <TextField.Input
+            type="number"
+            placeholder="0"
+            value={reps}
+            onChange={(e: any) => setReps(parseInt(e.target.value) || 0)}
+          />
+        </div>
+        <div>
+          <label className="text-sm font-medium mb-1 block">Current Weight (lbs)</label>
+          <TextField.Input
+            type="number"
+            placeholder="0"
+            value={currentWeight}
+            onChange={(e: any) => setCurrentWeight(parseInt(e.target.value) || 0)}
+          />
+        </div>
+        <div>
+          <label className="text-sm font-medium mb-1 block">Max Weight (lbs)</label>
+          <TextField.Input
+            type="number"
+            placeholder="0"
+            value={maxWeight}
+            onChange={(e: any) => setMaxWeight(parseInt(e.target.value) || 0)}
+            disabled
+            className="bg-gray-50 dark:bg-gray-800"
+          />
+          <p className="text-xs text-gray-500 mt-1">Calculated from your workout history</p>
+        </div>
       </div>
       <div className="flex justify-end gap-2">
         <Button variant="soft" onClick={onCancel}>
