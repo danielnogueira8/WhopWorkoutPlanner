@@ -40,9 +40,9 @@ export async function GET(
       recentAssignments.map(async (assignment) => {
         try {
           // Get user details for the assigned user
-          const user = await whop.users.get({ userId: assignment.whopUserId })
+          const user = await whop.users.getUser({ userId: assignment.whopUserId })
           // Get user details for the assigner
-          const assigner = await whop.users.get({ userId: assignment.assignedByWhopUserId })
+          const assigner = await whop.users.getUser({ userId: assignment.assignedByWhopUserId })
           
           return {
             id: assignment.id,

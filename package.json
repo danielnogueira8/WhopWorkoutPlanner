@@ -25,6 +25,7 @@
     "@whop/sdk": "^0.0.1-canary.0",
     "drizzle-orm": "^0.36.4",
     "frosted-ui": "^0.0.1-canary.83",
+    "lucide-react": "^0.546.0",
     "next": "^16.0.0",
     "postgres": "^3.4.5",
     "react": "19.2.0",

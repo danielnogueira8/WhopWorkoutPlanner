@@ -9,7 +9,7 @@ import { assignNutritionPlanMutation, nutritionPlansQuery } from '~/components/n
 
 export default function ClientsPage() {
   const { access, experience } = useWhop()
-  const isAdmin = access.accessLevel === 'owner' || access.accessLevel === 'admin'
+  const isAdmin = (access as any).accessLevel === 'owner' || (access as any).accessLevel === 'admin'
   const [userSearch, setUserSearch] = useState('')
   const [selectedUserId, setSelectedUserId] = useState('')
   const [assignUserId, setAssignUserId] = useState('')
@@ -93,7 +93,7 @@ export default function ClientsPage() {
                         </div>
                       </div>
                       <Button
-                        size="sm"
+                        size="2"
                         disabled={assignPlan.isPending}
                         onClick={() => assignPlan.mutate({ planId: p.id, whopUserId: selectedUserId })}
                       >
@@ -122,7 +122,7 @@ export default function ClientsPage() {
                 <div className="text-sm opacity-70">Loading nutrition plans...</div>
               ) : (
                 <div className="space-y-2">
-                  {(nutritionPlans ?? []).map((p) => (
+                  {(nutritionPlans ?? []).map((p: any) => (
                     <div key={p.id} className="flex items-center justify-between p-2 border rounded">
                       <div>
                         <div className="font-medium">{p.title}</div>
@@ -131,7 +131,7 @@ export default function ClientsPage() {
                         </div>
                       </div>
                       <Button
-                        size="sm"
+                        size="2"
                         disabled={assignNutritionPlan.isPending}
                         onClick={() => assignNutritionPlan.mutate({ planId: p.id, whopUserId: selectedUserId })}
                       >

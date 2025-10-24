@@ -22,7 +22,7 @@ export async function GET(
     if (!access) return Response.json({ error: 'Forbidden' }, { status: 403 })
 
     // Get recent workout plan creations - very simple query
-    let planCreations = []
+    let planCreations: any[] = []
     try {
       const plans = await db
         .select({
@@ -48,7 +48,7 @@ export async function GET(
     }
 
     // Get recent inbox messages - very simple query
-    let messages = []
+    let messages: any[] = []
     try {
       const inboxData = await db
         .select({
