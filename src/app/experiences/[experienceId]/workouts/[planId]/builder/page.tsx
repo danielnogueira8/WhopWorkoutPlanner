@@ -68,9 +68,9 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
 
   // Reorder mutation
   const reorderDays = useMutation({
-    ...reorderDaysMutation(experience.id, planId),
+    ...reorderDaysMutation(experienceId, planId),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['plan-days', experience.id, planId] })
+      qc.invalidateQueries({ queryKey: ['plan-days', experienceId, planId] })
     },
   })
 
