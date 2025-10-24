@@ -599,7 +599,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
         <Dialog.Content>
           <Dialog.Title>Edit Exercise</Dialog.Title>
           <ExerciseForm
-            exercise={editingExercise}
+            exercise={editingExercise || undefined}
             onSave={(data) => {
               updateExercise.mutate(data)
             }}
