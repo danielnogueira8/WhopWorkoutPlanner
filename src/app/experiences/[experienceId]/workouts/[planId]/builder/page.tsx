@@ -572,7 +572,6 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
             exercise={editingExercise}
             onSave={(data) => {
               updateExercise.mutate(data)
-              setEditingExercise(null)
             }}
             onCancel={() => setEditingExercise(null)}
             isLoading={updateExercise.isPending}

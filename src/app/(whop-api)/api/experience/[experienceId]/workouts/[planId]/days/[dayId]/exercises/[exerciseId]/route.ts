@@ -20,7 +20,7 @@ export async function PUT(
     const access = await whop.access.checkIfUserHasAccessToExperience({ experienceId, userId })
     if (!access) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     const body = await request.json()
-    const { name, reps, sets, currentWeight, maxWeight, orderIndex } = body
+    const { name, reps, sets, currentWeight, maxWeight, weightUnit, restTime, notes, orderIndex } = body
 
     if (!name) {
       return NextResponse.json({ error: 'Exercise name is required' }, { status: 400 })
@@ -51,10 +51,13 @@ export async function PUT(
       .update(workoutExercises)
       .set({
         name,
-        reps: reps ?? 0,
+        reps: reps ?? '0',
         sets: sets ?? 0,
         currentWeight: currentWeight ?? 0,
         maxWeight: maxWeight ?? 0,
+        weightUnit: weightUnit ?? 'lbs',
+        restTime: restTime ?? 60,
+        notes: notes ?? null,
         orderIndex: orderIndex ?? 0,
         updatedAt: new Date(),
       })
