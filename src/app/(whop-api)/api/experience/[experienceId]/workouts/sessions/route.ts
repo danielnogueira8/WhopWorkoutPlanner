@@ -38,29 +38,27 @@ export async function POST(
       })
       .returning()
 
-    // Create exercise logs for each logged exercise
+    // Create exercise logs for all exercises
     if (exerciseLogData && exerciseLogData.length > 0) {
       const exerciseLogEntries = []
       
       for (const log of exerciseLogData) {
-        if (log.weight > 0) { // Only log exercises where weight was entered
-          // Get the exercise details to include sets and reps
-          const [exercise] = await db
-            .select()
-            .from(workoutExercises)
-            .where(eq(workoutExercises.id, log.exerciseId))
-            .limit(1)
+        // Get the exercise details to include sets and reps
+        const [exercise] = await db
+          .select()
+          .from(workoutExercises)
+          .where(eq(workoutExercises.id, log.exerciseId))
+          .limit(1)
 
-          if (exercise) {
-            exerciseLogEntries.push({
-              sessionId: session.id,
-              exerciseId: log.exerciseId,
-              sets: exercise.sets,
-              reps: parseInt(exercise.reps) || 0, // Convert string reps to int
-              weight: log.weight,
-              notes: log.notes || null,
-            })
-          }
+        if (exercise) {
+          exerciseLogEntries.push({
+            sessionId: session.id,
+            exerciseId: log.exerciseId,
+            sets: exercise.sets,
+            reps: parseInt(exercise.reps) || 0, // Convert string reps to int
+            weight: log.weight,
+            notes: log.notes || null,
+          })
         }
       }
 

@@ -56,12 +56,17 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
   const completeWorkout = useMutation({
     mutationFn: async () => {
       if (!selectedDayId) throw new Error('No day selected')
+      if (!exercises) throw new Error('No exercises found')
       
-      const exerciseLogData = Object.values(exerciseLogs).map(log => ({
-        exerciseId: log.exerciseId,
-        weight: log.weight,
-        notes: log.notes
-      }))
+      // Log ALL exercises from the selected day
+      const exerciseLogData = exercises.map(exercise => {
+        const userLog = exerciseLogs[exercise.id]
+        return {
+          exerciseId: exercise.id,
+          weight: userLog?.weight ?? exercise.currentWeight, // Use user's weight or default from plan
+          notes: userLog?.notes || null
+        }
+      })
 
       const res = await fetch(`/api/experience/${experienceId}/workouts/sessions`, {
         method: 'POST',
@@ -86,8 +91,6 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
 
 
   const selectedDay = days?.find(d => d.id === selectedDayId)
-  const completedExercises = Object.values(exerciseLogs).filter(log => log.weight > 0).length
-  const totalExercises = exercises?.length || 0
 
   if (isLoadingDays) {
     return (
@@ -159,15 +162,10 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
         {/* Exercise Tracking */}
         <Card>
           <div className="p-3 md:p-4">
-            <div className="flex items-center justify-between mb-4">
+            <div className="mb-4">
               <h3 className="font-semibold text-sm md:text-base">
                 {selectedDay ? selectedDay.name : 'Select a Day'}
               </h3>
-              {selectedDay && (
-                <div className="text-xs opacity-70">
-                  {completedExercises}/{totalExercises} completed
-                </div>
-              )}
             </div>
 
             {!selectedDay ? (
