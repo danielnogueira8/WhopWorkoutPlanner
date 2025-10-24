@@ -188,7 +188,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
               <Calendar className="w-4 h-4 text-accent" />
               Workout Days
             </h3>
-            <Button variant="solid" size="2" onClick={() => setNewDayOpen(true)} className="!bg-accent hover:!bg-accent/90 !text-white">
+            <Button variant="solid" size="1" onClick={() => setNewDayOpen(true)} className="!bg-accent hover:!bg-accent/90 !text-white text-xs px-2 py-1">
               <Plus className="w-3 h-3 mr-1" />
               Add Day
             </Button>
@@ -203,7 +203,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
                 return (
                   <div
                     key={day.id}
-                    className={`group p-4 rounded-lg cursor-pointer border transition-all duration-200 ${
+                    className={`p-4 rounded-lg cursor-pointer border transition-all duration-200 ${
                       selectedDayId === day.id 
                         ? 'border-accent bg-accent/5 shadow-sm' 
                         : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
@@ -222,7 +222,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
                         </div>
                         <div className="text-xs opacity-70">Day {day.dayIndex + 1}</div>
                       </div>
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <div className="flex items-center gap-1">
                         <GripVertical className="w-4 h-4 text-gray-400 mr-1" />
                         <Button
                           size="2"
@@ -265,7 +265,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
               {selectedDayId ? days?.find(d => d.id === selectedDayId)?.name : 'Select a Day'}
             </h3>
             {selectedDayId && (
-              <Button variant="solid" size="2" onClick={() => setNewExerciseOpen(true)} className="!bg-accent hover:!bg-accent/90 !text-white">
+              <Button variant="solid" size="1" onClick={() => setNewExerciseOpen(true)} className="!bg-accent hover:!bg-accent/90 !text-white text-xs px-2 py-1">
                 <Plus className="w-3 h-3 mr-1" />
                 Add Exercise
               </Button>
@@ -288,7 +288,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
                 }
                 
                 return (
-                  <div key={exercise.id} className="group p-4 border rounded-lg hover:shadow-sm transition-shadow">
+                  <div key={exercise.id} className="p-4 border rounded-lg hover:shadow-sm transition-shadow">
                     {isEditing ? (
                       <div className="space-y-3">
                         <div className="flex items-center gap-2">
@@ -357,7 +357,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
                               <Info className="w-3 h-3 text-gray-400" title={exercise.notes} />
                             )}
                           </div>
-                          <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                          <div className="flex gap-1">
                             <Button
                               size="2"
                               variant="soft"
