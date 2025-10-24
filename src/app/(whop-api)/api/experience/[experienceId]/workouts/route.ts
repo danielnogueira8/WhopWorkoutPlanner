@@ -18,7 +18,7 @@ export async function GET(
 	try {
 		const access = await whop.access.checkIfUserHasAccessToExperience({ experienceId, userId })
 		if (!access) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-		const isAdmin = (access as any).accessLevel === 'owner' || (access as any).accessLevel === 'admin'
+		const isAdmin = (access as any).accessLevel === 'admin'
 
 		let plans = await db
 			.select()
@@ -90,7 +90,7 @@ export async function POST(
 
 	try {
 		const access = await whop.access.checkIfUserHasAccessToExperience({ experienceId, userId })
-		if (!access || !((access as any).accessLevel === 'owner' || (access as any).accessLevel === 'admin'))
+		if (!access || (access as any).accessLevel !== 'admin')
 			return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
 		const [inserted] = await db

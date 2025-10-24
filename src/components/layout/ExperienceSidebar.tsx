@@ -13,7 +13,7 @@ interface SidebarProps {
 
 export function ExperienceSidebar({ experienceId }: SidebarProps) {
   const { access, user, experience } = useWhop()
-  const isAdmin = access.accessLevel === 'owner' || access.accessLevel === 'admin'
+  const isAdmin = (access as any).accessLevel === 'admin'
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)

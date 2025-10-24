@@ -9,7 +9,7 @@ export default function Page() {
   const router = useRouter();
 
   useEffect(() => {
-    const isAdmin = (access as any).accessLevel === "owner" || (access as any).accessLevel === "admin";
+    const isAdmin = (access as any).accessLevel === "admin";
     const target = isAdmin
       ? `/experiences/${experience.id}/dashboard`
       : `/experiences/${experience.id}/workouts`;

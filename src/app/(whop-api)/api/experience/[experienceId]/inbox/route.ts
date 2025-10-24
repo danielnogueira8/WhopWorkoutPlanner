@@ -18,7 +18,7 @@ export async function GET(
 	const access = await whop.access.checkIfUserHasAccessToExperience({ experienceId, userId })
 	if (!access) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-	const isAdmin = (access as any).accessLevel === 'owner' || (access as any).accessLevel === 'admin'
+	const isAdmin = (access as any).accessLevel === 'admin'
 	const conversationUserId = isAdmin ? (new URL(req.url)).searchParams.get('userId') || userId : userId
 
 	const messages = await db
@@ -47,7 +47,7 @@ export async function POST(
 
 	const access = await whop.access.checkIfUserHasAccessToExperience({ experienceId, userId })
 	if (!access) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-	const isAdmin = (access as any).accessLevel === 'owner' || (access as any).accessLevel === 'admin'
+	const isAdmin = (access as any).accessLevel === 'admin'
 
 	const conversationUserId = isAdmin ? (body.userId ?? userId) : userId
 

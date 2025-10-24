@@ -25,7 +25,7 @@ interface WorkoutBuilderProps {
 export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
   const { experienceId, planId } = use(params)
   const { access } = useWhop()
-  const isAdmin = (access as any).accessLevel === 'owner' || (access as any).accessLevel === 'admin'
+  const isAdmin = (access as any).accessLevel === 'admin'
   const [newDayOpen, setNewDayOpen] = useState(false)
   const [newDayName, setNewDayName] = useState('')
   const [editingDay, setEditingDay] = useState<WorkoutDay | null>(null)

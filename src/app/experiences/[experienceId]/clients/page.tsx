@@ -9,7 +9,7 @@ import { assignNutritionPlanMutation, nutritionPlansQuery } from '~/components/n
 
 export default function ClientsPage() {
   const { access, experience } = useWhop()
-  const isAdmin = (access as any).accessLevel === 'owner' || (access as any).accessLevel === 'admin'
+  const isAdmin = (access as any).accessLevel === 'admin'
   const [userSearch, setUserSearch] = useState('')
   const [selectedUserId, setSelectedUserId] = useState('')
   const [assignUserId, setAssignUserId] = useState('')

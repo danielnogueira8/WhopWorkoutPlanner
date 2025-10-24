@@ -10,7 +10,7 @@ import { createPlanMutation, plansQuery, updatePlanMutation, deletePlanMutation 
 
 export default function WorkoutsPage() {
   const { experience, user, access } = useWhop();
-  const isAdmin = (access as any).accessLevel === "owner" || (access as any).accessLevel === "admin";
+  const isAdmin = (access as any).accessLevel === "admin";
   const [newPlanOpen, setNewPlanOpen] = useState(false);
   const [newPlanTitle, setNewPlanTitle] = useState("");
   const [editPlanId, setEditPlanId] = useState<string | null>(null);

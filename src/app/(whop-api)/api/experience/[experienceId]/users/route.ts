@@ -18,7 +18,7 @@ export async function GET(
 		const access = await whop.access.checkIfUserHasAccessToExperience({ experienceId, userId })
 		if (
 			!access ||
-			!((access as any).accessLevel === 'owner' || (access as any).accessLevel === 'admin')
+			(access as any).accessLevel !== 'admin'
 		)
 			return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
