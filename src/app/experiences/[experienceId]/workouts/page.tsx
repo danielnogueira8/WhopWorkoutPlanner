@@ -66,7 +66,7 @@ export default function WorkoutsPage() {
         </div>
         {isAdmin && (
           <Dialog.Root open={newPlanOpen} onOpenChange={setNewPlanOpen}>
-            <Dialog.Trigger asChild>
+            <Dialog.Trigger>
               <Button variant="solid" className="!bg-accent hover:!bg-accent/90 !text-white">New Plan</Button>
             </Dialog.Trigger>
             <Dialog.Content>
