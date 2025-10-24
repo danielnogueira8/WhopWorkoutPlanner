@@ -3,10 +3,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Button, Card, TextField, Dialog } from "frosted-ui";
-import { Trash2 } from "lucide-react";
+import { Trash2, Download } from "lucide-react";
 import Link from "next/link";
 import { useWhop } from "~/components/whop-context";
 import { createPlanMutation, plansQuery, updatePlanMutation, deletePlanMutation } from "~/components/workouts/queries";
+import { generateWorkoutPlanPDF } from "~/lib/pdf-generator";
 
 export default function WorkoutsPage() {
   const { experience, user, access } = useWhop();
@@ -18,6 +19,21 @@ export default function WorkoutsPage() {
   const [deletePlanId, setDeletePlanId] = useState<string | null>(null);
   const [deletePlanTitle, setDeletePlanTitle] = useState("");
   const qc = useQueryClient();
+
+  const handleDownloadPDF = async (planId: string, planTitle: string) => {
+    try {
+      // Fetch the full plan details including all days and exercises
+      const response = await fetch(`/api/experience/${experience.id}/workouts/${planId}`)
+      if (!response.ok) throw new Error('Failed to fetch plan details')
+      const planDetails = await response.json()
+      
+      // Generate and download the PDF
+      generateWorkoutPlanPDF(planDetails)
+    } catch (error) {
+      console.error('Error downloading PDF:', error)
+      // You could add a toast notification here
+    }
+  }
 
   const { data: plans, isLoading: isLoadingPlans } = useQuery(plansQuery(experience.id));
 
@@ -121,6 +137,14 @@ export default function WorkoutsPage() {
                         </Button>
                         <Button variant="solid" onClick={() => { setEditPlanId(p.id); setEditPlanTitle(p.title); }} className="!bg-accent hover:!bg-accent/90 !text-white">
                           Rename
+                        </Button>
+                        <Button 
+                          variant="soft" 
+                          onClick={() => handleDownloadPDF(p.id, p.title)}
+                          className="!bg-accent hover:!bg-accent/90 !text-white"
+                        >
+                          <Download className="w-4 h-4 mr-1" />
+                          PDF
                         </Button>
                         <Button 
                           variant="soft" 

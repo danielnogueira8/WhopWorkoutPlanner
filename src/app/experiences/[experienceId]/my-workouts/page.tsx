@@ -2,15 +2,31 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { Card, Button } from 'frosted-ui'
-import { Calendar, BookOpen, CheckCircle, Clock, TrendingUp, Target, Dumbbell } from 'lucide-react'
+import { Calendar, BookOpen, CheckCircle, Clock, TrendingUp, Target, Dumbbell, Download } from 'lucide-react'
 import Link from 'next/link'
 import { useWhop } from '~/components/whop-context'
-import { plansQuery } from '~/components/workouts/queries'
+import { plansQuery, planDetailQuery } from '~/components/workouts/queries'
+import { generateWorkoutPlanPDF } from '~/lib/pdf-generator'
 
 export default function MyWorkoutsPage() {
   const { experience, user, access } = useWhop()
   const isAdmin = (access as any).accessLevel === 'admin'
   const { data: plans, isLoading } = useQuery(plansQuery(experience.id))
+
+  const handleDownloadPDF = async (planId: string, planTitle: string) => {
+    try {
+      // Fetch the full plan details including all days and exercises
+      const response = await fetch(`/api/experience/${experience.id}/workouts/${planId}`)
+      if (!response.ok) throw new Error('Failed to fetch plan details')
+      const planDetails = await response.json()
+      
+      // Generate and download the PDF
+      generateWorkoutPlanPDF(planDetails)
+    } catch (error) {
+      console.error('Error downloading PDF:', error)
+      // You could add a toast notification here
+    }
+  }
 
   // API already filters to only show plans assigned to this user for non-admin users
   const userPlans = plans ?? []
@@ -147,6 +163,15 @@ export default function MyWorkoutsPage() {
                           </Button>
                         </Link>
                       )}
+                      <Button 
+                        variant="soft" 
+                        size="2"
+                        onClick={() => handleDownloadPDF(plan.id, plan.title)}
+                        className="!bg-accent hover:!bg-accent/90 !text-white"
+                      >
+                        <Download className="w-3 h-3 mr-1" />
+                        PDF
+                      </Button>
                     </div>
                   </div>
                 </div>
