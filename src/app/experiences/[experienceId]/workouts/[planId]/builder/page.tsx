@@ -421,7 +421,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
                             <Button
                               size="2"
                               variant="soft"
-                              onClick={() => setInlineEditingId(exercise.id)}
+                              onClick={() => setEditingExercise(exercise)}
                             >
                               <Edit className="w-3 h-3" />
                             </Button>
