@@ -141,7 +141,7 @@ export default function MyWorkoutsPage() {
                       </Link>
                       {!isCompleted && (
                         <Link href={`/experiences/${experience.id}/workouts/${plan.id}/track`}>
-                          <Button size="sm">
+                          <Button size="2">
                             Start Workout
                           </Button>
                         </Link>
