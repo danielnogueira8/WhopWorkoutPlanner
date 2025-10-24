@@ -67,7 +67,7 @@ export default function MyWorkoutsPage() {
             You don't have any workout plans assigned yet. Contact your trainer to get started!
           </p>
           <Link href={`/experiences/${experience.id}/inbox`}>
-            <Button variant="outline">
+            <Button variant="soft">
               <Target className="w-4 h-4 mr-2" />
               Contact Trainer
             </Button>
@@ -142,7 +142,7 @@ export default function MyWorkoutsPage() {
                     </div>
                     <div className="flex gap-2">
                       <Link href={`/experiences/${experience.id}/workouts/${plan.id}`}>
-                        <Button variant="outline" size="sm">
+                        <Button variant="soft" size="2">
                           View Plan
                         </Button>
                       </Link>
@@ -169,13 +169,13 @@ export default function MyWorkoutsPage() {
             <h3 className="font-semibold mb-3">Quick Actions</h3>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link href={`/experiences/${experience.id}/inbox`}>
-                <Button variant="outline" className="w-full sm:w-auto">
+                <Button variant="soft" className="w-full sm:w-auto">
                   <Target className="w-4 h-4 mr-2 text-accent" />
                   Contact Trainer
                 </Button>
               </Link>
               <Link href={`/experiences/${experience.id}/workouts`}>
-                <Button variant="outline" className="w-full sm:w-auto">
+                <Button variant="soft" className="w-full sm:w-auto">
                   <BookOpen className="w-4 h-4 mr-2 text-accent" />
                   View All Plans
                 </Button>
