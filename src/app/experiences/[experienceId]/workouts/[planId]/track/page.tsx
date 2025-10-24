@@ -8,7 +8,6 @@ import Link from 'next/link'
 import { useWhop } from '~/components/whop-context'
 import { 
   planDetailQuery,
-  planDaysQuery,
   dayExercisesQuery,
   type WorkoutDay,
   type WorkoutExercise
@@ -34,7 +33,8 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
   const qc = useQueryClient()
 
   const { data: plan } = useQuery(planDetailQuery(experienceId, planId))
-  const { data: days, isLoading: isLoadingDays } = useQuery(planDaysQuery(experienceId, planId))
+  const days = plan?.days
+  const isLoadingDays = !plan
   const { data: exercises, isLoading: isLoadingExercises } = useQuery({
     ...dayExercisesQuery(experienceId, planId, selectedDayId!),
     enabled: !!selectedDayId
