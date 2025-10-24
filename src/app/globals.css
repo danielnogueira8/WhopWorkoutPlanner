@@ -11,8 +11,8 @@
 [data-theme="dark"] {
   --background: #171717; /* Frosted UI default dark background */
   --foreground: #ffffff; /* Frosted UI default dark foreground */
-  --accent-color: #059669; /* A slightly darker emerald for dark mode (emerald-600) */
-  --accent-light: #064e3b; /* A very dark, subtle emerald tint for dark mode (emerald-900) */
+  --accent-color: #10b981; /* emerald-500 for dark mode */
+  --accent-light: #f9fafb; /* light gray for sidebar in dark mode (gray-50) */
 }
 
 @theme inline {
