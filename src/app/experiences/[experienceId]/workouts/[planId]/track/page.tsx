@@ -97,7 +97,7 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
       <div className="mb-4 md:mb-6">
         <div className="flex items-center gap-3 mb-2">
           <Link href={`/experiences/${experienceId}/my-workouts`}>
-            <Button variant="outline" size="sm">
+            <Button variant="soft" size="2">
               <ArrowLeft className="w-4 h-4 mr-2 text-accent" />
               Back
             </Button>

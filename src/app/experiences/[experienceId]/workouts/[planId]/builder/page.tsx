@@ -167,7 +167,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
                     </div>
                     <div className="flex gap-1">
                       <Button
-                        size="sm"
+                        size="2"
                         variant="soft"
                         onClick={(e) => {
                           e.stopPropagation()
@@ -178,7 +178,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
                         Edit
                       </Button>
                       <Button
-                        size="sm"
+                        size="2"
                         variant="soft"
                         onClick={(e) => {
                           e.stopPropagation()
@@ -223,14 +223,14 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
                     <div className="font-medium">{exercise.name}</div>
                     <div className="flex gap-1">
                       <Button
-                        size="sm"
+                        size="2"
                         variant="soft"
                         onClick={() => setEditingExercise(exercise)}
                       >
                         Edit
                       </Button>
                       <Button
-                        size="sm"
+                        size="2"
                         variant="soft"
                         onClick={() => {
                           setEditingExercise(exercise)

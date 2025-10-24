@@ -153,7 +153,7 @@ export default function NutritionPage() {
                       </Link>
                       {!isCompleted && (
                         <Link href={`/experiences/${experience.id}/nutrition-plans/${plan.id}/track` as any}>
-                          <Button size="sm">
+                          <Button size="2">
                             Start Plan
                           </Button>
                         </Link>
