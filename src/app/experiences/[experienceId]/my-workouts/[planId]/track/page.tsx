@@ -85,7 +85,7 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['workout-plans', experienceId] })
       qc.invalidateQueries({ queryKey: ['workout-history', experienceId] })
-      router.push(`/experiences/${experienceId}/workouts`)
+      router.push(`/experiences/${experienceId}/my-workouts`)
     },
   })
 
@@ -122,14 +122,14 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
           </Link>
           <ChevronRight className="w-4 h-4 text-gray-400" />
           <Link 
-            href={`/experiences/${experienceId}/workouts`}
+            href={`/experiences/${experienceId}/my-workouts`}
             className="text-gray-600 hover:text-accent transition-colors"
           >
-            Workout Plans
+            My Workouts
           </Link>
           <ChevronRight className="w-4 h-4 text-gray-400" />
           <Link 
-            href={`/experiences/${experienceId}/workouts/${planId}`}
+            href={`/experiences/${experienceId}/my-workouts/${planId}`}
             className="text-gray-600 hover:text-accent transition-colors"
           >
             {plan.title}
@@ -294,4 +294,3 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
     </div>
   )
 }
-

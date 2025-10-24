@@ -30,10 +30,10 @@ export default function WorkoutSessionDetailPage({ params }: WorkoutSessionDetai
     return (
       <div className="p-4 md:p-6">
         <div className="text-sm text-red-600">Failed to load workout session</div>
-        <Link href={`/experiences/${experienceId}/workouts`}>
+        <Link href={`/experiences/${experienceId}/my-workouts`}>
           <Button variant="soft" className="mt-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Workout Plans
+            Back to My Workouts
           </Button>
         </Link>
       </div>
@@ -54,10 +54,10 @@ export default function WorkoutSessionDetailPage({ params }: WorkoutSessionDetai
           </Link>
           <ChevronRight className="w-4 h-4 text-gray-400" />
           <Link 
-            href={`/experiences/${experienceId}/workouts`}
+            href={`/experiences/${experienceId}/my-workouts`}
             className="text-gray-600 hover:text-accent transition-colors"
           >
-            Workout Plans
+            My Workouts
           </Link>
           <ChevronRight className="w-4 h-4 text-gray-400" />
           <span className="text-gray-900 font-medium">{session.planTitle}</span>

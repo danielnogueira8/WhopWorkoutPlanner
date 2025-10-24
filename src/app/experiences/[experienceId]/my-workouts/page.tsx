@@ -151,7 +151,7 @@ export default function MyWorkoutsPage() {
                         </Button>
                       </Link>
                       {!isCompleted && (
-                            <Link href={`/experiences/${experience.id}/workouts/${plan.id}/track` as any}>
+                            <Link href={`/experiences/${experience.id}/my-workouts/${plan.id}/track` as any}>
                           <Button size="2">
                             Start Workout
                           </Button>
@@ -187,7 +187,7 @@ export default function MyWorkoutsPage() {
                 {workoutHistory.map((session) => (
                   <Link 
                     key={session.id} 
-                    href={`/experiences/${experience.id}/workouts/sessions/${session.id}`}
+                    href={`/experiences/${experience.id}/my-workouts/sessions/${session.id}`}
                     className="block"
                   >
                     <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer">

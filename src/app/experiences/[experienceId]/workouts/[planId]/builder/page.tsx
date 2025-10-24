@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Card, TextField, Dialog } from 'frosted-ui'
 import { useState, use, useEffect } from 'react'
-import { Calendar, Plus, Dumbbell, Clock, Info, GripVertical, Edit, Trash2, X } from 'lucide-react'
+import { Calendar, Plus, Dumbbell, Clock, Info, GripVertical, Edit, Trash2, X, Home, ChevronRight } from 'lucide-react'
 import {
   DndContext,
   closestCenter,
@@ -23,6 +23,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import Link from 'next/link'
 import { useWhop } from '~/components/whop-context'
 import { 
   planDaysQuery,
@@ -210,6 +211,35 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
 
   return (
     <div className="p-4 md:p-6">
+      {/* Breadcrumb Navigation */}
+      <nav className="mb-4">
+        <div className="flex items-center space-x-2 text-sm">
+          <Link 
+            href={`/experiences/${experienceId}`}
+            className="flex items-center gap-1 text-gray-600 hover:text-accent transition-colors"
+          >
+            <Home className="w-4 h-4" />
+            Home
+          </Link>
+          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <Link 
+            href={`/experiences/${experienceId}/workouts`}
+            className="text-gray-600 hover:text-accent transition-colors"
+          >
+            Workout Plans
+          </Link>
+          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <Link 
+            href={`/experiences/${experienceId}/workouts/${planId}`}
+            className="text-gray-600 hover:text-accent transition-colors"
+          >
+            {plan?.title || 'Workout Plan'}
+          </Link>
+          <ChevronRight className="w-4 h-4 text-gray-400" />
+          <span className="text-gray-900 font-medium">Builder</span>
+        </div>
+      </nav>
+
       {/* Header Section */}
       <div className="mb-4 md:mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">

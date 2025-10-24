@@ -47,10 +47,10 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
   })
 
   const Nav = (
-    <div className="h-full flex flex-col bg-accent-light">
+    <div className="h-full flex flex-col bg-accent-light dark:bg-black">
       <div className="p-3 flex items-center justify-between">
         <div className="truncate">
-          <div className="font-medium truncate text-gray-900">{experience.name}</div>
+          <div className="font-medium truncate text-gray-900 dark:text-white">{experience.name}</div>
         </div>
         <IconButton aria-label="Toggle" onClick={toggleCollapse}>
           {collapsed ? '→' : '←'}
@@ -69,7 +69,7 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
           }
           const Icon = i.icon as any
           const content = (
-            <div className={`px-3 py-2 rounded-md flex items-center gap-2 text-gray-900 ${active ? 'bg-black/5' : 'hover:bg-black/5'}`}>
+            <div className={`px-3 py-2 rounded-md flex items-center gap-2 text-gray-900 dark:text-white ${active ? 'bg-black/5 dark:bg-white/10' : 'hover:bg-black/5 dark:hover:bg-white/10'}`}>
                     <Icon size={18} strokeWidth={1.75} className="text-accent" />
               {!collapsed && (
                 <div className="flex items-center gap-1">
@@ -86,7 +86,7 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
           )
         })}
       </nav>
-      <div className="mt-auto p-3 text-xs text-gray-600">
+      <div className="mt-auto p-3 text-xs text-gray-600 dark:text-gray-300">
         Signed in as {user.username}
       </div>
     </div>
@@ -97,10 +97,10 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
     return (
       <>
         <div className="hidden md:block border-r" style={{ width: 240 }}>
-          <div className="h-full flex flex-col bg-accent-light">
+          <div className="h-full flex flex-col bg-accent-light dark:bg-black">
             <div className="p-3 flex items-center justify-between">
               <div className="truncate">
-                <div className="font-medium truncate text-gray-900">{experience.name}</div>
+                <div className="font-medium truncate text-gray-900 dark:text-white">{experience.name}</div>
               </div>
               <IconButton aria-label="Toggle">
                 ←
@@ -119,7 +119,7 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
                 }
                 const Icon = i.icon as any
                 const content = (
-                  <div className={`px-3 py-2 rounded-md flex items-center gap-2 text-gray-900 ${active ? 'bg-black/5' : 'hover:bg-black/5'}`}>
+                  <div className={`px-3 py-2 rounded-md flex items-center gap-2 text-gray-900 dark:text-white ${active ? 'bg-black/5 dark:bg-white/10' : 'hover:bg-black/5 dark:hover:bg-white/10'}`}>
                     <Icon size={18} strokeWidth={1.75} className="text-accent" />
                     <div className="flex items-center gap-1">
                       <span>{i.label}</span>
@@ -134,7 +134,7 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
                 )
               })}
             </nav>
-            <div className="mt-auto p-3 text-xs text-gray-600">
+            <div className="mt-auto p-3 text-xs text-gray-600 dark:text-gray-300">
               Signed in as {user.username}
             </div>
           </div>
