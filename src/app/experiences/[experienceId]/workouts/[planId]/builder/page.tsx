@@ -203,7 +203,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
                 return (
                   <div
                     key={day.id}
-                    className={`p-4 rounded-lg cursor-pointer border transition-all duration-200 ${
+                    className={`group p-4 rounded-lg cursor-pointer border transition-all duration-200 ${
                       selectedDayId === day.id 
                         ? 'border-accent bg-accent/5 shadow-sm' 
                         : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
@@ -222,7 +222,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
                         </div>
                         <div className="text-xs opacity-70">Day {day.dayIndex + 1}</div>
                       </div>
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <GripVertical className="w-4 h-4 text-gray-400 mr-1" />
                         <Button
                           size="2"
@@ -288,7 +288,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
                 }
                 
                 return (
-                  <div key={exercise.id} className="p-4 border rounded-lg hover:shadow-sm transition-shadow">
+                  <div key={exercise.id} className="group p-4 border rounded-lg hover:shadow-sm transition-shadow">
                     {isEditing ? (
                       <div className="space-y-3">
                         <div className="flex items-center gap-2">
@@ -357,7 +357,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
                               <Info className="w-3 h-3 text-gray-400" title={exercise.notes} />
                             )}
                           </div>
-                          <div className="flex gap-1">
+                          <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                             <Button
                               size="2"
                               variant="soft"
