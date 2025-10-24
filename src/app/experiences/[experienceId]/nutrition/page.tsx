@@ -12,15 +12,15 @@ export default function NutritionPage() {
   const { data: plans, isLoading } = useQuery(nutritionPlansQuery(experience.id))
 
   // Filter to only show plans assigned to this user
-  const userPlans = plans?.filter(plan => 
-    plan.assignedUsers?.some(assignment => assignment.whopUserId === user.id)
+  const userPlans = plans?.filter((plan: any) => 
+    plan.assignedUsers?.some((assignment: any) => assignment.whopUserId === user.id)
   ) ?? []
 
   const totalPlans = userPlans.length
-  const completedPlans = userPlans.filter(plan => 
-    plan.assignedUsers?.find(assignment => assignment.whopUserId === user.id)?.completedAt
+  const completedPlans = userPlans.filter((plan: any) => 
+    plan.assignedUsers?.find((assignment: any) => assignment.whopUserId === user.id)?.completedAt
   ).length
-  const totalDays = userPlans.reduce((sum, plan) => sum + (plan.daysCount || 0), 0)
+  const totalDays = userPlans.reduce((sum, plan: any) => sum + (plan.daysCount || 0), 0)
 
   const stats = [
     {
@@ -111,8 +111,8 @@ export default function NutritionPage() {
       <div className="space-y-4">
         <h2 className="text-lg font-semibold">Your Nutrition Plans</h2>
         <div className="grid gap-4">
-          {userPlans.map((plan) => {
-            const assignment = plan.assignedUsers?.find(a => a.whopUserId === user.id)
+          {userPlans.map((plan: any) => {
+            const assignment = plan.assignedUsers?.find((a: any) => a.whopUserId === user.id)
             const isCompleted = !!assignment?.completedAt
             const assignedDate = assignment?.assignedAt ? new Date(assignment.assignedAt) : null
             
