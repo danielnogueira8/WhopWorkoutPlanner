@@ -8,7 +8,8 @@ import { useWhop } from '~/components/whop-context'
 import { plansQuery } from '~/components/workouts/queries'
 
 export default function MyWorkoutsPage() {
-  const { experience, user } = useWhop()
+  const { experience, user, access } = useWhop()
+  const isAdmin = (access as any).accessLevel === 'admin'
   const { data: plans, isLoading } = useQuery(plansQuery(experience.id))
 
   // API already filters to only show plans assigned to this user for non-admin users
@@ -167,12 +168,14 @@ export default function MyWorkoutsPage() {
                   Contact Trainer
                 </Button>
               </Link>
-              <Link href={`/experiences/${experience.id}/workouts`}>
-                <Button variant="soft" className="w-full sm:w-auto">
-                  <BookOpen className="w-4 h-4 mr-2 text-accent" />
-                  View All Plans
-                </Button>
-              </Link>
+              {isAdmin && (
+                <Link href={`/experiences/${experience.id}/workouts`}>
+                  <Button variant="soft" className="w-full sm:w-auto">
+                    <BookOpen className="w-4 h-4 mr-2 text-accent" />
+                    View All Plans
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </Card>
