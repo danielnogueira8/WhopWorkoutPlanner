@@ -183,11 +183,11 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
       {/* Days Panel */}
       <Card>
         <div className="p-4 md:p-5">
-          <h3 className="font-semibold text-base flex items-center gap-2 mb-5">
+          <h3 className="font-semibold text-base flex items-center gap-2">
             <Calendar className="w-4 h-4 text-accent" />
             Workout Days
           </h3>
-          <div className="mb-5">
+          <div className="pt-4 pb-5">
             <Button variant="solid" size="1" onClick={() => setNewDayOpen(true)} className="!bg-accent hover:!bg-accent/90 !text-white text-xs px-2 py-1">
               <Plus className="w-3 h-3 mr-1" />
               Add Day
@@ -259,11 +259,11 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
       {/* Exercises Panel */}
       <Card>
         <div className="p-4 md:p-5">
-          <h3 className="font-semibold text-base flex items-center gap-2 mb-5">
+          <h3 className="font-semibold text-base flex items-center gap-2">
             <Dumbbell className="w-4 h-4 text-accent" />
             {selectedDayId ? days?.find(d => d.id === selectedDayId)?.name : 'Select a Day'}
           </h3>
-          <div className="mb-5">
+          <div className="pt-4 pb-5">
             {selectedDayId && (
               <Button variant="solid" size="1" onClick={() => setNewExerciseOpen(true)} className="!bg-accent hover:!bg-accent/90 !text-white text-xs px-2 py-1">
                 <Plus className="w-3 h-3 mr-1" />
@@ -354,7 +354,9 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
                             <Dumbbell className="w-4 h-4 text-accent" />
                             <div className="font-medium">{exercise.name}</div>
                             {exercise.notes && (
-                              <Info className="w-3 h-3 text-gray-400" title={exercise.notes} />
+                              <div title={exercise.notes}>
+                                <Info className="w-3 h-3 text-gray-400" />
+                              </div>
                             )}
                           </div>
                           <div className="flex gap-1">
