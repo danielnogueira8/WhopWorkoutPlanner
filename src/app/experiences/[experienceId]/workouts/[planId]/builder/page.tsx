@@ -255,7 +255,17 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
               <Clock className="w-5 h-5 text-accent" />
               <div>
                 <div className="text-2xl font-bold">
-                  {Math.round((exercises?.reduce((total, ex) => total + (ex.sets * 2), 0) || 0) / 60)}m
+                  {selectedDayId && exercises?.length > 0
+                    ? `${Math.round(
+                        exercises.reduce((total, ex) => {
+                          // Rest time between sets (in seconds)
+                          const restTimeTotal = (ex.restTime || 60) * (ex.sets - 1)
+                          // Execution time: ~45 seconds per set
+                          const executionTime = ex.sets * 45
+                          return total + restTimeTotal + executionTime
+                        }, 0) / 60
+                      )}m`
+                    : '—'}
                 </div>
                 <div className="text-sm opacity-70">Est. Duration</div>
               </div>
