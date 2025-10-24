@@ -6,8 +6,13 @@ import { env } from '~/env'
 
 // Drizzle client for type-safe queries and migrations
 const connectionString = env.DATABASE_URL
-// Supabase Postgres requires TLS in most environments
-const client = postgres(connectionString, { ssl: 'require' })
+// Use 'prefer' SSL mode for better Vercel compatibility
+const client = postgres(connectionString, { 
+  ssl: 'prefer',
+  max: 1,
+  idle_timeout: 20,
+  connect_timeout: 10
+})
 export const db = drizzle(client, { schema })
 
 // Supabase client for Auth, Storage, Realtime
