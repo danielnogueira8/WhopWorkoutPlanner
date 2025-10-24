@@ -745,17 +745,13 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
           <Info className="w-4 h-4 text-accent" />
           Notes & Instructions
         </label>
-        <TextField.Input
-          asChild
-        >
-          <textarea
-            placeholder="Add coaching cues, form tips, or special instructions..."
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            className="w-full resize-none"
-            rows={3}
-          />
-        </TextField.Input>
+        <textarea
+          placeholder="Add coaching cues, form tips, or special instructions..."
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
+          rows={3}
+        />
         <p className="text-xs text-gray-500 mt-1">Optional: Add form cues or special instructions</p>
       </div>
 
