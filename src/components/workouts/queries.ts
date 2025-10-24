@@ -397,3 +397,33 @@ export type WorkoutHistoryItem = {
 	exerciseCount: number
 }
 
+export const workoutSessionDetailQuery = (experienceId: string, sessionId: string) => ({
+	queryKey: ['workout-session-detail', experienceId, sessionId],
+	queryFn: async () => {
+		const res = await fetch(getApiUrl(`/api/experience/${experienceId}/workouts/sessions/${sessionId}`))
+		if (!res.ok) throw new Error('Failed to fetch workout session details')
+		return res.json() as Promise<WorkoutSessionDetail>
+	},
+})
+
+export type WorkoutSessionDetail = {
+	id: string
+	planId: string
+	dayId: string
+	completedAt: string
+	notes?: string
+	planTitle: string
+	planDescription?: string
+	dayName: string
+	exercises: {
+		id: string
+		exerciseId: string
+		sets: number
+		reps: number
+		weight: number
+		notes?: string
+		exerciseName: string
+		weightUnit: string
+	}[]
+}
+

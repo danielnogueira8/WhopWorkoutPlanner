@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { Card, Button } from 'frosted-ui'
-import { Calendar, BookOpen, CheckCircle, Clock, TrendingUp, Target, Dumbbell, Download } from 'lucide-react'
+import { Calendar, BookOpen, CheckCircle, Clock, TrendingUp, Target, Dumbbell, Download, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { useWhop } from '~/components/whop-context'
 import { plansQuery, planDetailQuery, workoutHistoryQuery } from '~/components/workouts/queries'
@@ -192,25 +192,34 @@ export default function MyWorkoutsPage() {
             ) : workoutHistory && workoutHistory.length > 0 ? (
               <div className="space-y-3">
                 {workoutHistory.map((session) => (
-                  <div key={session.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center">
-                        <CheckCircle className="w-4 h-4 text-accent" />
+                  <Link 
+                    key={session.id} 
+                    href={`/experiences/${experience.id}/workouts/sessions/${session.id}`}
+                    className="block"
+                  >
+                    <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center">
+                          <CheckCircle className="w-4 h-4 text-accent" />
+                        </div>
+                        <div>
+                          <div className="font-medium text-sm">{session.planTitle}</div>
+                          <div className="text-xs opacity-70">{session.dayName}</div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="font-medium text-sm">{session.planTitle}</div>
-                        <div className="text-xs opacity-70">{session.dayName}</div>
+                      <div className="flex items-center gap-2">
+                        <div className="text-right">
+                          <div className="text-xs opacity-70">
+                            {new Date(session.completedAt).toLocaleDateString()}
+                          </div>
+                          <div className="text-xs opacity-70">
+                            {session.exerciseCount} exercises logged
+                          </div>
+                        </div>
+                        <ChevronRight className="w-4 h-4 opacity-50" />
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-xs opacity-70">
-                        {new Date(session.completedAt).toLocaleDateString()}
-                      </div>
-                      <div className="text-xs opacity-70">
-                        {session.exerciseCount} exercises logged
-                      </div>
-                    </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             ) : (
