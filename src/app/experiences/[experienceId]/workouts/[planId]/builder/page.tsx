@@ -285,7 +285,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
               <Clock className="w-5 h-5 text-accent" />
               <div>
                 <div className="text-2xl font-bold">
-                  {selectedDayId && exercises?.length > 0
+                  {selectedDayId && exercises && exercises.length > 0
                     ? `${Math.round(
                         exercises.reduce((total, ex) => {
                           // Rest time between sets (in seconds)
