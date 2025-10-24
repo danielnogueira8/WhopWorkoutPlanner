@@ -79,8 +79,6 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
       // Optimistically update to the new value
       qc.setQueryData(['workout-plan-days', experienceId, planId], (old: WorkoutDay[] | undefined) => {
         if (!old) return old
-        console.log('Optimistic update - old data:', old)
-        console.log('Optimistic update - dayIds:', dayIds)
         
         // Create a completely new array to ensure React detects the change
         const newDays = dayIds.map((id, index) => {
@@ -93,8 +91,6 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
           }
         }).filter(Boolean) as WorkoutDay[]
         
-        console.log('Optimistic update - new days:', newDays)
-        console.log('Optimistic update - dayIndex values:', newDays.map(d => ({ id: d.id, name: d.name, dayIndex: d.dayIndex })))
         return newDays
       })
       
@@ -115,22 +111,16 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
 
   // Handle drag end
   const handleDragEnd = (event: DragEndEvent) => {
-    console.log('handleDragEnd called:', event)
     const { active, over } = event
 
     if (over && active.id !== over.id && days) {
       const oldIndex = days.findIndex((day) => day.id === active.id)
       const newIndex = days.findIndex((day) => day.id === over.id)
-
-      console.log('Drag end:', { active: active.id, over: over.id, oldIndex, newIndex })
       
       const newOrder = arrayMove(days, oldIndex, newIndex)
       const dayIds = newOrder.map(day => day.id)
       
-      console.log('New order dayIds:', dayIds)
       reorderDays.mutate(dayIds)
-    } else {
-      console.log('Drag end - no valid drop target or no days:', { over, active, days: !!days })
     }
   }
 
@@ -296,7 +286,6 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
-              onDragStart={(event) => console.log('Drag start:', event)}
               onDragEnd={handleDragEnd}
             >
               <SortableContext items={days?.map(day => day.id) || []} strategy={verticalListSortingStrategy}>
