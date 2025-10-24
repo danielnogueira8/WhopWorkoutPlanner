@@ -58,7 +58,15 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
       </div>
       <nav className="p-2 space-y-1">
         {visible.map((i) => {
-          const active = pathname?.startsWith(i.href)
+          // Special logic for workout plans: if user is not admin and viewing a workout plan,
+          // it should be considered as "My Workouts" active, not "Workout Plans"
+          let active = pathname?.startsWith(i.href)
+          if (i.key === 'workouts' && !isAdmin && pathname?.includes('/workouts/')) {
+            active = false // Don't highlight "Workout Plans" for non-admin users viewing plans
+          }
+          if (i.key === 'my-workouts' && !isAdmin && pathname?.includes('/workouts/')) {
+            active = true // Highlight "My Workouts" for non-admin users viewing plans
+          }
           const Icon = i.icon as any
           const content = (
             <div className={`px-3 py-2 rounded-md flex items-center gap-2 text-gray-900 ${active ? 'bg-black/5' : 'hover:bg-black/5'}`}>
@@ -100,7 +108,15 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
             </div>
             <nav className="p-2 space-y-1">
               {visible.map((i) => {
-                const active = pathname?.startsWith(i.href)
+                // Special logic for workout plans: if user is not admin and viewing a workout plan,
+                // it should be considered as "My Workouts" active, not "Workout Plans"
+                let active = pathname?.startsWith(i.href)
+                if (i.key === 'workouts' && !isAdmin && pathname?.includes('/workouts/')) {
+                  active = false // Don't highlight "Workout Plans" for non-admin users viewing plans
+                }
+                if (i.key === 'my-workouts' && !isAdmin && pathname?.includes('/workouts/')) {
+                  active = true // Highlight "My Workouts" for non-admin users viewing plans
+                }
                 const Icon = i.icon as any
                 const content = (
                   <div className={`px-3 py-2 rounded-md flex items-center gap-2 text-gray-900 ${active ? 'bg-black/5' : 'hover:bg-black/5'}`}>
