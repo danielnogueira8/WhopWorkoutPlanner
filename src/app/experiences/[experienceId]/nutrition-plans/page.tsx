@@ -108,7 +108,7 @@ export default function NutritionPlansPage() {
             ) : (
               <div className="space-y-2">
                 {userPlans.map((p: any) => {
-                  const href = `/experiences/${experience.id}/nutrition-plans/${String(p.id)}`
+                  const href = `/experiences/${experience.id}/nutrition-plans/${String(p.id)}` as any
                   return (
                     <div key={p.id} className="flex items-center justify-between">
                       <div>
