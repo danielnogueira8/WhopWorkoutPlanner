@@ -132,7 +132,7 @@ export default function MyWorkoutsPage() {
                         {assignedDate && (
                           <div className="flex items-center gap-1">
                             <Clock className="w-4 h-4 text-accent" />
-                            Assigned {assignedDate.toLocaleDateString()}
+                            Assigned {assignedDate?.toLocaleDateString()}
                           </div>
                         )}
                       </div>
