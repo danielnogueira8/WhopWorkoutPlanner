@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { Card, Button } from 'frosted-ui'
-import { Calendar, BookOpen, CheckCircle, Clock, TrendingUp, Target, Dumbbell, Download, ChevronRight } from 'lucide-react'
+import { Calendar, BookOpen, CheckCircle, Clock, Target, Dumbbell, Download, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { useWhop } from '~/components/whop-context'
 import { plansQuery, planDetailQuery, workoutHistoryQuery } from '~/components/workouts/queries'
@@ -33,7 +33,7 @@ export default function MyWorkoutsPage() {
   const userPlans = plans ?? []
 
   const totalWorkouts = userPlans.length
-  const completedWorkouts = 0 // TODO: Implement completion tracking
+  const completedWorkouts = workoutHistory?.length || 0
   const totalDays = userPlans.reduce((sum, plan) => sum + (plan.daysCount || 0), 0)
 
   const stats = [
@@ -57,13 +57,6 @@ export default function MyWorkoutsPage() {
       value: totalDays,
       color: 'text-purple-600',
       bgColor: 'bg-purple-50 dark:bg-purple-950'
-    },
-    {
-      icon: TrendingUp,
-      label: 'Progress',
-      value: totalWorkouts > 0 ? `${Math.round((completedWorkouts / totalWorkouts) * 100)}%` : '0%',
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50 dark:bg-orange-950'
     }
   ]
 
