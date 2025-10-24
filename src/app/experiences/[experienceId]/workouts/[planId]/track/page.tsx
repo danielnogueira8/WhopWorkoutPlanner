@@ -248,7 +248,7 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
               <div className="pt-4 border-t space-y-3">
                 <Button
                   onClick={() => setIsCompleted(!isCompleted)}
-                  variant={isCompleted ? "solid" : "outline"}
+                  variant={isCompleted ? "solid" : "soft"}
                   className="w-full"
                 >
                   <CheckCircle className="w-4 h-4 mr-2 text-accent" />
