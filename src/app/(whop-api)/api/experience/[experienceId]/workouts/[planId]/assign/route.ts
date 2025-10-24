@@ -22,7 +22,7 @@ export async function POST(
 
 	try {
 		const access = await whop.access.checkIfUserHasAccessToExperience({ experienceId, userId })
-		if (!access || (access as any).accessLevel !== 'owner')
+		if (!access || (access as any).accessLevel !== 'admin')
 			return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
 		// Ensure plan belongs to experience
