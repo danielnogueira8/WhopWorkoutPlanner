@@ -61,10 +61,10 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
           // Special logic for workout plans: if user is not admin and viewing a workout plan,
           // it should be considered as "My Workouts" active, not "Workout Plans"
           let active = pathname?.startsWith(i.href)
-          if (i.key === 'workouts' && !isAdmin && pathname?.includes('/workouts/')) {
+          if (i.key === 'workouts' && !isAdmin && (pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/'))) {
             active = false // Don't highlight "Workout Plans" for non-admin users viewing plans
           }
-          if (i.key === 'my-workouts' && !isAdmin && pathname?.includes('/workouts/')) {
+          if (i.key === 'my-workouts' && !isAdmin && (pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/'))) {
             active = true // Highlight "My Workouts" for non-admin users viewing plans
           }
           const Icon = i.icon as any
@@ -111,10 +111,10 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
                 // Special logic for workout plans: if user is not admin and viewing a workout plan,
                 // it should be considered as "My Workouts" active, not "Workout Plans"
                 let active = pathname?.startsWith(i.href)
-                if (i.key === 'workouts' && !isAdmin && pathname?.includes('/workouts/')) {
+                if (i.key === 'workouts' && !isAdmin && (pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/'))) {
                   active = false // Don't highlight "Workout Plans" for non-admin users viewing plans
                 }
-                if (i.key === 'my-workouts' && !isAdmin && pathname?.includes('/workouts/')) {
+                if (i.key === 'my-workouts' && !isAdmin && (pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/'))) {
                   active = true // Highlight "My Workouts" for non-admin users viewing plans
                 }
                 const Icon = i.icon as any

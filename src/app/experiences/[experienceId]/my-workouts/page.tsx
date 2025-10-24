@@ -145,7 +145,7 @@ export default function MyWorkoutsPage() {
                       )}
                     </div>
                     <div className="flex gap-2">
-                          <Link href={`/experiences/${experience.id}/workouts/${plan.id}` as any}>
+                          <Link href={`/experiences/${experience.id}/my-workouts/${plan.id}` as any}>
                         <Button variant="soft" size="2">
                           View Plan
                         </Button>
