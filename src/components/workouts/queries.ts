@@ -22,10 +22,11 @@ export type WorkoutExercise = {
 	id: string
 	dayId: string
 	name: string
-	reps: number
+	reps: string
 	sets: number
 	currentWeight: number
 	maxWeight: number
+	weightUnit: 'lbs' | 'kgs'
 	orderIndex: number
 }
 
@@ -231,10 +232,11 @@ export const dayExercisesQuery = (experienceId: string, planId: string, dayId: s
 export const createExerciseMutation = (experienceId: string, planId: string, dayId: string) => ({
 	mutationFn: async (payload: { 
 		name: string; 
-		reps?: number; 
+		reps?: string; 
 		sets?: number; 
 		currentWeight?: number; 
 		maxWeight?: number; 
+		weightUnit?: 'lbs' | 'kgs';
 		orderIndex?: number 
 	}) => {
 		const res = await fetch(getApiUrl(`/api/experience/${experienceId}/workouts/${planId}/days/${dayId}/exercises`), {
@@ -250,10 +252,11 @@ export const createExerciseMutation = (experienceId: string, planId: string, day
 export const updateExerciseMutation = (experienceId: string, planId: string, dayId: string, exerciseId: string) => ({
 	mutationFn: async (payload: { 
 		name: string; 
-		reps?: number; 
+		reps?: string; 
 		sets?: number; 
 		currentWeight?: number; 
 		maxWeight?: number; 
+		weightUnit?: 'lbs' | 'kgs';
 		orderIndex?: number 
 	}) => {
 		const res = await fetch(getApiUrl(`/api/experience/${experienceId}/workouts/${planId}/days/${dayId}/exercises/${exerciseId}`), {

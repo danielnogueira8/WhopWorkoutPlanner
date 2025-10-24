@@ -373,10 +373,11 @@ interface ExerciseFormProps {
 function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormProps) {
   const { experience } = useWhop()
   const [name, setName] = useState(exercise?.name || '')
-  const [reps, setReps] = useState(exercise?.reps || 0)
+  const [reps, setReps] = useState(exercise?.reps?.toString() || '')
   const [sets, setSets] = useState(exercise?.sets || 0)
   const [currentWeight, setCurrentWeight] = useState(exercise?.currentWeight || 0)
   const [maxWeight, setMaxWeight] = useState(exercise?.maxWeight || 0)
+  const [weightUnit, setWeightUnit] = useState<'lbs' | 'kgs'>('lbs')
 
   // Fetch max weight when exercise name changes
   const { data: maxWeightData } = useQuery({
@@ -398,6 +399,7 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
       sets,
       currentWeight,
       maxWeight,
+      weightUnit,
       orderIndex: exercise?.orderIndex || 0
     })
   }
@@ -409,6 +411,30 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
         value={name}
         onChange={(e: any) => setName(e.target.value)}
       />
+      
+      {/* Weight Unit Selector */}
+      <div className="flex items-center gap-4">
+        <label className="text-sm font-medium">Weight Unit:</label>
+        <div className="flex gap-2">
+          <Button
+            variant={weightUnit === 'lbs' ? 'solid' : 'soft'}
+            size="2"
+            onClick={() => setWeightUnit('lbs')}
+            className={weightUnit === 'lbs' ? '!bg-accent hover:!bg-accent/90 !text-white' : ''}
+          >
+            lbs
+          </Button>
+          <Button
+            variant={weightUnit === 'kgs' ? 'solid' : 'soft'}
+            size="2"
+            onClick={() => setWeightUnit('kgs')}
+            className={weightUnit === 'kgs' ? '!bg-accent hover:!bg-accent/90 !text-white' : ''}
+          >
+            kgs
+          </Button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="text-sm font-medium mb-1 block">Sets</label>
@@ -422,14 +448,15 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
         <div>
           <label className="text-sm font-medium mb-1 block">Reps</label>
           <TextField.Input
-            type="number"
-            placeholder="0"
+            type="text"
+            placeholder="e.g., 12, 12-10-8, 8-10-12"
             value={reps}
-            onChange={(e: any) => setReps(parseInt(e.target.value) || 0)}
+            onChange={(e: any) => setReps(e.target.value)}
           />
+          <p className="text-xs text-gray-500 mt-1">Enter reps as numbers or ranges (e.g., 12-10-8)</p>
         </div>
         <div>
-          <label className="text-sm font-medium mb-1 block">Current Weight (lbs)</label>
+          <label className="text-sm font-medium mb-1 block">Current Weight ({weightUnit})</label>
           <TextField.Input
             type="number"
             placeholder="0"
@@ -438,7 +465,7 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
           />
         </div>
         <div>
-          <label className="text-sm font-medium mb-1 block">Max Weight (lbs)</label>
+          <label className="text-sm font-medium mb-1 block">Max Weight ({weightUnit})</label>
           <TextField.Input
             type="number"
             placeholder="0"
