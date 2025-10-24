@@ -109,6 +109,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
 
   // Handle drag end
   const handleDragEnd = (event: DragEndEvent) => {
+    console.log('handleDragEnd called:', event)
     const { active, over } = event
 
     if (over && active.id !== over.id && days) {
@@ -122,6 +123,8 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
       
       console.log('New order dayIds:', dayIds)
       reorderDays.mutate(dayIds)
+    } else {
+      console.log('Drag end - no valid drop target or no days:', { over, active, days: !!days })
     }
   }
 
@@ -287,6 +290,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
+              onDragStart={(event) => console.log('Drag start:', event)}
               onDragEnd={handleDragEnd}
             >
               <SortableContext items={days?.map(day => day.id) || []} strategy={verticalListSortingStrategy}>
