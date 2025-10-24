@@ -5,13 +5,14 @@ import { Card, Button } from 'frosted-ui'
 import { Calendar, BookOpen, CheckCircle, Clock, TrendingUp, Target, Dumbbell, Download } from 'lucide-react'
 import Link from 'next/link'
 import { useWhop } from '~/components/whop-context'
-import { plansQuery, planDetailQuery } from '~/components/workouts/queries'
+import { plansQuery, planDetailQuery, workoutHistoryQuery } from '~/components/workouts/queries'
 import { generateWorkoutPlanPDF } from '~/lib/pdf-generator'
 
 export default function MyWorkoutsPage() {
   const { experience, user, access } = useWhop()
   const isAdmin = (access as any).accessLevel === 'admin'
   const { data: plans, isLoading } = useQuery(plansQuery(experience.id))
+  const { data: workoutHistory, isLoading: isLoadingHistory } = useQuery(workoutHistoryQuery(experience.id))
 
   const handleDownloadPDF = async (planId: string, planTitle: string) => {
     try {
@@ -179,6 +180,48 @@ export default function MyWorkoutsPage() {
             )
           })}
         </div>
+      </div>
+
+      {/* Workout History */}
+      <div className="mt-8">
+        <Card>
+          <div className="p-4 md:p-5">
+            <h3 className="font-semibold mb-4">Recent Workout History</h3>
+            {isLoadingHistory ? (
+              <div className="text-sm opacity-70">Loading workout history...</div>
+            ) : workoutHistory && workoutHistory.length > 0 ? (
+              <div className="space-y-3">
+                {workoutHistory.map((session) => (
+                  <div key={session.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center">
+                        <CheckCircle className="w-4 h-4 text-accent" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-sm">{session.planTitle}</div>
+                        <div className="text-xs opacity-70">{session.dayName}</div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xs opacity-70">
+                        {new Date(session.completedAt).toLocaleDateString()}
+                      </div>
+                      <div className="text-xs opacity-70">
+                        {session.exerciseCount} exercises logged
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <Dumbbell className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                <p className="text-sm opacity-70">No workout history yet</p>
+                <p className="text-xs opacity-50 mt-1">Complete your first workout to see it here</p>
+              </div>
+            )}
+          </div>
+        </Card>
       </div>
 
       {/* Quick Actions */}

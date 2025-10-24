@@ -376,5 +376,24 @@ export const reorderDaysMutation = (experienceId: string, planId: string) => ({
 	},
 })
 
+// Workout history queries
+export const workoutHistoryQuery = (experienceId: string) => ({
+	queryKey: ['workout-history', experienceId],
+	queryFn: async () => {
+		const res = await fetch(getApiUrl(`/api/experience/${experienceId}/workouts/sessions/history`))
+		if (!res.ok) throw new Error('Failed to fetch workout history')
+		return res.json() as Promise<WorkoutHistoryItem[]>
+	},
+})
 
+export type WorkoutHistoryItem = {
+	id: string
+	planId: string
+	dayId: string
+	completedAt: string
+	notes?: string
+	planTitle: string
+	dayName: string
+	exerciseCount: number
+}
 

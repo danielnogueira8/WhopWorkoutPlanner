@@ -1,9 +1,10 @@
 'use client'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
 import { Button, Card, TextField } from 'frosted-ui'
 import { useState, use } from 'react'
-import { CheckCircle, Clock, BookOpen, Save, ArrowLeft } from 'lucide-react'
+import { CheckCircle, Clock, BookOpen, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useWhop } from '~/components/whop-context'
 import { 
@@ -26,10 +27,10 @@ interface ExerciseLog {
 export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
   const { experienceId, planId } = use(params)
   const { user } = useWhop()
+  const router = useRouter()
   const [selectedDayId, setSelectedDayId] = useState<string | null>(null)
   const [exerciseLogs, setExerciseLogs] = useState<Record<string, ExerciseLog>>({})
   const [workoutNotes, setWorkoutNotes] = useState('')
-  const [isCompleted, setIsCompleted] = useState(false)
   const qc = useQueryClient()
 
   const { data: plan } = useQuery(planDetailQuery(experienceId, planId))
@@ -52,20 +53,37 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
     }))
   }
 
-  const saveWorkout = useMutation({
+  const completeWorkout = useMutation({
     mutationFn: async () => {
-      // TODO: Implement workout logging API
-      console.log('Saving workout:', { exerciseLogs, workoutNotes, isCompleted })
-      return Promise.resolve()
+      if (!selectedDayId) throw new Error('No day selected')
+      
+      const exerciseLogData = Object.values(exerciseLogs).map(log => ({
+        exerciseId: log.exerciseId,
+        weight: log.weight,
+        notes: log.notes
+      }))
+
+      const res = await fetch(`/api/experience/${experienceId}/workouts/sessions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          planId,
+          dayId: selectedDayId,
+          notes: workoutNotes,
+          exerciseLogs: exerciseLogData
+        })
+      })
+
+      if (!res.ok) throw new Error('Failed to complete workout')
+      return res.json()
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['workout-plans', experienceId] })
-      // Reset form
-      setExerciseLogs({})
-      setWorkoutNotes('')
-      setIsCompleted(false)
+      qc.invalidateQueries({ queryKey: ['workout-history', experienceId] })
+      router.push(`/experiences/${experienceId}/my-workouts`)
     },
   })
+
 
   const selectedDay = days?.find(d => d.id === selectedDayId)
   const completedExercises = Object.values(exerciseLogs).filter(log => log.weight > 0).length
@@ -238,22 +256,15 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
 
               <div className="pt-4 border-t space-y-3">
                 <Button
-                  onClick={() => setIsCompleted(!isCompleted)}
-                  variant={isCompleted ? "solid" : "soft"}
+                  onClick={() => completeWorkout.mutate()}
+                  disabled={completeWorkout.isPending || !selectedDay}
+                  variant="solid"
                   className="w-full"
                 >
                   <CheckCircle className="w-4 h-4 mr-2 text-accent" />
-                  {isCompleted ? 'Workout Completed' : 'Mark as Complete'}
+                  {completeWorkout.isPending ? 'Completing...' : 'Mark as Complete'}
                 </Button>
 
-                <Button
-                  onClick={() => saveWorkout.mutate()}
-                  disabled={saveWorkout.isPending || !selectedDay}
-                  className="w-full"
-                >
-                  <Save className="w-4 h-4 mr-2 text-accent" />
-                  {saveWorkout.isPending ? 'Saving...' : 'Save Workout'}
-                </Button>
               </div>
             </div>
           </div>
