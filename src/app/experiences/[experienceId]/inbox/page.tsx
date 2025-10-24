@@ -9,7 +9,7 @@ import { inboxQuery, sendMessageMutation, usersQuery } from '~/components/workou
 
 export default function InboxPage() {
   const { access, experience, user } = useWhop()
-  const isAdmin = access.accessLevel === 'owner' || access.accessLevel === 'admin'
+  const isAdmin = (access as any).accessLevel === 'owner' || (access as any).accessLevel === 'admin'
   const [selectedUserId, setSelectedUserId] = useState<string>('')
   const [message, setMessage] = useState('')
   const [search, setSearch] = useState('')
