@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/danielnogueira/whopWorkoutPlanner/workout-planner/src/app/experiences/%5BexperienceId%5D/page.tsx"],"sourcesContent":["\"use client\";\n\nimport { useEffect } from \"react\";\nimport { useRouter } from \"next/navigation\";\nimport { useWhop } from \"~/components/whop-context\";\n\nexport default function Page() {\n  const { access, experience } = useWhop();\n  const router = useRouter();\n\n  useEffect(() => {\n    const isAdmin = access.accessLevel === \"owner\" || access.accessLevel === \"admin\";\n    const target = isAdmin\n      ? `/experiences/${experience.id}/dashboard`\n      : `/experiences/${experience.id}/workouts`;\n    router.replace(target);\n  }, [access.accessLevel, experience.id, router]);\n\n  return null;\n}\n"],"names":[],"mappings":";;;;AAEA;AACA;AACA;AAAA;;AAJA;;;;AAMe,SAAS;;IACtB,MAAM,EAAE,MAAM,EAAE,UAAU,EAAE,GAAG,IAAA,kNAAO;IACtC,MAAM,SAAS,IAAA,8LAAS;IAExB,IAAA,sNAAS;0BAAC;YACR,MAAM,UAAU,OAAO,WAAW,KAAK,WAAW,OAAO,WAAW,KAAK;YACzE,MAAM,SAAS,UACX,CAAC,aAAa,EAAE,WAAW,EAAE,CAAC,UAAU,CAAC,GACzC,CAAC,aAAa,EAAE,WAAW,EAAE,CAAC,SAAS,CAAC;YAC5C,OAAO,OAAO,CAAC;QACjB;yBAAG;QAAC,OAAO,WAAW;QAAE,WAAW,EAAE;QAAE;KAAO;IAE9C,OAAO;AACT;GAbwB;;QACS,kNAAO;QACvB,8LAAS;;;KAFF","debugId":null}}]
-}

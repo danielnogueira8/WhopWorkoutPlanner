@@ -1,3 +1,0 @@
-{
-  "/(whop-api)/api/experience/[experienceId]/dashboard/activity/route": "app/(whop-api)/api/experience/[experienceId]/dashboard/activity/route.js"
-}
