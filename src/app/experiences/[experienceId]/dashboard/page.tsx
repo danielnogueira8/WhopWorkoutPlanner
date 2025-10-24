@@ -236,7 +236,7 @@ export default function DashboardPage() {
             </div>
             <div className="space-y-3">
               <Dialog.Root open={newPlanOpen} onOpenChange={setNewPlanOpen}>
-                <Dialog.Trigger asChild>
+                <Dialog.Trigger>
                   <Button variant="outline" className="w-full flex items-center justify-start text-left">
                     <Plus className="w-4 h-4 mr-2 text-accent" />
                     Create New Workout Plan
