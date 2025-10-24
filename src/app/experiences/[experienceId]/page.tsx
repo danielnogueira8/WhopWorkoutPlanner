@@ -13,8 +13,8 @@ export default function Page() {
     const target = isAdmin
       ? `/experiences/${experience.id}/dashboard`
       : `/experiences/${experience.id}/workouts`;
-    router.replace(target);
-  }, [access.accessLevel, experience.id, router]);
+    router.replace(target as any);
+  }, [(access as any).accessLevel, experience.id, router]);
 
   return null;
 }
