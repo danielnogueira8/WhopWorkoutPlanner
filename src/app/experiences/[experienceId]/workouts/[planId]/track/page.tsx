@@ -20,8 +20,6 @@ interface WorkoutTrackProps {
 
 interface ExerciseLog {
   exerciseId: string
-  sets: number
-  reps: number
   weight: number
   notes?: string
 }
@@ -48,8 +46,6 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
       [exerciseId]: {
         ...prev[exerciseId],
         exerciseId,
-        sets: prev[exerciseId]?.sets || 0,
-        reps: prev[exerciseId]?.reps || 0,
         weight: prev[exerciseId]?.weight || 0,
         ...updates
       }
@@ -72,7 +68,7 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
   })
 
   const selectedDay = days?.find(d => d.id === selectedDayId)
-  const completedExercises = Object.keys(exerciseLogs).length
+  const completedExercises = Object.values(exerciseLogs).filter(log => log.weight > 0).length
   const totalExercises = exercises?.length || 0
 
   if (isLoadingDays) {
@@ -172,31 +168,23 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
                       <div className="grid grid-cols-3 gap-2 mb-3">
                         <div>
                           <label className="text-xs opacity-70">Sets</label>
-                          <TextField.Input
-                            type="number"
-                            value={log?.sets || ''}
-                            onChange={(e) => updateExerciseLog(exercise.id, { sets: parseInt(e.target.value) || 0 })}
-                            placeholder="0"
-                            className="text-sm"
-                          />
+                          <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded border text-sm text-gray-600 dark:text-gray-400">
+                            {exercise.sets}
+                          </div>
                         </div>
                         <div>
                           <label className="text-xs opacity-70">Reps</label>
-                          <TextField.Input
-                            type="number"
-                            value={log?.reps || ''}
-                            onChange={(e) => updateExerciseLog(exercise.id, { reps: parseInt(e.target.value) || 0 })}
-                            placeholder="0"
-                            className="text-sm"
-                          />
+                          <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded border text-sm text-gray-600 dark:text-gray-400">
+                            {exercise.reps}
+                          </div>
                         </div>
                         <div>
-                          <label className="text-xs opacity-70">Weight (lbs)</label>
+                          <label className="text-xs opacity-70">Weight ({exercise.weightUnit})</label>
                           <TextField.Input
                             type="number"
-                            value={log?.weight || ''}
+                            value={log?.weight === undefined ? (exercise.currentWeight || '') : log.weight}
                             onChange={(e) => updateExerciseLog(exercise.id, { weight: parseInt(e.target.value) || 0 })}
-                            placeholder="0"
+                            placeholder={exercise.currentWeight?.toString() || "0"}
                             className="text-sm"
                           />
                         </div>
