@@ -65,7 +65,7 @@ export default function WorkoutsPage() {
           <div className="text-lg md:text-xl font-semibold">{experience.name}</div>
         </div>
         {isAdmin && (
-          <Dialog.Root open={newPlanOpen} onOpenChange={setNewPlanOpen}>
+          <Dialog.Root open={newPlanOpen} onOpenChange={setNewPlanOpen} modal={true}>
             <Dialog.Trigger>
               <Button variant="solid" className="!bg-accent hover:!bg-accent/90 !text-white">New Plan</Button>
             </Dialog.Trigger>
@@ -145,7 +145,7 @@ export default function WorkoutsPage() {
 
       {isAdmin && (
         <>
-          <Dialog.Root open={!!editPlanId} onOpenChange={(open) => { if (!open) { setEditPlanId(null); setEditPlanTitle(""); } }}>
+          <Dialog.Root open={!!editPlanId} onOpenChange={(open) => { if (!open) { setEditPlanId(null); setEditPlanTitle(""); } }} modal={true}>
             <Dialog.Content>
               <Dialog.Title>Edit plan</Dialog.Title>
               <div className="mt-4">
@@ -160,7 +160,7 @@ export default function WorkoutsPage() {
             </Dialog.Content>
           </Dialog.Root>
 
-          <Dialog.Root open={!!deletePlanId} onOpenChange={(open) => { if (!open) { setDeletePlanId(null); setDeletePlanTitle(""); } }}>
+          <Dialog.Root open={!!deletePlanId} onOpenChange={(open) => { if (!open) { setDeletePlanId(null); setDeletePlanTitle(""); } }} modal={true}>
             <Dialog.Content>
               <Dialog.Title>Delete workout plan</Dialog.Title>
               <div className="mt-4">

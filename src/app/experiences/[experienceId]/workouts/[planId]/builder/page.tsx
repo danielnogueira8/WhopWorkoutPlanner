@@ -483,7 +483,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
 
 
       {/* New Day Dialog */}
-      <Dialog.Root open={newDayOpen} onOpenChange={setNewDayOpen}>
+      <Dialog.Root open={newDayOpen} onOpenChange={setNewDayOpen} modal={true}>
         <Dialog.Content>
           <Dialog.Title>Add New Day</Dialog.Title>
           <div className="mt-4">
@@ -518,7 +518,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
           setEditingDay(null)
           setEditingDayName('')
         }
-      }}>
+      }} modal={true}>
         <Dialog.Content>
           <Dialog.Title>Edit Day</Dialog.Title>
           <div className="mt-4">
@@ -558,7 +558,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
       </Dialog.Root>
 
       {/* New Exercise Dialog */}
-      <Dialog.Root open={newExerciseOpen} onOpenChange={setNewExerciseOpen}>
+      <Dialog.Root open={newExerciseOpen} onOpenChange={setNewExerciseOpen} modal={true}>
         <Dialog.Content>
           <Dialog.Title>Add New Exercise</Dialog.Title>
           <ExerciseForm
@@ -572,7 +572,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
       {/* Edit Exercise Dialog */}
       <Dialog.Root open={!!editingExercise} onOpenChange={(open) => {
         if (!open) setEditingExercise(null)
-      }}>
+      }} modal={true}>
         <Dialog.Content>
           <Dialog.Title>Edit Exercise</Dialog.Title>
           <ExerciseForm
