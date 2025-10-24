@@ -223,7 +223,7 @@ export default function InboxPage() {
                     value={messageSearch} 
                     onChange={(e: any) => setMessageSearch(e.target.value)}
                     className="pl-8 w-48 text-sm"
-                    size="sm"
+                    size="2"
                   />
                 </div>
               )}
