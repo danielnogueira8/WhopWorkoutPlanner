@@ -14,7 +14,7 @@ export async function GET(
 	if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
 	try {
-		// Ensure requester has access and is owner (admin-only endpoint for now)
+		// Ensure requester has access and is admin (admin-only endpoint for now)
 		const access = await whop.access.checkIfUserHasAccessToExperience({ experienceId, userId })
 		if (
 			!access ||

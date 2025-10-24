@@ -73,7 +73,7 @@ export async function PUT(
 
 	try {
 		const access = await whop.access.checkIfUserHasAccessToExperience({ experienceId, userId })
-		if (!access || !['owner', 'admin'].includes((access as any).accessLevel))
+		if (!access || (access as any).accessLevel !== 'admin')
 			return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
 		const [updated] = await db
@@ -106,7 +106,7 @@ export async function DELETE(
 
 	try {
 		const access = await whop.access.checkIfUserHasAccessToExperience({ experienceId, userId })
-		if (!access || !['owner', 'admin'].includes((access as any).accessLevel))
+		if (!access || (access as any).accessLevel !== 'admin')
 			return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
 		// First, get all days for this plan
