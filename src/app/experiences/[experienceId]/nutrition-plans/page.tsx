@@ -107,12 +107,14 @@ export default function NutritionPlansPage() {
               <div className="text-sm opacity-70">No nutrition plans created yet.</div>
             ) : (
               <div className="space-y-2">
-                {userPlans.map((p: any) => (
-                  <div key={p.id} className="flex items-center justify-between">
-                    <div>
-                      <Link href={`/experiences/${experience.id}/nutrition-plans/${String(p.id)}`} className="font-medium hover:underline">
-                        {p.title}
-                      </Link>
+                {userPlans.map((p: any) => {
+                  const href = `/experiences/${experience.id}/nutrition-plans/${String(p.id)}`
+                  return (
+                    <div key={p.id} className="flex items-center justify-between">
+                      <div>
+                        <Link href={href} className="font-medium hover:underline">
+                          {p.title}
+                        </Link>
                       <div className="text-xs opacity-70">
                         {p.daysCount || 0} days • {p.assignedCount} assigned
                       </div>
@@ -138,7 +140,8 @@ export default function NutritionPlansPage() {
                       </Button>
                     </div>
                   </div>
-                ))}
+                  )
+                })}
               </div>
             )}
           </div>
