@@ -237,7 +237,7 @@ export default function DashboardPage() {
             <div className="space-y-3">
               <Dialog.Root open={newPlanOpen} onOpenChange={setNewPlanOpen}>
                 <Dialog.Trigger>
-                  <Button variant="soft" className="w-full flex items-center justify-start text-left">
+                  <Button variant="ghost" className="w-full flex items-center justify-start text-left p-0 h-auto">
                     <Plus className="w-4 h-4 mr-2 text-accent" />
                     Create New Workout Plan
                   </Button>
@@ -263,7 +263,7 @@ export default function DashboardPage() {
               </Dialog.Root>
 
               <Link href={`/experiences/${experience.id}/clients`}>
-                <Button variant="soft" className="w-full flex items-center justify-start text-left">
+                <Button variant="ghost" className="w-full flex items-center justify-start text-left p-0 h-auto">
                   <UserCheck className="w-4 h-4 mr-2 text-accent" />
                   Assign Workout to Client
                 </Button>
