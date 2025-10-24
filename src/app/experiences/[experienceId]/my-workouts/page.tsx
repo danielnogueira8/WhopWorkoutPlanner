@@ -109,7 +109,6 @@ export default function MyWorkoutsPage() {
         <div className="grid gap-4">
           {userPlans.map((plan) => {
             const isCompleted = false // TODO: Implement completion tracking
-            const assignedDate = null // TODO: Get assignment date from API
             
             return (
               <Card key={plan.id}>
@@ -129,12 +128,6 @@ export default function MyWorkoutsPage() {
                           <Calendar className="w-4 h-4 text-accent" />
                           {plan.daysCount} days
                         </div>
-                        {assignedDate && (
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4 text-accent" />
-                            Assigned {assignedDate?.toLocaleDateString()}
-                          </div>
-                        )}
                       </div>
                       {plan.description && (
                         <p className="text-sm opacity-70 mt-2">{plan.description}</p>
