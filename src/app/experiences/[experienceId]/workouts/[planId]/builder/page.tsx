@@ -183,8 +183,8 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
       {/* Days Panel */}
       <Card>
         <div className="p-4 md:p-5">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
-            <h3 className="font-semibold text-base flex items-center gap-2">
+          <div className="mb-5">
+            <h3 className="font-semibold text-base flex items-center gap-2 mb-3">
               <Calendar className="w-4 h-4 text-accent" />
               Workout Days
             </h3>
@@ -259,8 +259,8 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
       {/* Exercises Panel */}
       <Card>
         <div className="p-4 md:p-5">
-          <div className="flex items-center justify-between mb-5">
-            <h3 className="font-semibold text-base flex items-center gap-2">
+          <div className="mb-5">
+            <h3 className="font-semibold text-base flex items-center gap-2 mb-3">
               <Dumbbell className="w-4 h-4 text-accent" />
               {selectedDayId ? days?.find(d => d.id === selectedDayId)?.name : 'Select a Day'}
             </h3>
