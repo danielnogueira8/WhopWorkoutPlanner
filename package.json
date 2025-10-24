@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "whop-proxy --command 'next dev --turbopack'",
     "build": "next build --turbopack",
+    "vercel-build": "next build",
     "start": "next start",
     "lint": "eslint",
     "typegen": "next typegen",
