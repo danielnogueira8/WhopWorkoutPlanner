@@ -74,11 +74,13 @@ export default function NutritionBuilderPage({ params }: NutritionBuilderProps) 
       if (!res.ok) throw new Error('Failed to upload PDF')
       return res.json()
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('📤 Upload success:', data)
       queryClient.invalidateQueries({ queryKey: ['nutrition-content', experienceId, planId] })
       setIsUploading(false)
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('📤 Upload error:', error)
       setIsUploading(false)
     }
   })
@@ -91,8 +93,12 @@ export default function NutritionBuilderPage({ params }: NutritionBuilderProps) 
       if (!res.ok) throw new Error('Failed to delete PDF')
       return res.json()
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('🗑️ Delete success:', data)
       queryClient.invalidateQueries({ queryKey: ['nutrition-content', experienceId, planId] })
+    },
+    onError: (error) => {
+      console.error('🗑️ Delete error:', error)
     }
   })
 
@@ -193,6 +199,16 @@ export default function NutritionBuilderPage({ params }: NutritionBuilderProps) 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900">PDF Upload</h3>
+            <Button 
+              variant="soft" 
+              onClick={() => {
+                console.log('🔄 Manual refresh triggered')
+                queryClient.invalidateQueries({ queryKey: ['nutrition-content', experienceId, planId] })
+              }}
+              className="text-sm"
+            >
+              Refresh
+            </Button>
             {content?.contentType === 'pdf' && content.pdfUrl && (
               <div className="flex items-center gap-2">
                 <a
