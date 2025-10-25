@@ -4,6 +4,7 @@ import { Theme } from "frosted-ui";
 import "./globals.css";
 import "frosted-ui/styles.css";
 import { GlobalLoader } from "~/components/GlobalLoader";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +42,29 @@ export default function RootLayout({
         <Theme>
           <GlobalLoader />
           {children}
+          <Toaster 
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: 'var(--color-background)',
+                color: 'var(--color-foreground)',
+                border: '1px solid var(--color-border)',
+              },
+              success: {
+                iconTheme: {
+                  primary: '#10b981', // emerald-500
+                  secondary: 'white',
+                },
+              },
+              error: {
+                iconTheme: {
+                  primary: '#ef4444', // red-500
+                  secondary: 'white',
+                },
+              },
+            }}
+          />
         </Theme>
       </body>
     </html>

@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { useWhop } from '~/components/whop-context'
 import { plansQuery, planDetailQuery, workoutHistoryQuery } from '~/components/workouts/queries'
 import { generateWorkoutPlanPDF } from '~/lib/pdf-generator'
+import { StatsSkeleton, CardSkeleton } from '~/components/ui/Skeleton'
 
 export default function MyWorkoutsPage() {
   const { experience, user, access } = useWhop()
@@ -63,7 +64,51 @@ export default function MyWorkoutsPage() {
   if (isLoading) {
     return (
       <div className="p-4 md:p-6">
-        <div className="text-sm opacity-70">Loading your workouts...</div>
+        {/* Header */}
+        <div className="mb-4 md:mb-6">
+          <h1 className="text-xl md:text-2xl font-bold">My Workouts</h1>
+          <p className="text-sm opacity-70 mt-1">Track your fitness journey and progress</p>
+        </div>
+
+        {/* Stats Overview Skeleton */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
+          <Card><StatsSkeleton /></Card>
+          <Card><StatsSkeleton /></Card>
+          <Card><StatsSkeleton /></Card>
+        </div>
+
+        {/* Workout Plans Skeleton */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold">Your Workout Plans</h2>
+          <div className="grid gap-4">
+            <Card><CardSkeleton /></Card>
+            <Card><CardSkeleton /></Card>
+          </div>
+        </div>
+
+        {/* Workout History Skeleton */}
+        <div className="mt-8">
+          <Card>
+            <div className="p-4 md:p-5">
+              <h3 className="font-semibold mb-4">Recent Workout History</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+                    <div>
+                      <div className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1" />
+                      <div className="h-3 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="h-3 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1" />
+                    <div className="h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
       </div>
     )
   }

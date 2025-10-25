@@ -16,6 +16,7 @@ import Link from 'next/link'
 import { useWhop } from '~/components/whop-context'
 import { nutritionPlansQuery } from '~/components/nutrition/queries'
 import { plansQuery, userAssignmentsQuery, workoutHistoryQuery, recentActivityQuery } from '~/components/workouts/queries'
+import { StatsSkeleton } from '~/components/ui/Skeleton'
 
 export default function UserDashboardPage() {
   const { access, experience, user } = useWhop()
@@ -126,26 +127,35 @@ export default function UserDashboardPage() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
-        {stats.map((stat, index) => {
-          const Icon = stat.icon
-          const content = (
-            <Card key={index} className="hover:shadow-md transition-shadow">
-              <div className="p-4">
-                <div className="flex justify-between items-start mb-3">
-                  <p className="text-sm opacity-70">{stat.label}</p>
-                  <Icon className="w-5 h-5 text-accent" />
+        {assignmentsLoading ? (
+          <>
+            <Card><StatsSkeleton /></Card>
+            <Card><StatsSkeleton /></Card>
+            <Card><StatsSkeleton /></Card>
+            <Card><StatsSkeleton /></Card>
+          </>
+        ) : (
+          stats.map((stat, index) => {
+            const Icon = stat.icon
+            const content = (
+              <Card key={index} className="hover:shadow-md transition-shadow">
+                <div className="p-4">
+                  <div className="flex justify-between items-start mb-3">
+                    <p className="text-sm opacity-70">{stat.label}</p>
+                    <Icon className="w-5 h-5 text-accent" />
+                  </div>
+                  <p className="text-2xl font-bold">{stat.value}</p>
                 </div>
-                <p className="text-2xl font-bold">{stat.value}</p>
-              </div>
-            </Card>
-          )
-
-          return stat.href ? (
-            <Link key={index} href={stat.href as any}>
-              {content}
-            </Link>
-          ) : content
-        })}
+              </Card>
+            )
+            
+            return stat.href ? (
+              <Link key={index} href={stat.href as any}>
+                {content}
+              </Link>
+            ) : content
+          })
+        )}
       </div>
 
       {/* Main Content Grid */}

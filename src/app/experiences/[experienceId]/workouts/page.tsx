@@ -8,6 +8,8 @@ import Link from "next/link";
 import { useWhop } from "~/components/whop-context";
 import { createPlanMutation, plansQuery, updatePlanMutation, deletePlanMutation, clientsQuery, bulkAssignWorkoutMutation, type Client } from "~/components/workouts/queries";
 import { generateWorkoutPlanPDF } from "~/lib/pdf-generator";
+import toast from 'react-hot-toast';
+import { CardSkeleton, StatsSkeleton, Skeleton } from '~/components/ui/Skeleton';
 
 export default function WorkoutsPage() {
   const { experience, user, access } = useWhop();
@@ -47,6 +49,10 @@ export default function WorkoutsPage() {
       qc.invalidateQueries({ queryKey: ["workout-plans", experience.id] });
       setNewPlanOpen(false);
       setNewPlanTitle("");
+      toast.success('Workout plan created successfully!');
+    },
+    onError: () => {
+      toast.error('Failed to create workout plan. Please try again.');
     },
   });
 
@@ -60,6 +66,10 @@ export default function WorkoutsPage() {
       qc.invalidateQueries({ queryKey: ["workout-plans", experience.id] });
       setEditPlanId(null);
       setEditPlanTitle("");
+      toast.success('Workout plan updated successfully!');
+    },
+    onError: () => {
+      toast.error('Failed to update workout plan. Please try again.');
     },
   });
 
@@ -72,6 +82,10 @@ export default function WorkoutsPage() {
       qc.invalidateQueries({ queryKey: ["workout-plans", experience.id] });
       setDeletePlanId(null);
       setDeletePlanTitle("");
+      toast.success('Workout plan deleted successfully!');
+    },
+    onError: () => {
+      toast.error('Failed to delete workout plan. Please try again.');
     },
   });
 
@@ -89,12 +103,12 @@ export default function WorkoutsPage() {
       
       // Show success message
       if (data?.message) {
-        alert(data.message) // You could replace this with a toast notification
+        toast.success(data.message)
       }
     },
     onError: (error) => {
       console.error('Bulk assignment failed:', error)
-      alert('Failed to assign workout plan. Please try again.') // You could replace this with a toast notification
+      toast.error('Failed to assign workout plan. Please try again.')
     },
   });
 
@@ -139,7 +153,11 @@ export default function WorkoutsPage() {
           <div className="p-4">
             <div className="text-sm opacity-70 mb-1">My Workouts</div>
             {isLoadingPlans ? (
-              <div className="text-sm opacity-70">Loading...</div>
+              <div className="space-y-2">
+                <CardSkeleton />
+                <CardSkeleton />
+                <CardSkeleton />
+              </div>
             ) : userPlans.length === 0 ? (
               <div className="text-sm opacity-70">No workouts assigned yet.</div>
             ) : (
@@ -251,7 +269,20 @@ export default function WorkoutsPage() {
               <Dialog.Title>Assign Workout Plan: "{assignPlanTitle}"</Dialog.Title>
               <div className="mt-4">
                 {isLoadingClients ? (
-                  <div className="text-sm opacity-70">Loading clients...</div>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <Skeleton className="h-4 w-24" />
+                      <div className="flex gap-2">
+                        <Skeleton className="h-6 w-16" />
+                        <Skeleton className="h-6 w-20" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Skeleton className="h-12 w-full" />
+                      <Skeleton className="h-12 w-full" />
+                      <Skeleton className="h-12 w-full" />
+                    </div>
+                  </div>
                 ) : (
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
