@@ -6,6 +6,7 @@ import {
   Dumbbell, 
   Apple, 
   CheckCircle, 
+  Calendar,
   Clock, 
   Target,
   MessageSquare,
