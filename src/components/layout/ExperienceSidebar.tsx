@@ -32,7 +32,8 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
   }
 
   const items = [
-    { key: 'dashboard', label: 'Dashboard', href: `/experiences/${experienceId}/dashboard`, admin: true, icon: LayoutDashboard },
+    { key: 'dashboard', label: 'Admin Dashboard', href: `/experiences/${experienceId}/dashboard`, admin: true, icon: LayoutDashboard },
+    { key: 'user-dashboard', label: 'Dashboard', href: `/experiences/${experienceId}`, admin: false, icon: LayoutDashboard },
     { key: 'inbox', label: 'Inbox', href: `/experiences/${experienceId}/inbox`, admin: false, icon: MessageSquare },
     { key: 'clients', label: 'Clients', href: `/experiences/${experienceId}/clients`, admin: true, icon: Users },
     { key: 'my-workouts', label: 'My Workouts', href: `/experiences/${experienceId}/my-workouts`, admin: false, icon: Dumbbell },
@@ -43,7 +44,7 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
   // Show appropriate items based on admin status
   const visible = items.filter((i) => {
     if (isAdmin) return true // Admins see everything
-    return i.key === 'my-workouts' || i.key === 'inbox' || i.key === 'nutrition' // Users see My Workouts, Inbox, and Nutrition
+    return i.key === 'user-dashboard' || i.key === 'my-workouts' || i.key === 'inbox' || i.key === 'nutrition' // Users see Dashboard, My Workouts, Inbox, and Nutrition
   })
 
   const Nav = (
@@ -66,6 +67,15 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
           }
           if (i.key === 'my-workouts' && !isAdmin && (pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/'))) {
             active = true // Highlight "My Workouts" for non-admin users viewing plans
+          }
+          
+          // Special logic for user dashboard: when on the main experience page (user dashboard),
+          // it should be considered as "Dashboard" active for non-admin users
+          if (i.key === 'user-dashboard' && !isAdmin && pathname === `/experiences/${experienceId}`) {
+            active = true // Highlight "Dashboard" for non-admin users on main page
+          }
+          if (i.key === 'dashboard' && !isAdmin && pathname === `/experiences/${experienceId}`) {
+            active = false // Don't highlight admin dashboard for non-admin users on main page
           }
           
           // Special logic for nutrition plans: when viewing a nutrition plan, 
@@ -134,6 +144,15 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
                 }
                 if (i.key === 'my-workouts' && !isAdmin && (pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/'))) {
                   active = true // Highlight "My Workouts" for non-admin users viewing plans
+                }
+                
+                // Special logic for user dashboard: when on the main experience page (user dashboard),
+                // it should be considered as "Dashboard" active for non-admin users
+                if (i.key === 'user-dashboard' && !isAdmin && pathname === `/experiences/${experienceId}`) {
+                  active = true // Highlight "Dashboard" for non-admin users on main page
+                }
+                if (i.key === 'dashboard' && !isAdmin && pathname === `/experiences/${experienceId}`) {
+                  active = false // Don't highlight admin dashboard for non-admin users on main page
                 }
                 
                 // Special logic for nutrition plans: when viewing a nutrition plan, 
