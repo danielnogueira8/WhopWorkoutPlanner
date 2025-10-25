@@ -72,41 +72,38 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
       </div>
       <nav className="p-2 space-y-1">
         {visible.map((i) => {
-          // Special logic for workout plans: if user is not admin and viewing a workout plan,
-          // it should be considered as "My Workouts" active, not "Workout Plans"
-          let active = pathname?.startsWith(i.href)
-          if (i.key === 'workouts' && !isAdmin && (pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/'))) {
-            active = false // Don't highlight "Workout Plans" for non-admin users viewing plans
-          }
-          if (i.key === 'my-workouts' && !isAdmin && (pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/'))) {
-            active = true // Highlight "My Workouts" for non-admin users viewing plans
-          }
+          // Determine active state based on item key and current pathname
+          let active = false
           
-          // Special logic for user dashboard: when on the main experience page (user dashboard),
-          // it should be considered as "Dashboard" active for non-admin users
           if (i.key === 'user-dashboard' && !isAdmin) {
-            active = pathname === `/experiences/${experienceId}` // Only active on exact main page
-          }
-          if (i.key === 'dashboard' && !isAdmin) {
-            active = false // Don't highlight admin dashboard for non-admin users
-          }
-          
-          // Special logic for nutrition plans: when viewing a nutrition plan, 
-          // it should be considered as "Nutrition" active, not "Nutrition Plans"
-          // But when building a nutrition plan, it should be "Nutrition Plans" active
-          if (i.key === 'nutrition-plans' && pathname?.includes('/nutrition-plans/')) {
-            if (pathname?.includes('/builder')) {
-              active = true // Highlight "Nutrition Plans" when building a plan
+            // User dashboard is only active on the exact main page
+            active = pathname === `/experiences/${experienceId}`
+          } else if (i.key === 'dashboard' && isAdmin) {
+            // Admin dashboard is active when on admin dashboard page
+            active = pathname === `/experiences/${experienceId}/dashboard`
+          } else if (i.key === 'workouts' && isAdmin) {
+            // Admin workout plans - active when on workout plans pages
+            active = pathname?.startsWith(i.href)
+          } else if (i.key === 'my-workouts' && !isAdmin) {
+            // User workouts - active when on my-workouts pages OR when viewing workout plans
+            active = pathname?.startsWith(i.href) || pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/')
+          } else if (i.key === 'nutrition-plans' && isAdmin) {
+            // Admin nutrition plans - active when building a plan
+            if (pathname?.includes('/nutrition-plans/')) {
+              active = pathname?.includes('/builder')
             } else {
-              active = false // Don't highlight "Nutrition Plans" when viewing a specific plan
+              active = pathname?.startsWith(i.href)
             }
-          }
-          if (i.key === 'nutrition' && pathname?.includes('/nutrition-plans/')) {
-            if (pathname?.includes('/builder')) {
-              active = false // Don't highlight "Nutrition" when building a plan
+          } else if (i.key === 'nutrition' && !isAdmin) {
+            // User nutrition - active when on nutrition pages OR when viewing nutrition plans (except builder)
+            if (pathname?.includes('/nutrition-plans/')) {
+              active = !pathname?.includes('/builder')
             } else {
-              active = true // Highlight "Nutrition" when viewing a specific plan
+              active = pathname?.startsWith(i.href)
             }
+          } else {
+            // Default behavior for other items
+            active = pathname?.startsWith(i.href)
           }
           const Icon = i.icon as any
           const content = (
@@ -157,41 +154,38 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
             </div>
             <nav className="p-2 space-y-1">
               {visible.map((i) => {
-                // Special logic for workout plans: if user is not admin and viewing a workout plan,
-                // it should be considered as "My Workouts" active, not "Workout Plans"
-                let active = pathname?.startsWith(i.href)
-                if (i.key === 'workouts' && !isAdmin && (pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/'))) {
-                  active = false // Don't highlight "Workout Plans" for non-admin users viewing plans
-                }
-                if (i.key === 'my-workouts' && !isAdmin && (pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/'))) {
-                  active = true // Highlight "My Workouts" for non-admin users viewing plans
-                }
+                // Determine active state based on item key and current pathname (same logic as desktop)
+                let active = false
                 
-                // Special logic for user dashboard: when on the main experience page (user dashboard),
-                // it should be considered as "Dashboard" active for non-admin users
                 if (i.key === 'user-dashboard' && !isAdmin) {
-                  active = pathname === `/experiences/${experienceId}` // Only active on exact main page
-                }
-                if (i.key === 'dashboard' && !isAdmin) {
-                  active = false // Don't highlight admin dashboard for non-admin users
-                }
-                
-                // Special logic for nutrition plans: when viewing a nutrition plan, 
-                // it should be considered as "Nutrition" active, not "Nutrition Plans"
-                // But when building a nutrition plan, it should be "Nutrition Plans" active
-                if (i.key === 'nutrition-plans' && pathname?.includes('/nutrition-plans/')) {
-                  if (pathname?.includes('/builder')) {
-                    active = true // Highlight "Nutrition Plans" when building a plan
+                  // User dashboard is only active on the exact main page
+                  active = pathname === `/experiences/${experienceId}`
+                } else if (i.key === 'dashboard' && isAdmin) {
+                  // Admin dashboard is active when on admin dashboard page
+                  active = pathname === `/experiences/${experienceId}/dashboard`
+                } else if (i.key === 'workouts' && isAdmin) {
+                  // Admin workout plans - active when on workout plans pages
+                  active = pathname?.startsWith(i.href)
+                } else if (i.key === 'my-workouts' && !isAdmin) {
+                  // User workouts - active when on my-workouts pages OR when viewing workout plans
+                  active = pathname?.startsWith(i.href) || pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/')
+                } else if (i.key === 'nutrition-plans' && isAdmin) {
+                  // Admin nutrition plans - active when building a plan
+                  if (pathname?.includes('/nutrition-plans/')) {
+                    active = pathname?.includes('/builder')
                   } else {
-                    active = false // Don't highlight "Nutrition Plans" when viewing a specific plan
+                    active = pathname?.startsWith(i.href)
                   }
-                }
-                if (i.key === 'nutrition' && pathname?.includes('/nutrition-plans/')) {
-                  if (pathname?.includes('/builder')) {
-                    active = false // Don't highlight "Nutrition" when building a plan
+                } else if (i.key === 'nutrition' && !isAdmin) {
+                  // User nutrition - active when on nutrition pages OR when viewing nutrition plans (except builder)
+                  if (pathname?.includes('/nutrition-plans/')) {
+                    active = !pathname?.includes('/builder')
                   } else {
-                    active = true // Highlight "Nutrition" when viewing a specific plan
+                    active = pathname?.startsWith(i.href)
                   }
+                } else {
+                  // Default behavior for other items
+                  active = pathname?.startsWith(i.href)
                 }
                 const Icon = i.icon as any
                 const content = (
@@ -240,40 +234,38 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
         <div className="overflow-x-auto scrollbar-hide">
           <div className="flex space-x-1 px-2 py-2">
             {visible.map((i) => {
-              // Same active logic as desktop
-              let active = pathname?.startsWith(i.href)
-              if (i.key === 'workouts' && !isAdmin && (pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/'))) {
-                active = false // Don't highlight "Workout Plans" for non-admin users viewing plans
-              }
-              if (i.key === 'my-workouts' && !isAdmin && (pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/'))) {
-                active = true // Highlight "My Workouts" for non-admin users viewing plans
-              }
+              // Determine active state based on item key and current pathname (same logic as desktop)
+              let active = false
               
-              // Special logic for user dashboard: when on the main experience page (user dashboard),
-              // it should be considered as "Dashboard" active for non-admin users
               if (i.key === 'user-dashboard' && !isAdmin) {
-                active = pathname === `/experiences/${experienceId}` // Only active on exact main page
-              }
-              if (i.key === 'dashboard' && !isAdmin) {
-                active = false // Don't highlight admin dashboard for non-admin users
-              }
-              
-              // Special logic for nutrition plans: when viewing a nutrition plan, 
-              // it should be considered as "Nutrition" active, not "Nutrition Plans"
-              // But when building a nutrition plan, it should be "Nutrition Plans" active
-              if (i.key === 'nutrition-plans' && pathname?.includes('/nutrition-plans/')) {
-                if (pathname?.includes('/builder')) {
-                  active = true // Highlight "Nutrition Plans" when building a plan
+                // User dashboard is only active on the exact main page
+                active = pathname === `/experiences/${experienceId}`
+              } else if (i.key === 'dashboard' && isAdmin) {
+                // Admin dashboard is active when on admin dashboard page
+                active = pathname === `/experiences/${experienceId}/dashboard`
+              } else if (i.key === 'workouts' && isAdmin) {
+                // Admin workout plans - active when on workout plans pages
+                active = pathname?.startsWith(i.href)
+              } else if (i.key === 'my-workouts' && !isAdmin) {
+                // User workouts - active when on my-workouts pages OR when viewing workout plans
+                active = pathname?.startsWith(i.href) || pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/')
+              } else if (i.key === 'nutrition-plans' && isAdmin) {
+                // Admin nutrition plans - active when building a plan
+                if (pathname?.includes('/nutrition-plans/')) {
+                  active = pathname?.includes('/builder')
                 } else {
-                  active = false // Don't highlight "Nutrition Plans" when viewing a specific plan
+                  active = pathname?.startsWith(i.href)
                 }
-              }
-              if (i.key === 'nutrition' && pathname?.includes('/nutrition-plans/')) {
-                if (pathname?.includes('/builder')) {
-                  active = false // Don't highlight "Nutrition" when building a plan
+              } else if (i.key === 'nutrition' && !isAdmin) {
+                // User nutrition - active when on nutrition pages OR when viewing nutrition plans (except builder)
+                if (pathname?.includes('/nutrition-plans/')) {
+                  active = !pathname?.includes('/builder')
                 } else {
-                  active = true // Highlight "Nutrition" when viewing a specific plan
+                  active = pathname?.startsWith(i.href)
                 }
+              } else {
+                // Default behavior for other items
+                active = pathname?.startsWith(i.href)
               }
               
               const Icon = i.icon as any
