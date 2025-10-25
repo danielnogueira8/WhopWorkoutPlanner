@@ -92,12 +92,8 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
             // User workouts - active when on my-workouts pages OR when viewing workout plans
             active = pathname?.startsWith(i.href) || pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/')
           } else if (i.key === 'nutrition-plans' && isAdmin) {
-            // Admin nutrition plans - active when building a plan
-            if (pathname?.includes('/nutrition-plans/')) {
-              active = pathname?.includes('/builder')
-            } else {
-              active = pathname?.startsWith(i.href)
-            }
+            // Admin nutrition plans - active when on nutrition plans pages (including viewing plans)
+            active = pathname?.startsWith(i.href) || pathname?.includes('/nutrition-plans/')
           } else if (i.key === 'nutrition' && !isAdmin) {
             // User nutrition - active when on nutrition pages OR when viewing nutrition plans (except builder)
             if (pathname?.includes('/nutrition-plans/')) {
@@ -254,12 +250,8 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
                 // User workouts - active when on my-workouts pages OR when viewing workout plans
                 active = pathname?.startsWith(i.href) || pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/')
               } else if (i.key === 'nutrition-plans' && isAdmin) {
-                // Admin nutrition plans - active when building a plan
-                if (pathname?.includes('/nutrition-plans/')) {
-                  active = pathname?.includes('/builder')
-                } else {
-                  active = pathname?.startsWith(i.href)
-                }
+                // Admin nutrition plans - active when on nutrition plans pages (including viewing plans)
+                active = pathname?.startsWith(i.href) || pathname?.includes('/nutrition-plans/')
               } else if (i.key === 'nutrition' && !isAdmin) {
                 // User nutrition - active when on nutrition pages OR when viewing nutrition plans (except builder)
                 if (pathname?.includes('/nutrition-plans/')) {
