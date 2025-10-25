@@ -94,12 +94,18 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
           } else if (i.key === 'nutrition-plans' && isAdmin) {
             // Admin nutrition plans - active when on nutrition plans pages (including viewing plans)
             active = pathname?.startsWith(i.href) || pathname?.includes('/nutrition-plans/')
-          } else if (i.key === 'nutrition' && !isAdmin) {
-            // User nutrition - active when on nutrition pages OR when viewing nutrition plans (except builder)
-            if (pathname?.includes('/nutrition-plans/')) {
-              active = !pathname?.includes('/builder')
+          } else if (i.key === 'nutrition') {
+            // Nutrition tab logic
+            if (isAdmin) {
+              // Admins: Only active on /nutrition page, never on /nutrition-plans/
+              active = pathname?.startsWith(i.href) && !pathname?.includes('/nutrition-plans/')
             } else {
-              active = pathname?.startsWith(i.href)
+              // Users: Active on nutrition pages OR when viewing nutrition plans (except builder)
+              if (pathname?.includes('/nutrition-plans/')) {
+                active = !pathname?.includes('/builder')
+              } else {
+                active = pathname?.startsWith(i.href)
+              }
             }
           } else {
             // Default behavior for other items
@@ -252,12 +258,18 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
               } else if (i.key === 'nutrition-plans' && isAdmin) {
                 // Admin nutrition plans - active when on nutrition plans pages (including viewing plans)
                 active = pathname?.startsWith(i.href) || pathname?.includes('/nutrition-plans/')
-              } else if (i.key === 'nutrition' && !isAdmin) {
-                // User nutrition - active when on nutrition pages OR when viewing nutrition plans (except builder)
-                if (pathname?.includes('/nutrition-plans/')) {
-                  active = !pathname?.includes('/builder')
+              } else if (i.key === 'nutrition') {
+                // Nutrition tab logic
+                if (isAdmin) {
+                  // Admins: Only active on /nutrition page, never on /nutrition-plans/
+                  active = pathname?.startsWith(i.href) && !pathname?.includes('/nutrition-plans/')
                 } else {
-                  active = pathname?.startsWith(i.href)
+                  // Users: Active on nutrition pages OR when viewing nutrition plans (except builder)
+                  if (pathname?.includes('/nutrition-plans/')) {
+                    active = !pathname?.includes('/builder')
+                  } else {
+                    active = pathname?.startsWith(i.href)
+                  }
                 }
               } else {
                 // Default behavior for other items
