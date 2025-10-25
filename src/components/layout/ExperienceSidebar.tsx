@@ -22,18 +22,16 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
   const [mounted, setMounted] = useState(false)
 
   // Fetch conversations to get unread counts
-  const { data: conversations } = useQuery({ ...conversationsQuery(experienceId) })
+  const { data: conversations } = useQuery({ 
+    ...conversationsQuery(experienceId),
+    refetchOnWindowFocus: true, // Refetch when user returns to tab
+    refetchOnMount: true, // Refetch when component mounts
+    staleTime: 0, // Data is immediately stale, ensuring fresh data
+  })
   
   // Calculate total unread count
   const totalUnreadCount = conversations?.reduce((total, conv) => total + conv.unreadCount, 0) || 0
   
-  // Debug logging
-  console.log('🔔 Sidebar Debug:', {
-    conversations: conversations?.length || 0,
-    conversationsData: conversations,
-    totalUnreadCount,
-    experienceId
-  })
 
   useEffect(() => {
     setMounted(true)
@@ -122,12 +120,6 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
                     {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
                   </div>
                 )}
-                {/* Debug: Always show badge for testing */}
-                {i.key === 'inbox' && (
-                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
-                    {totalUnreadCount}
-                  </div>
-                )}
               </div>
               {!collapsed && (
                 <div className="flex items-center gap-1">
@@ -211,12 +203,6 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
                       {i.key === 'inbox' && totalUnreadCount > 0 && (
                         <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
                           {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
-                        </div>
-                      )}
-                      {/* Debug: Always show badge for testing */}
-                      {i.key === 'inbox' && (
-                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
-                          {totalUnreadCount}
                         </div>
                       )}
                     </div>

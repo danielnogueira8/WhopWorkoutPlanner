@@ -317,20 +317,29 @@ export default function UserDashboardPage() {
                   </div>
                 ))}
                 
-                {/* Show general activity including messages */}
-                {activityData?.activities?.slice(0, 2).map((activity) => {
-                  const formatted = formatActivity(activity)
-                  const Icon = formatted.icon
-                  return (
-                    <div key={activity.id} className="flex items-start space-x-3">
-                      <Icon className="w-4 h-4 mt-0.5 text-accent" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm">{formatted.description}</p>
-                        <p className="text-xs opacity-70">{formatted.time}</p>
+                {/* Show general activity including messages (excluding own messages) */}
+                {activityData?.activities
+                  ?.filter((activity) => {
+                    // Filter out user's own messages from recent activity
+                    if (activity.type === 'message' && activity.senderUserId === user.id) {
+                      return false
+                    }
+                    return true
+                  })
+                  ?.slice(0, 2)
+                  ?.map((activity) => {
+                    const formatted = formatActivity(activity)
+                    const Icon = formatted.icon
+                    return (
+                      <div key={activity.id} className="flex items-start space-x-3">
+                        <Icon className="w-4 h-4 mt-0.5 text-accent" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm">{formatted.description}</p>
+                          <p className="text-xs opacity-70">{formatted.time}</p>
+                        </div>
                       </div>
-                    </div>
-                  )
-                })}
+                    )
+                  })}
                 
                 {workoutHistory && workoutHistory.length > 5 && (
                   <Link href={`/experiences/${experience.id}/my-workouts`}>
