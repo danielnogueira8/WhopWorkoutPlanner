@@ -68,7 +68,6 @@ export default function NutritionPlansPage() {
     <div className="min-h-screen w-full p-4 md:p-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4 md:mb-6">
         <div>
-          <div className="text-sm opacity-70">Experience</div>
           <div className="text-lg md:text-xl font-semibold">{experience.name}</div>
         </div>
         <Dialog.Root open={newPlanOpen} onOpenChange={setNewPlanOpen}>
