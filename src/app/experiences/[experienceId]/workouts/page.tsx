@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Button, Card, TextField, Dialog } from "frosted-ui";
-import { Trash2, Download, Users } from "lucide-react";
+import { Trash2, Download, Users, Edit3 } from "lucide-react";
 import Link from "next/link";
 import { useWhop } from "~/components/whop-context";
 import { createPlanMutation, plansQuery, updatePlanMutation, deletePlanMutation, clientsQuery, bulkAssignWorkoutMutation, type Client } from "~/components/workouts/queries";
@@ -155,9 +155,6 @@ export default function WorkoutsPage() {
                           <Users className="w-4 h-4 mr-1" />
                           Assign
                         </Button>
-                        <Button variant="solid" onClick={() => { setEditPlanId(p.id); setEditPlanTitle(p.title); }} className="!bg-accent hover:!bg-accent/90 !text-white">
-                          Rename
-                        </Button>
                         <Button 
                           variant="soft" 
                           onClick={() => handleDownloadPDF(p.id, p.title)}
@@ -168,13 +165,20 @@ export default function WorkoutsPage() {
                         </Button>
                         <Button 
                           variant="soft" 
+                          onClick={() => { setEditPlanId(p.id); setEditPlanTitle(p.title); }}
+                          className="text-blue-600 border-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-950"
+                        >
+                          <Edit3 className="w-4 h-4" />
+                        </Button>
+                        <Button 
+                          variant="soft" 
                           onClick={() => { 
                             setDeletePlanId(p.id); 
                             setDeletePlanTitle(p.title); 
                           }}
                           className="text-red-600 border-red-600 hover:bg-red-50 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-950"
                         >
-                          <Trash2 className="w-4 h-4 text-accent" />
+                          <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
                     )}
