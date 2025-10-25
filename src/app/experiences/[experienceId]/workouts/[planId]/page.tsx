@@ -87,11 +87,11 @@ export default function WorkoutPlanPage({ params }: WorkoutPlanPageProps) {
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
                           <span className="opacity-70">Current Weight:</span>
-                          <span className="ml-2 font-medium">{exercise.currentWeight} lbs</span>
+                          <span className="ml-2 font-medium">{exercise.currentWeight} {exercise.weightUnit}</span>
                         </div>
                         <div>
                           <span className="opacity-70">Max Weight:</span>
-                          <span className="ml-2 font-medium">{exercise.maxWeight} lbs</span>
+                          <span className="ml-2 font-medium">{exercise.maxWeight} {exercise.weightUnit}</span>
                         </div>
                       </div>
                     </div>
