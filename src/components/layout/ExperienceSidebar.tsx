@@ -239,7 +239,7 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
       <div className="md:hidden p-2">
         <Button variant="soft" onClick={() => setMobileOpen(true)}>Menu</Button>
         <Sheet.Root open={mobileOpen} onOpenChange={setMobileOpen}>
-          <Sheet.Content>
+          <Sheet.Content className="bg-accent-light dark:bg-black">
             {Nav}
           </Sheet.Content>
         </Sheet.Root>
