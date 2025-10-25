@@ -57,8 +57,8 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
   // Show appropriate items based on admin status
   const visible = items.filter((i) => {
     if (isAdmin) {
-      // Admins see everything except the user dashboard
-      return i.key !== 'user-dashboard'
+      // Admins see everything
+      return true
     }
     // Users see Dashboard, My Workouts, Inbox, and Nutrition
     return i.key === 'user-dashboard' || i.key === 'my-workouts' || i.key === 'inbox' || i.key === 'nutrition'
@@ -79,12 +79,12 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
           // Determine active state based on item key and current pathname
           let active = false
           
-          if (i.key === 'user-dashboard' && !isAdmin) {
-            // User dashboard is only active on the exact main page
+          if (i.key === 'user-dashboard') {
+            // User dashboard is active on the exact main page (for both admins and users)
             active = pathname === `/experiences/${experienceId}`
           } else if (i.key === 'dashboard' && isAdmin) {
-            // Admin dashboard is active when on admin dashboard page OR when on main page (for admins)
-            active = pathname === `/experiences/${experienceId}/dashboard` || pathname === `/experiences/${experienceId}`
+            // Admin dashboard is active when on admin dashboard page
+            active = pathname === `/experiences/${experienceId}/dashboard`
           } else if (i.key === 'workouts' && isAdmin) {
             // Admin workout plans - active when on workout plans pages
             active = pathname?.startsWith(i.href)
@@ -161,12 +161,12 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
                 // Determine active state based on item key and current pathname (same logic as desktop)
                 let active = false
                 
-                if (i.key === 'user-dashboard' && !isAdmin) {
-                  // User dashboard is only active on the exact main page
+                if (i.key === 'user-dashboard') {
+                  // User dashboard is active on the exact main page (for both admins and users)
                   active = pathname === `/experiences/${experienceId}`
                 } else if (i.key === 'dashboard' && isAdmin) {
-                  // Admin dashboard is active when on admin dashboard page OR when on main page (for admins)
-                  active = pathname === `/experiences/${experienceId}/dashboard` || pathname === `/experiences/${experienceId}`
+                  // Admin dashboard is active when on admin dashboard page
+                  active = pathname === `/experiences/${experienceId}/dashboard`
                 } else if (i.key === 'workouts' && isAdmin) {
                   // Admin workout plans - active when on workout plans pages
                   active = pathname?.startsWith(i.href)
@@ -241,12 +241,12 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
               // Determine active state based on item key and current pathname (same logic as desktop)
               let active = false
               
-              if (i.key === 'user-dashboard' && !isAdmin) {
-                // User dashboard is only active on the exact main page
+              if (i.key === 'user-dashboard') {
+                // User dashboard is active on the exact main page (for both admins and users)
                 active = pathname === `/experiences/${experienceId}`
               } else if (i.key === 'dashboard' && isAdmin) {
-                // Admin dashboard is active when on admin dashboard page OR when on main page (for admins)
-                active = pathname === `/experiences/${experienceId}/dashboard` || pathname === `/experiences/${experienceId}`
+                // Admin dashboard is active when on admin dashboard page
+                active = pathname === `/experiences/${experienceId}/dashboard`
               } else if (i.key === 'workouts' && isAdmin) {
                 // Admin workout plans - active when on workout plans pages
                 active = pathname?.startsWith(i.href)
