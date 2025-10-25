@@ -747,7 +747,7 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
               onClick={() => setRestTime(seconds)}
               className={restTime === seconds ? '!bg-accent hover:!bg-accent/90 !text-white' : ''}
             >
-              {seconds < 60 ? `${seconds}s` : `${Math.floor(seconds / 60)}m${seconds % 60 ? `:${seconds % 60}` : ''}`}
+              {seconds < 60 ? `${seconds}s` : `${Math.floor(seconds / 60)}m${seconds % 60 ? `:${seconds % 60}s` : ''}`}
             </Button>
           ))}
         </div>
