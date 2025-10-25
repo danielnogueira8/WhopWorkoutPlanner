@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { Card, Button } from 'frosted-ui'
-import { Home, ChevronRight, Download, FileText, File } from 'lucide-react'
+import { Home, ChevronRight, Download, FileText, File, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import { use, useState } from 'react'
 import { useWhop } from '~/components/whop-context'
@@ -88,7 +88,14 @@ export default function NutritionPlanViewPage({ params }: NutritionPlanViewProps
         {content?.contentType === 'pdf' && content.pdfUrl ? (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">Nutrition Plan PDF</h3>
+              <div className="flex items-center gap-3">
+                <h3 className="text-lg font-semibold text-gray-900">Nutrition Plan PDF</h3>
+                <div className="flex items-center gap-1 px-3 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-sm">
+                  <CheckCircle className="w-4 h-4" />
+                  <File className="w-4 h-4" />
+                  PDF Ready
+                </div>
+              </div>
               <div className="flex items-center gap-2">
                 <a
                   href={content.pdfUrl}
@@ -102,19 +109,32 @@ export default function NutritionPlanViewPage({ params }: NutritionPlanViewProps
               </div>
             </div>
             
-            <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center">
-              <File className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h4 className="text-lg font-medium text-gray-900 mb-2">PDF Nutrition Plan</h4>
-              <p className="text-gray-600 mb-4">{content.pdfFilename}</p>
-              <a
-                href={content.pdfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-white rounded-md hover:bg-accent/90 transition-colors"
-              >
-                <FileText className="w-4 h-4" />
-                View PDF
-              </a>
+            <div className="bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                    <File className="w-6 h-6 text-green-600 dark:text-green-400" />
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-2">PDF Nutrition Plan Available</h4>
+                  <p className="text-green-700 dark:text-green-300 mb-3">
+                    <span className="font-medium">File:</span> {content.pdfFilename}
+                  </p>
+                  <p className="text-sm text-green-600 dark:text-green-400 mb-4">
+                    Your nutrition plan is ready to view and download.
+                  </p>
+                  <a
+                    href={content.pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors"
+                  >
+                    <FileText className="w-4 h-4" />
+                    View PDF
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         ) : content?.contentType === 'text' && content.content ? (

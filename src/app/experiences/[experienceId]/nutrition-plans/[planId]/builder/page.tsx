@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Card } from 'frosted-ui'
 import { useState, use, useRef } from 'react'
-import { Home, ChevronRight, Upload, Download, Trash2, File } from 'lucide-react'
+import { Home, ChevronRight, Upload, Download, Trash2, File, CheckCircle, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import { useWhop } from '~/components/whop-context'
 import { 
@@ -206,64 +206,112 @@ export default function NutritionBuilderPage({ params }: NutritionBuilderProps) 
           </div>
 
           {content?.contentType === 'pdf' && content.pdfUrl ? (
-            <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center">
-              <File className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h4 className="text-lg font-medium text-gray-900 mb-2">PDF Uploaded</h4>
-              <p className="text-gray-600 mb-4">{content.pdfFilename}</p>
-              <div className="flex items-center justify-center gap-4">
-                <a
-                  href={content.pdfUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-white rounded-md hover:bg-accent/90 transition-colors"
-                >
-                  <Download className="w-4 h-4" />
-                  View PDF
-                </a>
-                <Button
-                  onClick={handleDeletePDF}
-                  variant="soft"
-                  className="text-red-600 border-red-600 hover:bg-red-50 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-950"
-                >
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Delete PDF
-                </Button>
+            <div className="bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h4 className="text-lg font-semibold text-green-800 dark:text-green-200">PDF Successfully Uploaded</h4>
+                    <File className="w-5 h-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <p className="text-green-700 dark:text-green-300 mb-3">
+                    <span className="font-medium">File:</span> {content.pdfFilename}
+                  </p>
+                  <p className="text-sm text-green-600 dark:text-green-400 mb-4">
+                    Your nutrition plan PDF is ready for your clients to view and download.
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <a
+                      href={content.pdfUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors"
+                    >
+                      <Download className="w-4 h-4" />
+                      View PDF
+                    </a>
+                    <Button
+                      onClick={handleDeletePDF}
+                      variant="soft"
+                      className="text-red-600 border-red-600 hover:bg-red-50 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-950"
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete PDF
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           ) : (
-            <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center">
-              <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h4 className="text-lg font-medium text-gray-900 mb-2">Upload PDF</h4>
-              <p className="text-gray-600 mb-4">Drag and drop your PDF file here, or click to browse</p>
-              
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".pdf"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-              
-              <Button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isUploading}
-                variant="solid"
-                className="!bg-accent hover:!bg-accent/90 !text-white"
-              >
-                <Upload className="w-4 h-4 mr-2" />
-                {isUploading ? 'Uploading...' : 'Choose PDF File'}
-              </Button>
-              
-              {uploadError && (
-                <div className="mt-4 p-3 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-md">
-                  <p className="text-red-600 dark:text-red-400 text-sm">{uploadError}</p>
-                </div>
+            <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+              isUploading 
+                ? 'border-blue-300 dark:border-blue-600 bg-blue-50 dark:bg-blue-950' 
+                : uploadError 
+                  ? 'border-red-300 dark:border-red-600 bg-red-50 dark:bg-red-950'
+                  : 'border-gray-300 dark:border-gray-600 hover:border-accent dark:hover:border-accent'
+            }`}>
+              {isUploading ? (
+                <>
+                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Upload className="w-6 h-6 text-blue-600 dark:text-blue-400 animate-pulse" />
+                  </div>
+                  <h4 className="text-lg font-medium text-blue-800 dark:text-blue-200 mb-2">Uploading PDF...</h4>
+                  <p className="text-blue-600 dark:text-blue-400 mb-4">Please wait while your file is being uploaded</p>
+                  <div className="w-full bg-blue-200 dark:bg-blue-800 rounded-full h-2 mb-4">
+                    <div className="bg-blue-600 dark:bg-blue-400 h-2 rounded-full animate-pulse" style={{ width: '60%' }}></div>
+                  </div>
+                </>
+              ) : uploadError ? (
+                <>
+                  <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
+                  <h4 className="text-lg font-medium text-red-800 dark:text-red-200 mb-2">Upload Failed</h4>
+                  <p className="text-red-600 dark:text-red-400 mb-4">{uploadError}</p>
+                  <Button
+                    onClick={() => {
+                      setUploadError(null)
+                      fileInputRef.current?.click()
+                    }}
+                    variant="solid"
+                    className="!bg-accent hover:!bg-accent/90 !text-white"
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    Try Again
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <h4 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Upload PDF</h4>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">Drag and drop your PDF file here, or click to browse</p>
+                  
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".pdf"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                  
+                  <Button
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploading}
+                    variant="solid"
+                    className="!bg-accent hover:!bg-accent/90 !text-white"
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    Choose PDF File
+                  </Button>
+                  
+                  <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                    <p>Maximum file size: 10MB</p>
+                    <p>Supported format: PDF only</p>
+                  </div>
+                </>
               )}
-              
-              <div className="mt-4 text-sm text-gray-500">
-                <p>Maximum file size: 10MB</p>
-                <p>Supported format: PDF only</p>
-              </div>
             </div>
           )}
         </div>

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyUserToken } from '@whop/api'
 import { db } from '~/db'
-import { nutritionPlans, nutritionAssignments } from '~/db/schema'
+import { nutritionPlans, nutritionAssignments, nutritionPlanContent } from '~/db/schema'
 import { eq } from 'drizzle-orm'
 
 export async function GET(
@@ -15,13 +15,19 @@ export async function GET(
   
   const plans = await db.select().from(nutritionPlans).where(eq(nutritionPlans.experienceId, experienceId))
   const assignments = await db.select().from(nutritionAssignments)
+  const contentData = await db.select().from(nutritionPlanContent)
   
-  // Similar to workouts - aggregate assignment data
-  const plansWithData = plans.map(plan => ({
-    ...plan,
-    assignedUsers: assignments.filter(a => a.planId === plan.id),
-    assignedCount: assignments.filter(a => a.planId === plan.id).length,
-  }))
+  // Similar to workouts - aggregate assignment data and PDF info
+  const plansWithData = plans.map(plan => {
+    const planContent = contentData.find(c => c.planId === plan.id)
+    return {
+      ...plan,
+      assignedUsers: assignments.filter(a => a.planId === plan.id),
+      assignedCount: assignments.filter(a => a.planId === plan.id).length,
+      hasPDF: planContent?.contentType === 'pdf' && !!planContent.pdfUrl,
+      pdfFilename: planContent?.pdfFilename,
+    }
+  })
   
   return NextResponse.json(plansWithData)
 }

@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Button, Card, TextField, Dialog } from "frosted-ui";
-import { Trash2 } from "lucide-react";
+import { Trash2, File, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { useWhop } from "~/components/whop-context";
 import { createNutritionPlanMutation, nutritionPlansQuery, updateNutritionPlanMutation, deleteNutritionPlanMutation } from "~/components/nutrition/queries";
@@ -110,14 +110,28 @@ export default function NutritionPlansPage() {
                   const href = `/experiences/${experience.id}/nutrition-plans/${String(p.id)}` as any
                   return (
                     <div key={p.id} className="flex items-center justify-between">
-                      <div>
-                        <Link href={href} className="font-medium hover:underline">
-                          {p.title}
-                        </Link>
-                      <div className="text-xs opacity-70">
-                        {p.daysCount || 0} days • {p.assignedCount} assigned
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Link href={href} className="font-medium hover:underline">
+                            {p.title}
+                          </Link>
+                          {p.hasPDF && (
+                            <div className="flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-xs">
+                              <CheckCircle className="w-3 h-3" />
+                              <File className="w-3 h-3" />
+                              PDF Ready
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-xs opacity-70">
+                          {p.daysCount || 0} days • {p.assignedCount} assigned
+                          {p.hasPDF && p.pdfFilename && (
+                            <span className="ml-2 text-green-600 dark:text-green-400">
+                              • {p.pdfFilename}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
                     <div className="flex gap-2">
                       <Button variant="solid" asChild className="!bg-accent hover:!bg-accent/90 !text-white">
                         <Link href={`/experiences/${experience.id}/nutrition-plans/${p.id}/builder` as any}>
