@@ -652,7 +652,7 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
       currentWeight,
       maxWeight,
       weightUnit,
-      restTime,
+      restTime: restTime || 60, // Default to 60 if empty
       notes,
       orderIndex: exercise?.orderIndex || 0
     })
@@ -754,8 +754,15 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
         <TextField.Input
           type="number"
           placeholder="Custom rest time (seconds)"
-          value={restTime}
-          onChange={(e: any) => setRestTime(parseInt(e.target.value) || 60)}
+          value={restTime === 0 ? '' : restTime}
+          onChange={(e: any) => {
+            const value = e.target.value
+            if (value === '' || value === '0') {
+              setRestTime(0)
+            } else {
+              setRestTime(parseInt(value) || 60)
+            }
+          }}
           className="w-full"
         />
         <p className="text-xs text-gray-500 mt-1">Rest time between sets in seconds</p>
