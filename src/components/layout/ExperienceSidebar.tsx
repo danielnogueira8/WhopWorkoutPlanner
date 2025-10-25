@@ -56,8 +56,12 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
   ] as const
   // Show appropriate items based on admin status
   const visible = items.filter((i) => {
-    if (isAdmin) return true // Admins see everything
-    return i.key === 'user-dashboard' || i.key === 'my-workouts' || i.key === 'inbox' || i.key === 'nutrition' // Users see Dashboard, My Workouts, Inbox, and Nutrition
+    if (isAdmin) {
+      // Admins see everything except the user dashboard
+      return i.key !== 'user-dashboard'
+    }
+    // Users see Dashboard, My Workouts, Inbox, and Nutrition
+    return i.key === 'user-dashboard' || i.key === 'my-workouts' || i.key === 'inbox' || i.key === 'nutrition'
   })
 
   const Nav = (
@@ -79,8 +83,8 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
             // User dashboard is only active on the exact main page
             active = pathname === `/experiences/${experienceId}`
           } else if (i.key === 'dashboard' && isAdmin) {
-            // Admin dashboard is active when on admin dashboard page
-            active = pathname === `/experiences/${experienceId}/dashboard`
+            // Admin dashboard is active when on admin dashboard page OR when on main page (for admins)
+            active = pathname === `/experiences/${experienceId}/dashboard` || pathname === `/experiences/${experienceId}`
           } else if (i.key === 'workouts' && isAdmin) {
             // Admin workout plans - active when on workout plans pages
             active = pathname?.startsWith(i.href)
@@ -161,8 +165,8 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
                   // User dashboard is only active on the exact main page
                   active = pathname === `/experiences/${experienceId}`
                 } else if (i.key === 'dashboard' && isAdmin) {
-                  // Admin dashboard is active when on admin dashboard page
-                  active = pathname === `/experiences/${experienceId}/dashboard`
+                  // Admin dashboard is active when on admin dashboard page OR when on main page (for admins)
+                  active = pathname === `/experiences/${experienceId}/dashboard` || pathname === `/experiences/${experienceId}`
                 } else if (i.key === 'workouts' && isAdmin) {
                   // Admin workout plans - active when on workout plans pages
                   active = pathname?.startsWith(i.href)
@@ -241,8 +245,8 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
                 // User dashboard is only active on the exact main page
                 active = pathname === `/experiences/${experienceId}`
               } else if (i.key === 'dashboard' && isAdmin) {
-                // Admin dashboard is active when on admin dashboard page
-                active = pathname === `/experiences/${experienceId}/dashboard`
+                // Admin dashboard is active when on admin dashboard page OR when on main page (for admins)
+                active = pathname === `/experiences/${experienceId}/dashboard` || pathname === `/experiences/${experienceId}`
               } else if (i.key === 'workouts' && isAdmin) {
                 // Admin workout plans - active when on workout plans pages
                 active = pathname?.startsWith(i.href)
