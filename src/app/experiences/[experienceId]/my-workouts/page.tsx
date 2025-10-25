@@ -77,12 +77,6 @@ export default function MyWorkoutsPage() {
           <p className="text-sm opacity-70 mb-6">
             You don't have any workout plans assigned yet. Contact your trainer to get started!
           </p>
-          <Link href={`/experiences/${experience.id}/inbox`}>
-            <Button variant="soft">
-              <Target className="w-4 h-4 mr-2" />
-              Contact Trainer
-            </Button>
-          </Link>
         </div>
       </div>
     )
@@ -232,12 +226,6 @@ export default function MyWorkoutsPage() {
           <div className="p-4 md:p-5">
             <h3 className="font-semibold mb-3">Quick Actions</h3>
             <div className="flex flex-col sm:flex-row gap-3">
-              <Link href={`/experiences/${experience.id}/inbox`}>
-                <Button variant="soft" className="w-full sm:w-auto">
-                  <Target className="w-4 h-4 mr-2 text-accent" />
-                  Contact Trainer
-                </Button>
-              </Link>
               {isAdmin && (
                 <Link href={`/experiences/${experience.id}/workouts`}>
                   <Button variant="soft" className="w-full sm:w-auto">

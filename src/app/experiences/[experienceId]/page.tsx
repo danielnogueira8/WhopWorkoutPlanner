@@ -126,7 +126,13 @@ export default function UserDashboardPage() {
               <div className="text-center py-8">
                 <Dumbbell className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No Workouts Yet</h3>
-                <p className="text-gray-600">Your trainer hasn't assigned any workout plans yet.</p>
+                <p className="text-gray-600 mb-8">Your trainer hasn't assigned any workout plans yet.</p>
+                <Link href={`/experiences/${experience.id}/inbox`} className="inline-block">
+                  <Button variant="soft" size="2">
+                    <MessageSquare className="w-4 h-4 mr-2" />
+                    Contact Trainer
+                  </Button>
+                </Link>
               </div>
             ) : (
               <div className="space-y-3">
@@ -181,7 +187,13 @@ export default function UserDashboardPage() {
               <div className="text-center py-8">
                 <Apple className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No Nutrition Plans Yet</h3>
-                <p className="text-gray-600">Your trainer hasn't assigned any nutrition plans yet.</p>
+                <p className="text-gray-600 mb-8">Your trainer hasn't assigned any nutrition plans yet.</p>
+                <Link href={`/experiences/${experience.id}/inbox`} className="inline-block">
+                  <Button variant="soft" size="2">
+                    <MessageSquare className="w-4 h-4 mr-2" />
+                    Contact Trainer
+                  </Button>
+                </Link>
               </div>
             ) : (
               <div className="space-y-3">
