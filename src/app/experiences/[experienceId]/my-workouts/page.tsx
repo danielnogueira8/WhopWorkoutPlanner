@@ -220,24 +220,6 @@ export default function MyWorkoutsPage() {
         </Card>
       </div>
 
-      {/* Quick Actions */}
-      <div className="mt-8">
-        <Card>
-          <div className="p-4 md:p-5">
-            <h3 className="font-semibold mb-3">Quick Actions</h3>
-            <div className="flex flex-col sm:flex-row gap-3">
-              {isAdmin && (
-                <Link href={`/experiences/${experience.id}/workouts`}>
-                  <Button variant="soft" className="w-full sm:w-auto">
-                    <BookOpen className="w-4 h-4 mr-2 text-accent" />
-                    View All Plans
-                  </Button>
-                </Link>
-              )}
-            </div>
-          </div>
-        </Card>
-      </div>
     </div>
   )
 }
