@@ -11,26 +11,19 @@ export async function POST(
 ) {
 	try {
 		const { experienceId, planId } = await params
-		console.log('=== BULK ASSIGN API CALLED ===')
-		console.log('Bulk assign request:', { experienceId, planId })
-		console.log('Request URL:', req.url)
-		console.log('Request method:', req.method)
 		
 		if (!experienceId || !planId)
 			return NextResponse.json({ error: 'Missing params' }, { status: 400 })
 
 		const { userId } = await verifyUserToken(req.headers)
-		console.log('User ID:', userId)
 		if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
 		const body = (await req.json().catch(() => null)) as { whopUserIds?: string[] } | null
-		console.log('Request body:', body)
 		
 		if (!body?.whopUserIds || !Array.isArray(body.whopUserIds) || body.whopUserIds.length === 0)
 			return NextResponse.json({ error: 'Missing whopUserIds array' }, { status: 400 })
 
 		const access = await whop.access.checkIfUserHasAccessToExperience({ experienceId, userId })
-		console.log('Access check result:', access)
 		
 		if (!access || (access as any).accessLevel !== 'admin')
 			return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
@@ -40,7 +33,6 @@ export async function POST(
 			.select({ id: workoutPlans.id })
 			.from(workoutPlans)
 			.where(and(eq(workoutPlans.id, planId), eq(workoutPlans.experienceId, experienceId)))
-		console.log('Plan found:', plan)
 		if (!plan) return NextResponse.json({ error: 'Plan not found' }, { status: 404 })
 
 		// Create assignments for all selected users
@@ -50,23 +42,36 @@ export async function POST(
 			assignedByWhopUserId: userId,
 		}))
 
-		console.log('Creating assignments:', assignments)
+		// Check for existing assignments to avoid duplicates
+		const existingAssignments = await db
+			.select()
+			.from(workoutAssignments)
+			.where(eq(workoutAssignments.planId, plan.id))
+
+		// Filter out users who already have this plan assigned
+		const existingUserIds = existingAssignments.map(a => a.whopUserId)
+		const newAssignments = assignments.filter(assignment => 
+			!existingUserIds.includes(assignment.whopUserId)
+		)
+
+		if (newAssignments.length === 0) {
+			return NextResponse.json({ 
+				message: 'All selected users already have this plan assigned',
+				assignments: [] 
+			}, { status: 200 })
+		}
 
 		const inserted = await db
 			.insert(workoutAssignments)
-			.values(assignments)
+			.values(newAssignments)
 			.returning()
-
-		console.log('Assignments created:', inserted)
 
 		return NextResponse.json({ 
 			message: `Successfully assigned plan to ${inserted.length} clients`,
 			assignments: inserted 
 		}, { status: 201 })
 	} catch (error) {
-		console.error('=== BULK ASSIGN ERROR ===')
-		console.error('Error details:', error)
-		console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
+		console.error('Failed to bulk assign workout plan:', error)
 		return NextResponse.json({ error: 'Failed to assign plan' }, { status: 500 })
 	}
 }

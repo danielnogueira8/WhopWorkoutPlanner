@@ -77,26 +77,24 @@ export default function WorkoutsPage() {
 
   const bulkAssignPlan = useMutation({
     mutationFn: async () => {
-      if (!assignPlanId) {
-        console.error('No plan ID selected for assignment')
-        return
-      }
-      if (!selectedClients || selectedClients.length === 0) {
-        console.error('No clients selected for assignment')
-        return
-      }
-      console.log('Attempting to assign plan:', assignPlanId, 'to clients:', selectedClients)
+      if (!assignPlanId) return
+      if (!selectedClients || selectedClients.length === 0) return
       return bulkAssignWorkoutMutation(experience.id, assignPlanId).mutationFn(selectedClients)
     },
     onSuccess: (data) => {
-      console.log('Assignment successful:', data)
       qc.invalidateQueries({ queryKey: ["workout-plans", experience.id] });
       setAssignPlanId(null);
       setAssignPlanTitle("");
       setSelectedClients([]);
+      
+      // Show success message
+      if (data?.message) {
+        alert(data.message) // You could replace this with a toast notification
+      }
     },
     onError: (error) => {
       console.error('Bulk assignment failed:', error)
+      alert('Failed to assign workout plan. Please try again.') // You could replace this with a toast notification
     },
   });
 
@@ -319,10 +317,7 @@ export default function WorkoutsPage() {
                 <Button 
                   variant="solid" 
                   disabled={selectedClients.length === 0 || bulkAssignPlan.isPending}
-                  onClick={() => {
-                    console.log('Button clicked, isPending:', bulkAssignPlan.isPending, 'selectedClients:', selectedClients.length)
-                    bulkAssignPlan.mutate()
-                  }}
+                  onClick={() => bulkAssignPlan.mutate()}
                   className="!bg-accent hover:!bg-accent/90 !text-white"
                 >
                   {bulkAssignPlan.isPending ? "Assigning..." : `Assign Plan (${selectedClients.length})`}
