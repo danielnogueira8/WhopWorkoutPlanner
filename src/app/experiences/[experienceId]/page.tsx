@@ -5,6 +5,7 @@ import { Card, Button } from 'frosted-ui'
 import { 
   Dumbbell, 
   Apple, 
+  CheckCircle,
   Clock, 
   Target,
   MessageSquare,
