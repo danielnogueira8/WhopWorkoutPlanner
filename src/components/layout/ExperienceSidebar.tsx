@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { Button, IconButton, Tooltip, Sheet } from 'frosted-ui'
+import { Button, IconButton, Tooltip } from 'frosted-ui'
 import { LayoutDashboard, MessageSquare, Users, BookOpen, Dumbbell, Apple, Utensils } from 'lucide-react'
 import { useWhop } from '~/components/whop-context'
 import { useQuery } from '@tanstack/react-query'
@@ -18,7 +18,6 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
   const isAdmin = (access as any).accessLevel === 'admin'
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
 
   // Fetch conversations to get unread counts
@@ -236,13 +235,68 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
       <div className="hidden md:block border-r" style={{ width: collapsed ? 72 : 240 }}>
         {Nav}
       </div>
-      <div className="md:hidden p-2">
-        <Button variant="soft" onClick={() => setMobileOpen(true)}>Menu</Button>
-        <Sheet.Root open={mobileOpen} onOpenChange={setMobileOpen}>
-          <Sheet.Content className="bg-accent-light dark:bg-black">
-            {Nav}
-          </Sheet.Content>
-        </Sheet.Root>
+      {/* Mobile Bottom Navigation */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-accent-light dark:bg-black border-t border-gray-200 dark:border-gray-700 z-50">
+        <div className="overflow-x-auto scrollbar-hide">
+          <div className="flex space-x-1 px-2 py-2">
+            {visible.map((i) => {
+              // Same active logic as desktop
+              let active = pathname?.startsWith(i.href)
+              if (i.key === 'workouts' && !isAdmin && (pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/'))) {
+                active = false // Don't highlight "Workout Plans" for non-admin users viewing plans
+              }
+              if (i.key === 'my-workouts' && !isAdmin && (pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/'))) {
+                active = true // Highlight "My Workouts" for non-admin users viewing plans
+              }
+              
+              // Special logic for user dashboard: when on the main experience page (user dashboard),
+              // it should be considered as "Dashboard" active for non-admin users
+              if (i.key === 'user-dashboard' && !isAdmin) {
+                active = pathname === `/experiences/${experienceId}` // Only active on exact main page
+              }
+              if (i.key === 'dashboard' && !isAdmin) {
+                active = false // Don't highlight admin dashboard for non-admin users
+              }
+              
+              // Special logic for nutrition plans: when viewing a nutrition plan, 
+              // it should be considered as "Nutrition" active, not "Nutrition Plans"
+              // But when building a nutrition plan, it should be "Nutrition Plans" active
+              if (i.key === 'nutrition-plans' && pathname?.includes('/nutrition-plans/')) {
+                if (pathname?.includes('/builder')) {
+                  active = true // Highlight "Nutrition Plans" when building a plan
+                } else {
+                  active = false // Don't highlight "Nutrition Plans" when viewing a specific plan
+                }
+              }
+              if (i.key === 'nutrition' && pathname?.includes('/nutrition-plans/')) {
+                if (pathname?.includes('/builder')) {
+                  active = false // Don't highlight "Nutrition" when building a plan
+                } else {
+                  active = true // Highlight "Nutrition" when viewing a specific plan
+                }
+              }
+              
+              const Icon = i.icon as any
+              return (
+                <Link key={i.key} href={i.href} className="flex-shrink-0">
+                  <div className={`flex flex-col items-center px-3 py-2 rounded-md min-w-[60px] relative ${active ? 'bg-black/5 dark:bg-white/10' : 'hover:bg-black/5 dark:hover:bg-white/10'}`}>
+                    <div className="relative">
+                      <Icon size={20} strokeWidth={1.75} className="text-accent mb-1" />
+                      {/* Unread badge for inbox */}
+                      {i.key === 'inbox' && totalUnreadCount > 0 && (
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                          {totalUnreadCount}
+                        </div>
+                      )}
+                    </div>
+                    <span className="text-xs text-gray-900 dark:text-white text-center leading-tight">{i.label}</span>
+                    {i.admin && <span className="text-xs opacity-60 text-center">(admin)</span>}
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
       </div>
     </>
   )

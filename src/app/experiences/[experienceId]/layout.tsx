@@ -27,7 +27,7 @@ export default async function ExperienceLayout({
       >
         <div className="min-h-screen w-full flex">
           <ExperienceSidebar experienceId={experienceId} />
-          <div className="flex-1">
+          <div className="flex-1 pb-16 md:pb-0">
             {children}
           </div>
         </div>
