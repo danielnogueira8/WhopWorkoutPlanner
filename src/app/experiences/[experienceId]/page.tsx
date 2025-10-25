@@ -296,7 +296,7 @@ export default function UserDashboardPage() {
               </div>
             ) : (workoutHistory && workoutHistory.length > 0) || (activityData?.activities && activityData.activities.length > 0) ? (
               <div className="space-y-3 max-h-64 overflow-y-auto">
-                {workoutHistory.slice(0, 5).map((session) => (
+                {workoutHistory?.slice(0, 5).map((session) => (
                   <div key={session.id} className="flex items-start space-x-3">
                     <CheckCircle className="w-4 h-4 mt-0.5 text-green-600" />
                     <div className="flex-1 min-w-0">
@@ -332,7 +332,7 @@ export default function UserDashboardPage() {
                   )
                 })}
                 
-                {workoutHistory.length > 5 && (
+                {workoutHistory && workoutHistory.length > 5 && (
                   <Link href={`/experiences/${experience.id}/my-workouts`}>
                     <Button variant="ghost" className="w-full">
                       View All Workout History
