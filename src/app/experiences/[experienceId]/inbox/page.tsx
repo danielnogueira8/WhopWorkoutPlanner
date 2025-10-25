@@ -302,7 +302,7 @@ export default function InboxPage() {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto space-y-3 p-2 min-h-0">
+            <div className="flex-1 overflow-y-auto space-y-3 p-2 max-h-[calc(100vh-280px)] min-h-0">
               {isLoadingMessages ? (
                 <div className="flex items-center justify-center h-full">
                   <div className="text-sm opacity-70">Loading messages...</div>
