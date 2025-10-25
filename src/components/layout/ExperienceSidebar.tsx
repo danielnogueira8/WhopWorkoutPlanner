@@ -129,7 +129,7 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
             </div>
           )
           return (
-            <Link key={i.key} href={i.href} onClick={() => setMobileOpen(false)}>
+            <Link key={i.key} href={i.href}>
               {collapsed ? <Tooltip content={`${i.label}${i.admin ? ' (admin)' : ''}`}>{content}</Tooltip> : content}
             </Link>
           )
