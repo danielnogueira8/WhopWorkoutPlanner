@@ -26,6 +26,14 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
   
   // Calculate total unread count
   const totalUnreadCount = conversations?.reduce((total, conv) => total + conv.unreadCount, 0) || 0
+  
+  // Debug logging
+  console.log('🔔 Sidebar Debug:', {
+    conversations: conversations?.length || 0,
+    conversationsData: conversations,
+    totalUnreadCount,
+    experienceId
+  })
 
   useEffect(() => {
     setMounted(true)
@@ -79,11 +87,11 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
           
           // Special logic for user dashboard: when on the main experience page (user dashboard),
           // it should be considered as "Dashboard" active for non-admin users
-          if (i.key === 'user-dashboard' && !isAdmin && pathname === `/experiences/${experienceId}`) {
-            active = true // Highlight "Dashboard" for non-admin users on main page
+          if (i.key === 'user-dashboard' && !isAdmin) {
+            active = pathname === `/experiences/${experienceId}` // Only active on exact main page
           }
-          if (i.key === 'dashboard' && !isAdmin && pathname === `/experiences/${experienceId}`) {
-            active = false // Don't highlight admin dashboard for non-admin users on main page
+          if (i.key === 'dashboard' && !isAdmin) {
+            active = false // Don't highlight admin dashboard for non-admin users
           }
           
           // Special logic for nutrition plans: when viewing a nutrition plan, 
@@ -112,6 +120,12 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
                 {i.key === 'inbox' && totalUnreadCount > 0 && (
                   <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
                     {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
+                  </div>
+                )}
+                {/* Debug: Always show badge for testing */}
+                {i.key === 'inbox' && (
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                    {totalUnreadCount}
                   </div>
                 )}
               </div>
@@ -164,11 +178,11 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
                 
                 // Special logic for user dashboard: when on the main experience page (user dashboard),
                 // it should be considered as "Dashboard" active for non-admin users
-                if (i.key === 'user-dashboard' && !isAdmin && pathname === `/experiences/${experienceId}`) {
-                  active = true // Highlight "Dashboard" for non-admin users on main page
+                if (i.key === 'user-dashboard' && !isAdmin) {
+                  active = pathname === `/experiences/${experienceId}` // Only active on exact main page
                 }
-                if (i.key === 'dashboard' && !isAdmin && pathname === `/experiences/${experienceId}`) {
-                  active = false // Don't highlight admin dashboard for non-admin users on main page
+                if (i.key === 'dashboard' && !isAdmin) {
+                  active = false // Don't highlight admin dashboard for non-admin users
                 }
                 
                 // Special logic for nutrition plans: when viewing a nutrition plan, 
@@ -197,6 +211,12 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
                       {i.key === 'inbox' && totalUnreadCount > 0 && (
                         <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
                           {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
+                        </div>
+                      )}
+                      {/* Debug: Always show badge for testing */}
+                      {i.key === 'inbox' && (
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                          {totalUnreadCount}
                         </div>
                       )}
                     </div>
