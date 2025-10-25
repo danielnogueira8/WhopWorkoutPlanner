@@ -5,8 +5,6 @@ import { Card, Button } from 'frosted-ui'
 import { 
   Dumbbell, 
   Apple, 
-  CheckCircle, 
-  Calendar,
   Clock, 
   Target,
   MessageSquare,
@@ -56,8 +54,6 @@ export default function UserDashboardPage() {
   // Calculate stats
   const totalWorkoutPlans = userWorkoutPlans.length
   const totalNutritionPlans = userNutritionPlans.length
-  const completedWorkouts = workoutHistory?.length || 0
-  const upcomingWorkouts = 0 // TODO: Add upcoming workout tracking
 
   const stats = [
     {
@@ -75,20 +71,6 @@ export default function UserDashboardPage() {
       color: 'text-green-600',
       bgColor: 'bg-green-50 dark:bg-green-950',
       href: `/experiences/${experience.id}/nutrition`
-    },
-    {
-      icon: CheckCircle,
-      label: 'Completed',
-      value: completedWorkouts,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50 dark:bg-purple-950'
-    },
-    {
-      icon: Calendar,
-      label: 'This Week',
-      value: upcomingWorkouts,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50 dark:bg-orange-950'
     }
   ]
 
