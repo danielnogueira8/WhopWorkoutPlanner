@@ -310,48 +310,54 @@ export default function InboxPage() {
                   const isOwnMessage = m.senderUserId === user.id
                   const status = getMessageStatus(m)
                   
-                  return (
-                    <div key={m.id} className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} mb-3`}>
-                      <div className={`flex items-end gap-2 max-w-[75%] ${isOwnMessage ? 'flex-row-reverse' : 'flex-row'}`}>
-                        {/* Avatar for received messages */}
-                        {!isOwnMessage && (
-                          <div className="w-6 h-6 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0">
-                            <User className="w-3 h-3 text-gray-600 dark:text-gray-400" />
+                  if (isOwnMessage) {
+                    // YOUR MESSAGE - RIGHT SIDE
+                    return (
+                      <div key={m.id} className="flex flex-col items-end mb-3">
+                        <div className="flex items-end gap-2 max-w-[75%]">
+                          {/* Message bubble */}
+                          <div className="px-4 py-2 bg-blue-500 text-white rounded-2xl rounded-br-md shadow-sm">
+                            <div className="text-sm leading-relaxed">{m.content}</div>
                           </div>
-                        )}
-                        
-                        {/* Message bubble */}
-                        <div className={`px-4 py-2 rounded-2xl shadow-sm ${
-                          isOwnMessage 
-                            ? 'bg-blue-500 text-white rounded-br-md' 
-                            : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-bl-md'
-                        }`}>
-                          <div className="text-sm leading-relaxed">{m.content}</div>
-                        </div>
-                        
-                        {/* Avatar for sent messages */}
-                        {isOwnMessage && (
+                          {/* Avatar */}
                           <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
                             <User className="w-3 h-3 text-white" />
                           </div>
-                        )}
+                        </div>
+                        {/* Time and status */}
+                        <div className="flex items-center gap-1 mt-1 text-xs opacity-70">
+                          <span>{formatTime(m.createdAt)}</span>
+                          {status && (
+                            <div className="ml-1">
+                              {status === 'sending' && <Clock className="w-3 h-3 text-accent" />}
+                              {status === 'sent' && <Check className="w-3 h-3 text-accent" />}
+                              {status === 'delivered' && <CheckCheck className="w-3 h-3 text-accent" />}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      
-                      {/* Time and status */}
-                      <div className={`w-full flex items-center gap-1 mt-1 text-xs opacity-70 ${
-                        isOwnMessage ? 'justify-end' : 'justify-start'
-                      }`}>
-                        <span className={isOwnMessage ? 'mr-12' : 'ml-8'}>{formatTime(m.createdAt)}</span>
-                        {isOwnMessage && status && (
-                          <div className="ml-1">
-                            {status === 'sending' && <Clock className="w-3 h-3 text-accent" />}
-                            {status === 'sent' && <Check className="w-3 h-3 text-accent" />}
-                            {status === 'delivered' && <CheckCheck className="w-3 h-3 text-accent" />}
+                    )
+                  } else {
+                    // THEIR MESSAGE - LEFT SIDE
+                    return (
+                      <div key={m.id} className="flex flex-col items-start mb-3">
+                        <div className="flex items-end gap-2 max-w-[75%]">
+                          {/* Avatar */}
+                          <div className="w-6 h-6 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0">
+                            <User className="w-3 h-3 text-gray-600 dark:text-gray-400" />
                           </div>
-                        )}
+                          {/* Message bubble */}
+                          <div className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-2xl rounded-bl-md shadow-sm">
+                            <div className="text-sm leading-relaxed">{m.content}</div>
+                          </div>
+                        </div>
+                        {/* Time */}
+                        <div className="flex items-center gap-1 mt-1 text-xs opacity-70">
+                          <span>{formatTime(m.createdAt)}</span>
+                        </div>
                       </div>
-                    </div>
-                  )
+                    )
+                  }
                 })
               )}
               <div ref={messagesEndRef} />
