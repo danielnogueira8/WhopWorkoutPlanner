@@ -43,12 +43,18 @@ export default function InboxPage() {
     },
   })
 
-  // Auto-mark messages as read when conversation is opened
+  // Auto-mark messages as read when viewing inbox
   useEffect(() => {
-    if (selectedUserId && !isLoadingMessages) {
+    if (isLoadingMessages) return
+    
+    if (isAdmin && selectedUserId) {
+      // Admin: mark messages as read for selected user
       markMessagesRead.mutate(selectedUserId)
+    } else if (!isAdmin && messages && messages.length > 0) {
+      // Regular user: mark messages as read for their conversation
+      markMessagesRead.mutate(user.id)
     }
-  }, [selectedUserId, isLoadingMessages])
+  }, [isAdmin, selectedUserId, isLoadingMessages, messages?.length])
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -65,7 +71,15 @@ export default function InboxPage() {
     onSuccess: () => {
       setMessage('')
       qc.invalidateQueries({ queryKey: ['inbox', experience.id] })
+      qc.invalidateQueries({ queryKey: ['conversations', experience.id] })
       setIsTyping(false)
+      
+      // Mark messages as read when user sends a message (they're clearly engaged)
+      if (isAdmin && selectedUserId) {
+        markMessagesRead.mutate(selectedUserId)
+      } else if (!isAdmin) {
+        markMessagesRead.mutate(user.id)
+      }
     },
   })
 
