@@ -456,3 +456,31 @@ export type WorkoutSessionDetail = {
 	}[]
 }
 
+// Client types and queries
+export type Client = {
+	id: string
+	username: string
+	name: string
+}
+
+export const clientsQuery = (experienceId: string) => ({
+	queryKey: ['clients', experienceId],
+	queryFn: async () => {
+		const res = await fetch(getApiUrl(`/api/experience/${experienceId}/users`))
+		if (!res.ok) throw new Error('Failed to fetch clients')
+		return res.json() as Promise<Client[]>
+	},
+})
+
+export const bulkAssignWorkoutMutation = (experienceId: string, planId: string) => ({
+	mutationFn: async (whopUserIds: string[]) => {
+		const res = await fetch(getApiUrl(`/api/experience/${experienceId}/workouts/${planId}/bulk-assign`), {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ whopUserIds }),
+		})
+		if (!res.ok) throw new Error('Failed to assign workout plan')
+		return res.json()
+	},
+})
+

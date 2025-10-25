@@ -3,10 +3,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Button, Card, TextField, Dialog } from "frosted-ui";
-import { Trash2, Download } from "lucide-react";
+import { Trash2, Download, Users } from "lucide-react";
 import Link from "next/link";
 import { useWhop } from "~/components/whop-context";
-import { createPlanMutation, plansQuery, updatePlanMutation, deletePlanMutation } from "~/components/workouts/queries";
+import { createPlanMutation, plansQuery, updatePlanMutation, deletePlanMutation, clientsQuery, bulkAssignWorkoutMutation, type Client } from "~/components/workouts/queries";
 import { generateWorkoutPlanPDF } from "~/lib/pdf-generator";
 
 export default function WorkoutsPage() {
@@ -18,6 +18,9 @@ export default function WorkoutsPage() {
   const [editPlanTitle, setEditPlanTitle] = useState("");
   const [deletePlanId, setDeletePlanId] = useState<string | null>(null);
   const [deletePlanTitle, setDeletePlanTitle] = useState("");
+  const [assignPlanId, setAssignPlanId] = useState<string | null>(null);
+  const [assignPlanTitle, setAssignPlanTitle] = useState("");
+  const [selectedClients, setSelectedClients] = useState<string[]>([]);
   const qc = useQueryClient();
 
   const handleDownloadPDF = async (planId: string, planTitle: string) => {
@@ -36,6 +39,7 @@ export default function WorkoutsPage() {
   }
 
   const { data: plans, isLoading: isLoadingPlans } = useQuery(plansQuery(experience.id));
+  const { data: clients, isLoading: isLoadingClients } = useQuery(clientsQuery(experience.id));
 
   const createPlan = useMutation({
     mutationFn: createPlanMutation(experience.id).mutationFn,
@@ -68,6 +72,19 @@ export default function WorkoutsPage() {
       qc.invalidateQueries({ queryKey: ["workout-plans", experience.id] });
       setDeletePlanId(null);
       setDeletePlanTitle("");
+    },
+  });
+
+  const bulkAssignPlan = useMutation({
+    mutationFn: async () => {
+      if (!assignPlanId) return
+      return bulkAssignWorkoutMutation(experience.id, assignPlanId).mutationFn(selectedClients)
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["workout-plans", experience.id] });
+      setAssignPlanId(null);
+      setAssignPlanTitle("");
+      setSelectedClients([]);
     },
   });
 
@@ -133,6 +150,10 @@ export default function WorkoutsPage() {
                           <Link href={`/experiences/${experience.id}/workouts/${p.id}/builder` as any}>
                             Build
                           </Link>
+                        </Button>
+                        <Button variant="solid" onClick={() => { setAssignPlanId(p.id); setAssignPlanTitle(p.title); }} className="!bg-accent hover:!bg-accent/90 !text-white">
+                          <Users className="w-4 h-4 mr-1" />
+                          Assign
                         </Button>
                         <Button variant="solid" onClick={() => { setEditPlanId(p.id); setEditPlanTitle(p.title); }} className="!bg-accent hover:!bg-accent/90 !text-white">
                           Rename
@@ -200,6 +221,92 @@ export default function WorkoutsPage() {
                   className="bg-red-600 text-white hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700"
                 >
                   {deletePlan.isPending ? "Deleting..." : "Delete"}
+                </Button>
+              </div>
+            </Dialog.Content>
+          </Dialog.Root>
+
+          <Dialog.Root open={!!assignPlanId} onOpenChange={(open) => { 
+            if (!open) { 
+              setAssignPlanId(null); 
+              setAssignPlanTitle(""); 
+              setSelectedClients([]); 
+            } 
+          }}>
+            <Dialog.Content className="max-w-md">
+              <Dialog.Title>Assign Workout Plan: "{assignPlanTitle}"</Dialog.Title>
+              <div className="mt-4">
+                {isLoadingClients ? (
+                  <div className="text-sm opacity-70">Loading clients...</div>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium">Select Clients</span>
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="soft" 
+                          size="1"
+                          onClick={() => setSelectedClients(clients?.map(c => c.id) || [])}
+                        >
+                          Select All
+                        </Button>
+                        <Button 
+                          variant="soft" 
+                          size="1"
+                          onClick={() => setSelectedClients([])}
+                        >
+                          Deselect All
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <div className="max-h-60 overflow-y-auto space-y-2">
+                      {clients?.map((client) => (
+                        <label key={client.id} className="flex items-center space-x-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={selectedClients.includes(client.id)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedClients([...selectedClients, client.id]);
+                              } else {
+                                setSelectedClients(selectedClients.filter(id => id !== client.id));
+                              }
+                            }}
+                            className="rounded border-gray-300 text-accent focus:ring-accent"
+                          />
+                          <div className="flex-1">
+                            <div className="text-sm font-medium">{client.name}</div>
+                            <div className="text-xs opacity-70">@{client.username}</div>
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                    
+                    <div className="text-sm opacity-70">
+                      Selected: {selectedClients.length} client{selectedClients.length !== 1 ? 's' : ''}
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="mt-6 flex justify-end gap-2">
+                <Button 
+                  variant="soft" 
+                  onClick={() => { 
+                    setAssignPlanId(null); 
+                    setAssignPlanTitle(""); 
+                    setSelectedClients([]); 
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  variant="solid" 
+                  disabled={selectedClients.length === 0 || bulkAssignPlan.isPending}
+                  onClick={() => bulkAssignPlan.mutate()}
+                  className="!bg-accent hover:!bg-accent/90 !text-white"
+                >
+                  {bulkAssignPlan.isPending ? "Assigning..." : `Assign Plan (${selectedClients.length})`}
                 </Button>
               </div>
             </Dialog.Content>
