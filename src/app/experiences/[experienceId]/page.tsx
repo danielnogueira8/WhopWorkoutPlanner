@@ -321,7 +321,7 @@ export default function UserDashboardPage() {
                 {activityData?.activities
                   ?.filter((activity) => {
                     // Filter out user's own messages from recent activity
-                    if (activity.type === 'message' && activity.senderUserId === user.id) {
+                    if (activity.type === 'message' && activity.whopUserId === user.id) {
                       return false
                     }
                     return true
