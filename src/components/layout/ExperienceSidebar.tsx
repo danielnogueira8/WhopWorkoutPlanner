@@ -32,7 +32,7 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
   }
 
   const items = [
-    { key: 'dashboard', label: 'Admin Dashboard', href: `/experiences/${experienceId}/dashboard`, admin: true, icon: LayoutDashboard },
+    { key: 'dashboard', label: 'Dashboard', href: `/experiences/${experienceId}/dashboard`, admin: true, icon: LayoutDashboard },
     { key: 'user-dashboard', label: 'Dashboard', href: `/experiences/${experienceId}`, admin: false, icon: LayoutDashboard },
     { key: 'inbox', label: 'Inbox', href: `/experiences/${experienceId}/inbox`, admin: false, icon: MessageSquare },
     { key: 'clients', label: 'Clients', href: `/experiences/${experienceId}/clients`, admin: true, icon: Users },

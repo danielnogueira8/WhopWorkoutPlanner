@@ -6,8 +6,6 @@ import {
   Dumbbell, 
   Apple, 
   CheckCircle, 
-  Calendar, 
-  TrendingUp, 
   Clock, 
   Target,
   MessageSquare,
@@ -130,12 +128,12 @@ export default function UserDashboardPage() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 mt-8">
         
         {/* My Workouts */}
         <Card>
           <div className="p-6">
-            <div className="flex justify-between items-start mb-4">
+            <div className="flex justify-between items-start mb-6">
               <h2 className="text-lg font-semibold text-gray-900">My Workouts</h2>
               <Dumbbell className="w-5 h-5 text-accent" />
             </div>
@@ -196,7 +194,7 @@ export default function UserDashboardPage() {
         {/* My Nutrition Plans */}
         <Card>
           <div className="p-6">
-            <div className="flex justify-between items-start mb-4">
+            <div className="flex justify-between items-start mb-6">
               <h2 className="text-lg font-semibold text-gray-900">My Nutrition Plans</h2>
               <Apple className="w-5 h-5 text-accent" />
             </div>
@@ -251,41 +249,6 @@ export default function UserDashboardPage() {
                 )}
               </div>
             )}
-          </div>
-        </Card>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="mt-6">
-        <Card>
-          <div className="p-6">
-            <div className="flex justify-between items-start mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Quick Actions</h2>
-              <Target className="w-5 h-5 text-accent" />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Link href={`/experiences/${experience.id}/my-workouts`}>
-                <Button variant="soft" className="w-full h-auto p-4 flex flex-col items-center gap-2">
-                  <Dumbbell className="w-6 h-6 text-accent" />
-                  <span className="font-medium">My Workouts</span>
-                  <span className="text-xs opacity-70">View assigned workouts</span>
-                </Button>
-              </Link>
-              <Link href={`/experiences/${experience.id}/nutrition`}>
-                <Button variant="soft" className="w-full h-auto p-4 flex flex-col items-center gap-2">
-                  <Apple className="w-6 h-6 text-accent" />
-                  <span className="font-medium">Nutrition Plans</span>
-                  <span className="text-xs opacity-70">View nutrition guides</span>
-                </Button>
-              </Link>
-              <Link href={`/experiences/${experience.id}/inbox`}>
-                <Button variant="soft" className="w-full h-auto p-4 flex flex-col items-center gap-2">
-                  <MessageSquare className="w-6 h-6 text-accent" />
-                  <span className="font-medium">Contact Trainer</span>
-                  <span className="text-xs opacity-70">Send a message</span>
-                </Button>
-              </Link>
-            </div>
           </div>
         </Card>
       </div>
