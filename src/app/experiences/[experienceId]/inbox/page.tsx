@@ -115,6 +115,11 @@ export default function InboxPage() {
 
   const selectedUser = users?.find(u => u.id === selectedUserId)
   
+  // For regular users, they're always chatting with the admin
+  // For admins, they need to select a user to chat with
+  const chatPartner = isAdmin ? selectedUser : (users?.find(u => (access as any).accessLevel !== 'admin') || null)
+  const isChatActive = isAdmin ? !!selectedUserId : true
+  
   // Filter messages based on search
   const filteredMessages = messages?.filter(m => 
     !messageSearch || m.content.toLowerCase().includes(messageSearch.toLowerCase())
@@ -250,14 +255,14 @@ export default function InboxPage() {
             {/* Chat Header */}
             <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center gap-3">
-                {selectedUser ? (
+                {chatPartner ? (
                   <>
                     <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
                       <User className="w-4 h-4 text-accent" />
                     </div>
                     <div>
-                      <div className="font-medium">{selectedUser.name || selectedUser.username}</div>
-                      <div className="text-xs opacity-70">@{selectedUser.username}</div>
+                      <div className="font-medium">{chatPartner.name || chatPartner.username}</div>
+                      <div className="text-xs opacity-70">@{chatPartner.username}</div>
                     </div>
                   </>
                 ) : (
@@ -268,7 +273,7 @@ export default function InboxPage() {
               </div>
               
               {/* Message Search */}
-              {selectedUser && (
+              {isChatActive && (
                 <div className="relative">
                   <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-accent" />
                   <TextField.Input 
@@ -306,27 +311,44 @@ export default function InboxPage() {
                   const status = getMessageStatus(m)
                   
                   return (
-                    <div key={m.id} className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-[70%] ${isOwnMessage ? 'order-2' : 'order-1'}`}>
-                        <div className={`px-4 py-2 rounded-2xl ${
+                    <div key={m.id} className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'} mb-3`}>
+                      <div className={`flex items-end gap-2 max-w-[75%] ${isOwnMessage ? 'flex-row-reverse' : 'flex-row'}`}>
+                        {/* Avatar for received messages */}
+                        {!isOwnMessage && (
+                          <div className="w-6 h-6 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center flex-shrink-0">
+                            <User className="w-3 h-3 text-gray-600 dark:text-gray-400" />
+                          </div>
+                        )}
+                        
+                        {/* Message bubble */}
+                        <div className={`px-4 py-2 rounded-2xl shadow-sm ${
                           isOwnMessage 
                             ? 'bg-blue-500 text-white rounded-br-md' 
                             : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-bl-md'
                         }`}>
-                          <div className="text-sm">{m.content}</div>
+                          <div className="text-sm leading-relaxed">{m.content}</div>
                         </div>
-                        <div className={`flex items-center gap-1 mt-1 text-xs opacity-70 ${
-                          isOwnMessage ? 'justify-end' : 'justify-start'
-                        }`}>
-                          <span>{formatTime(m.createdAt)}</span>
-                          {isOwnMessage && status && (
-                            <div className="ml-1">
-                              {status === 'sending' && <Clock className="w-3 h-3 text-accent" />}
-                              {status === 'sent' && <Check className="w-3 h-3 text-accent" />}
-                              {status === 'delivered' && <CheckCheck className="w-3 h-3 text-accent" />}
-                            </div>
-                          )}
-                        </div>
+                        
+                        {/* Avatar for sent messages */}
+                        {isOwnMessage && (
+                          <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <User className="w-3 h-3 text-white" />
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Time and status */}
+                      <div className={`w-full flex items-center gap-1 mt-1 text-xs opacity-70 ${
+                        isOwnMessage ? 'justify-end' : 'justify-start'
+                      }`}>
+                        <span className={isOwnMessage ? 'mr-12' : 'ml-8'}>{formatTime(m.createdAt)}</span>
+                        {isOwnMessage && status && (
+                          <div className="ml-1">
+                            {status === 'sending' && <Clock className="w-3 h-3 text-accent" />}
+                            {status === 'sent' && <Check className="w-3 h-3 text-accent" />}
+                            {status === 'delivered' && <CheckCheck className="w-3 h-3 text-accent" />}
+                          </div>
+                        )}
                       </div>
                     </div>
                   )
@@ -339,15 +361,15 @@ export default function InboxPage() {
             <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
               <div className="flex gap-2">
                 <TextField.Input 
-                  placeholder={isAdmin && !selectedUserId ? "Select a client to message..." : "Type a message..."}
+                  placeholder={isAdmin && !isChatActive ? "Select a client to message..." : "Type a message..."}
                   value={message} 
                   onChange={(e: any) => setMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  disabled={isAdmin && !selectedUserId}
+                  disabled={isAdmin && !isChatActive}
                   className="flex-1"
                 />
                 <Button 
-                  disabled={!message.trim() || (isAdmin && !selectedUserId) || sendMessage.isPending} 
+                  disabled={!message.trim() || (isAdmin && !isChatActive) || sendMessage.isPending} 
                   onClick={() => sendMessage.mutate()}
                   variant="soft"
                   className="rounded-lg px-4 h-10 transition-all duration-200 hover:bg-blue-100 dark:hover:bg-blue-900 disabled:opacity-50 disabled:cursor-not-allowed"
