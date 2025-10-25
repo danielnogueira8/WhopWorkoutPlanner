@@ -122,7 +122,7 @@ export default function UserDashboardPage() {
           )
 
           return stat.href ? (
-            <Link key={index} href={stat.href}>
+            <Link key={index} href={stat.href as any}>
               {content}
             </Link>
           ) : content
