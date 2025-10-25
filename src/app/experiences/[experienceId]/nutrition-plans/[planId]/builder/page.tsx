@@ -47,6 +47,16 @@ export default function NutritionBuilderPage({ params }: NutritionBuilderProps) 
   const { data: plan, isLoading: planLoading } = useQuery(nutritionPlanDetailQuery(experienceId, planId))
   const { data: content, isLoading: contentLoading } = useQuery(nutritionContentQuery(experienceId, planId))
   
+  // Debug logging
+  console.log('🔍 Nutrition Builder Debug:', {
+    experienceId,
+    planId,
+    plan,
+    content,
+    contentLoading,
+    planLoading
+  })
+  
   // State
   const [isUploading, setIsUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
