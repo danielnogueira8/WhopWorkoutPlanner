@@ -21,11 +21,19 @@ export default function InboxPage() {
   const qc = useQueryClient()
 
   const { data: users } = useQuery({ ...usersQuery(experience.id, isAdmin ? search : undefined), enabled: isAdmin })
-  const { data: conversations } = useQuery({ ...conversationsQuery(experience.id) })
-  const { data: messages, isLoading: isLoadingMessages } = useQuery({
+  const { data: conversations, error: conversationsError } = useQuery({ ...conversationsQuery(experience.id) })
+  const { data: messages, isLoading: isLoadingMessages, error: messagesError } = useQuery({
     ...inboxQuery(experience.id, isAdmin ? (selectedUserId || undefined) : undefined),
     refetchInterval: 5000, // Poll every 5 seconds for real-time updates
   })
+
+  // Log errors for debugging
+  if (conversationsError) {
+    console.error('💬 Conversations query error:', conversationsError)
+  }
+  if (messagesError) {
+    console.error('📨 Messages query error:', messagesError)
+  }
 
   const markMessagesRead = useMutation({
     ...markMessagesReadMutation(experience.id),
@@ -138,6 +146,15 @@ export default function InboxPage() {
   }).sort((a, b) => b.unreadCount - a.unreadCount) || []
   
   const visibleUsers = usersWithUnread.slice(0, visibleCount)
+
+  // Debug logging
+  console.log('🔍 Inbox Debug Info:')
+  console.log('  - users:', users?.length || 0)
+  console.log('  - conversations:', conversations?.length || 0)
+  console.log('  - conversations data:', conversations)
+  console.log('  - messages:', messages?.length || 0)
+  console.log('  - selectedUserId:', selectedUserId)
+  console.log('  - usersWithUnread:', usersWithUnread.map(u => ({ id: u.id, name: u.name, unreadCount: u.unreadCount })))
 
   return (
     <div className="p-4 md:p-6">
