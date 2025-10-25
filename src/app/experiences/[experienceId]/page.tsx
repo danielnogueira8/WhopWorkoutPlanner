@@ -15,7 +15,7 @@ import {
 import Link from 'next/link'
 import { useWhop } from '~/components/whop-context'
 import { nutritionPlansQuery } from '~/components/nutrition/queries'
-import { plansQuery, userAssignmentsQuery, workoutHistoryQuery } from '~/components/workouts/queries'
+import { plansQuery, userAssignmentsQuery, workoutHistoryQuery, recentActivityQuery } from '~/components/workouts/queries'
 
 export default function UserDashboardPage() {
   const { access, experience, user } = useWhop()
@@ -43,6 +43,7 @@ export default function UserDashboardPage() {
   const { data: workoutPlans, isLoading: workoutLoading } = useQuery(plansQuery(experience.id))
   const { data: userAssignments, isLoading: assignmentsLoading } = useQuery(userAssignmentsQuery(experience.id, user.id))
   const { data: workoutHistory, isLoading: historyLoading } = useQuery(workoutHistoryQuery(experience.id))
+  const { data: activityData, isLoading: activityLoading } = useQuery(recentActivityQuery(experience.id))
   
   // Filter user's assigned plans
   const userWorkoutPlans = workoutPlans?.filter((plan: any) => 
@@ -55,6 +56,42 @@ export default function UserDashboardPage() {
   // Calculate stats
   const totalWorkoutPlans = userWorkoutPlans.length
   const totalNutritionPlans = userNutritionPlans.length
+
+  const formatActivity = (activity: any) => {
+    const timeAgo = new Date(activity.createdAt).toLocaleDateString()
+    
+    switch (activity.type) {
+      case 'assignment':
+        return {
+          icon: Target,
+          description: `Assigned "${activity.planTitle}" to client`,
+          time: timeAgo,
+          color: 'text-blue-600'
+        }
+      case 'plan_creation':
+        return {
+          icon: Dumbbell,
+          description: `Created workout plan "${activity.planTitle}"`,
+          time: timeAgo,
+          color: 'text-green-600'
+        }
+      case 'message':
+        const senderName = activity.senderName || 'Unknown User'
+        return {
+          icon: MessageSquare,
+          description: `New message from ${senderName}: ${activity.message?.substring(0, 30)}${activity.message && activity.message.length > 30 ? '...' : ''}`,
+          time: timeAgo,
+          color: 'text-purple-600'
+        }
+      default:
+        return {
+          icon: Clock,
+          description: 'Unknown activity',
+          time: timeAgo,
+          color: 'text-gray-600'
+        }
+    }
+  }
 
   const stats = [
     {
@@ -245,7 +282,7 @@ export default function UserDashboardPage() {
               <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
               <Clock className="w-5 h-5 text-accent" />
             </div>
-            {historyLoading ? (
+            {historyLoading || activityLoading ? (
               <div className="space-y-3">
                 {[...Array(3)].map((_, i) => (
                   <div key={i} className="flex items-center space-x-3">
@@ -257,7 +294,7 @@ export default function UserDashboardPage() {
                   </div>
                 ))}
               </div>
-            ) : workoutHistory && workoutHistory.length > 0 ? (
+            ) : (workoutHistory && workoutHistory.length > 0) || (activityData?.activities && activityData.activities.length > 0) ? (
               <div className="space-y-3 max-h-64 overflow-y-auto">
                 {workoutHistory.slice(0, 5).map((session) => (
                   <div key={session.id} className="flex items-start space-x-3">
@@ -279,6 +316,22 @@ export default function UserDashboardPage() {
                     </Link>
                   </div>
                 ))}
+                
+                {/* Show general activity including messages */}
+                {activityData?.activities?.slice(0, 2).map((activity) => {
+                  const formatted = formatActivity(activity)
+                  const Icon = formatted.icon
+                  return (
+                    <div key={activity.id} className="flex items-start space-x-3">
+                      <Icon className="w-4 h-4 mt-0.5 text-accent" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm">{formatted.description}</p>
+                        <p className="text-xs opacity-70">{formatted.time}</p>
+                      </div>
+                    </div>
+                  )
+                })}
+                
                 {workoutHistory.length > 5 && (
                   <Link href={`/experiences/${experience.id}/my-workouts`}>
                     <Button variant="ghost" className="w-full">
