@@ -3,9 +3,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Button, Card, TextField } from 'frosted-ui'
 import { useState, useEffect, useRef } from 'react'
-import { Send, Search, MessageSquare, Clock, Check, CheckCheck, User, Users } from 'lucide-react'
+import { Send, Search, MessageSquare, Clock, Check, CheckCheck, User, Users, Bell } from 'lucide-react'
 import { useWhop } from '~/components/whop-context'
-import { inboxQuery, sendMessageMutation, usersQuery } from '~/components/workouts/queries'
+import { inboxQuery, sendMessageMutation, usersQuery, conversationsQuery, markMessagesReadMutation, ConversationSummary } from '~/components/workouts/queries'
 
 export default function InboxPage() {
   const { access, experience, user } = useWhop()
@@ -21,10 +21,26 @@ export default function InboxPage() {
   const qc = useQueryClient()
 
   const { data: users } = useQuery({ ...usersQuery(experience.id, isAdmin ? search : undefined), enabled: isAdmin })
+  const { data: conversations } = useQuery({ ...conversationsQuery(experience.id) })
   const { data: messages, isLoading: isLoadingMessages } = useQuery({
     ...inboxQuery(experience.id, isAdmin ? (selectedUserId || undefined) : undefined),
     refetchInterval: 5000, // Poll every 5 seconds for real-time updates
   })
+
+  const markMessagesRead = useMutation({
+    ...markMessagesReadMutation(experience.id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['conversations', experience.id] })
+      qc.invalidateQueries({ queryKey: ['inbox', experience.id] })
+    },
+  })
+
+  // Auto-mark messages as read when conversation is opened
+  useEffect(() => {
+    if (selectedUserId && !isLoadingMessages) {
+      markMessagesRead.mutate(selectedUserId)
+    }
+  }, [selectedUserId, isLoadingMessages])
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -112,8 +128,16 @@ export default function InboxPage() {
     setVisibleCount(10)
   }, [search])
 
-  // Get visible users for pagination
-  const visibleUsers = users?.slice(0, visibleCount) || []
+  // Get visible users for pagination with unread counts
+  const usersWithUnread = users?.map(user => {
+    const conversation = conversations?.find(c => c.conversationUserId === user.id)
+    return {
+      ...user,
+      unreadCount: conversation?.unreadCount || 0
+    }
+  }).sort((a, b) => b.unreadCount - a.unreadCount) || []
+  
+  const visibleUsers = usersWithUnread.slice(0, visibleCount)
 
   return (
     <div className="p-4 md:p-6">
@@ -170,11 +194,23 @@ export default function InboxPage() {
                         onClick={() => setSelectedUserId(u.id)}
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                            <User className="w-4 h-4 text-accent" />
+                          <div className="relative">
+                            <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                              <User className="w-4 h-4 text-accent" />
+                            </div>
+                            {u.unreadCount > 0 && (
+                              <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                                {u.unreadCount > 9 ? '9+' : u.unreadCount}
+                              </div>
+                            )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="font-medium text-sm truncate">{u.name || u.username}</div>
+                            <div className="font-medium text-sm truncate flex items-center gap-2">
+                              {u.name || u.username}
+                              {u.unreadCount > 0 && (
+                                <Bell className="w-3 h-3 text-red-500" />
+                              )}
+                            </div>
                             <div className="text-xs opacity-70 truncate">@{u.username}</div>
                           </div>
                         </div>

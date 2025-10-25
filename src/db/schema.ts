@@ -103,6 +103,7 @@ export const inboxMessages = pgTable('inbox_messages', {
 	senderUserId: text('sender_user_id').notNull(),
 	content: text('content').notNull(),
 	createdAt: timestamp('created_at').defaultNow().notNull(),
+	readAt: timestamp('read_at'), // When the message was read by the recipient
 })
 
 // Nutrition planning schema

@@ -151,6 +151,14 @@ export type InboxMessage = {
 	senderUserId: string
 	content: string
 	createdAt: string
+	readAt?: string
+}
+
+export type ConversationSummary = {
+	conversationUserId: string
+	unreadCount: number
+	lastMessage: string
+	lastMessageContent: string
 }
 
 export const inboxQuery = (experienceId: string, conversationUserId?: string) => ({
@@ -173,6 +181,27 @@ export const sendMessageMutation = (experienceId: string) => ({
 			body: JSON.stringify(payload),
 		})
 		if (!res.ok) throw new Error('Failed to send message')
+		return res.json()
+	},
+})
+
+export const conversationsQuery = (experienceId: string) => ({
+	queryKey: ['conversations', experienceId],
+	queryFn: async () => {
+		const res = await fetch(getApiUrl(`/api/experience/${experienceId}/inbox/conversations`))
+		if (!res.ok) throw new Error('Failed to fetch conversations')
+		return res.json() as Promise<ConversationSummary[]>
+	},
+})
+
+export const markMessagesReadMutation = (experienceId: string) => ({
+	mutationFn: async (conversationUserId: string) => {
+		const res = await fetch(getApiUrl(`/api/experience/${experienceId}/inbox/mark-read`), {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ conversationUserId }),
+		})
+		if (!res.ok) throw new Error('Failed to mark messages as read')
 		return res.json()
 	},
 })
