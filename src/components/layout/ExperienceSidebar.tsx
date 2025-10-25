@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react'
 import { Button, IconButton, Tooltip, Sheet } from 'frosted-ui'
 import { LayoutDashboard, MessageSquare, Users, BookOpen, Dumbbell, Apple, Utensils } from 'lucide-react'
 import { useWhop } from '~/components/whop-context'
+import { useQuery } from '@tanstack/react-query'
+import { conversationsQuery } from '~/components/workouts/queries'
 
 interface SidebarProps {
   experienceId: string
@@ -18,6 +20,12 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
+
+  // Fetch conversations to get unread counts
+  const { data: conversations } = useQuery({ ...conversationsQuery(experienceId) })
+  
+  // Calculate total unread count
+  const totalUnreadCount = conversations?.reduce((total, conv) => total + conv.unreadCount, 0) || 0
 
   useEffect(() => {
     setMounted(true)
@@ -98,7 +106,15 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
           const Icon = i.icon as any
           const content = (
             <div className={`px-3 py-2 rounded-md flex items-center gap-2 text-gray-900 dark:text-white ${active ? 'bg-black/5 dark:bg-white/10' : 'hover:bg-black/5 dark:hover:bg-white/10'}`}>
-                    <Icon size={18} strokeWidth={1.75} className="text-accent" />
+              <div className="relative">
+                <Icon size={18} strokeWidth={1.75} className="text-accent" />
+                {/* Unread badge for inbox */}
+                {i.key === 'inbox' && totalUnreadCount > 0 && (
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                    {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
+                  </div>
+                )}
+              </div>
               {!collapsed && (
                 <div className="flex items-center gap-1">
                   <span>{i.label}</span>
@@ -175,7 +191,15 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
                 const Icon = i.icon as any
                 const content = (
                   <div className={`px-3 py-2 rounded-md flex items-center gap-2 text-gray-900 dark:text-white ${active ? 'bg-black/5 dark:bg-white/10' : 'hover:bg-black/5 dark:hover:bg-white/10'}`}>
-                    <Icon size={18} strokeWidth={1.75} className="text-accent" />
+                    <div className="relative">
+                      <Icon size={18} strokeWidth={1.75} className="text-accent" />
+                      {/* Unread badge for inbox */}
+                      {i.key === 'inbox' && totalUnreadCount > 0 && (
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                          {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
+                        </div>
+                      )}
+                    </div>
                     <div className="flex items-center gap-1">
                       <span>{i.label}</span>
                       {i.admin && <span className="text-xs opacity-60">(admin)</span>}
