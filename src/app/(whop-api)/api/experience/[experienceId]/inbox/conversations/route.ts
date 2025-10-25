@@ -40,7 +40,7 @@ export async function GET(
 			.from(inboxMessages)
 			.where(eq(inboxMessages.experienceId, experienceId))
 			.groupBy(inboxMessages.conversationUserId)
-			.orderBy(sql`unread_count DESC`, sql`last_message DESC`)
+			.orderBy(sql`COUNT(CASE WHEN ${inboxMessages.readAt} IS NULL AND ${inboxMessages.senderUserId} != ${userId} THEN 1 END) DESC`, sql`MAX(${inboxMessages.createdAt}) DESC`)
 
 		return NextResponse.json(conversations)
 	} else {
