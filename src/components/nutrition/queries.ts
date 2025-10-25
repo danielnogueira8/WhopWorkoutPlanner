@@ -66,3 +66,59 @@ export const removeNutritionPlanAssignmentMutation = (experienceId: string, plan
     return res.json()
   },
 })
+
+// Nutrition plan detail query
+export const nutritionPlanDetailQuery = (experienceId: string, planId: string) => ({
+  queryKey: ['nutrition-plan-detail', experienceId, planId],
+  queryFn: async () => {
+    const res = await fetch(`/api/experience/${experienceId}/nutrition/${planId}`)
+    if (!res.ok) throw new Error('Failed to fetch nutrition plan detail')
+    return res.json()
+  },
+})
+
+// Nutrition plan content queries
+export const nutritionContentQuery = (experienceId: string, planId: string) => ({
+  queryKey: ['nutrition-content', experienceId, planId],
+  queryFn: async () => {
+    const res = await fetch(`/api/experience/${experienceId}/nutrition/${planId}/content`)
+    if (!res.ok) throw new Error('Failed to fetch nutrition content')
+    return res.json()
+  },
+})
+
+export const saveNutritionContentMutation = (experienceId: string, planId: string) => ({
+  mutationFn: async (data: { contentType: 'text' | 'pdf', content?: string }) => {
+    const res = await fetch(`/api/experience/${experienceId}/nutrition/${planId}/content`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    if (!res.ok) throw new Error('Failed to save nutrition content')
+    return res.json()
+  },
+})
+
+export const uploadNutritionPDFMutation = (experienceId: string, planId: string) => ({
+  mutationFn: async (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    
+    const res = await fetch(`/api/experience/${experienceId}/nutrition/${planId}/content/upload`, {
+      method: 'POST',
+      body: formData,
+    })
+    if (!res.ok) throw new Error('Failed to upload PDF')
+    return res.json()
+  },
+})
+
+export const deleteNutritionPDFMutation = (experienceId: string, planId: string) => ({
+  mutationFn: async () => {
+    const res = await fetch(`/api/experience/${experienceId}/nutrition/${planId}/content/upload`, {
+      method: 'DELETE',
+    })
+    if (!res.ok) throw new Error('Failed to delete PDF')
+    return res.json()
+  },
+})

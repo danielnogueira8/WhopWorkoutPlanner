@@ -148,10 +148,30 @@ export const nutritionAssignments = pgTable('nutrition_assignments', {
 	completedAt: timestamp('completed_at'), // When the entire plan was completed
 })
 
+// Nutrition plan content - stores either text content or PDF file info
+export const nutritionPlanContent = pgTable('nutrition_plan_content', {
+	id: uuid('id').defaultRandom().primaryKey(),
+	planId: uuid('plan_id').notNull(),
+	contentType: text('content_type').notNull(), // 'pdf' or 'text'
+	content: text('content'), // For text content (HTML)
+	pdfUrl: text('pdf_url'), // For PDF file URL
+	pdfFilename: text('pdf_filename'), // Original PDF filename
+	createdAt: timestamp('created_at').defaultNow().notNull(),
+	updatedAt: timestamp('updated_at').defaultNow().notNull(),
+})
+
 // Nutrition relations
-export const nutritionPlansRelations = relations(nutritionPlans, ({ many }) => ({
+export const nutritionPlansRelations = relations(nutritionPlans, ({ many, one }) => ({
 	days: many(nutritionPlanDays),
 	assignments: many(nutritionAssignments),
+	content: one(nutritionPlanContent),
+}))
+
+export const nutritionPlanContentRelations = relations(nutritionPlanContent, ({ one }) => ({
+	plan: one(nutritionPlans, {
+		fields: [nutritionPlanContent.planId],
+		references: [nutritionPlans.id],
+	}),
 }))
 
 export const nutritionPlanDaysRelations = relations(nutritionPlanDays, ({ many }) => ({

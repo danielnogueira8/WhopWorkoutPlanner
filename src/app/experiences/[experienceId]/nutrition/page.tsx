@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { Card, Button } from 'frosted-ui'
-import { Calendar, Apple, CheckCircle, Clock, TrendingUp, Target } from 'lucide-react'
+import { Calendar, Apple, Clock, Target } from 'lucide-react'
 import Link from 'next/link'
 import { useWhop } from '~/components/whop-context'
 import { nutritionPlansQuery } from '~/components/nutrition/queries'
@@ -17,11 +17,6 @@ export default function NutritionPage() {
   ) ?? []
 
   const totalPlans = userPlans.length
-  const completedPlans = userPlans.filter((plan: any) => 
-    plan.assignedUsers?.find((assignment: any) => assignment.whopUserId === user.id)?.completedAt
-  ).length
-  const totalDays = userPlans.reduce((sum: number, plan: any) => sum + (plan.daysCount || 0), 0)
-
   const stats = [
     {
       icon: Apple,
@@ -29,27 +24,6 @@ export default function NutritionPage() {
       value: totalPlans,
       color: 'text-blue-600',
       bgColor: 'bg-blue-50 dark:bg-blue-950'
-    },
-    {
-      icon: CheckCircle,
-      label: 'Completed',
-      value: completedPlans,
-      color: 'text-green-600',
-      bgColor: 'bg-green-50 dark:bg-green-950'
-    },
-    {
-      icon: Calendar,
-      label: 'Total Days',
-      value: totalDays,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50 dark:bg-purple-950'
-    },
-    {
-      icon: TrendingUp,
-      label: 'Progress',
-      value: totalPlans > 0 ? `${Math.round((completedPlans / totalPlans) * 100)}%` : '0%',
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50 dark:bg-orange-950'
     }
   ]
 
@@ -113,7 +87,6 @@ export default function NutritionPage() {
         <div className="grid gap-4">
           {userPlans.map((plan: any) => {
             const assignment = plan.assignedUsers?.find((a: any) => a.whopUserId === user.id)
-            const isCompleted = !!assignment?.completedAt
             const assignedDate = assignment?.assignedAt ? new Date(assignment.assignedAt) : null
             
             return (
@@ -123,11 +96,6 @@ export default function NutritionPage() {
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <h3 className="font-semibold">{plan.title}</h3>
-                        {isCompleted && (
-                          <div className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 text-xs rounded-full">
-                            Completed
-                          </div>
-                        )}
                       </div>
                       <div className="flex items-center gap-4 text-sm opacity-70">
                         <div className="flex items-center gap-1">
@@ -151,13 +119,6 @@ export default function NutritionPage() {
                           View Plan
                         </Button>
                       </Link>
-                      {!isCompleted && (
-                        <Link href={`/experiences/${experience.id}/nutrition-plans/${plan.id}/track` as any}>
-                          <Button size="2">
-                            Start Plan
-                          </Button>
-                        </Link>
-                      )}
                     </div>
                   </div>
                 </div>

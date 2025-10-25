@@ -67,6 +67,24 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
           if (i.key === 'my-workouts' && !isAdmin && (pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/'))) {
             active = true // Highlight "My Workouts" for non-admin users viewing plans
           }
+          
+          // Special logic for nutrition plans: when viewing a nutrition plan, 
+          // it should be considered as "Nutrition" active, not "Nutrition Plans"
+          // But when building a nutrition plan, it should be "Nutrition Plans" active
+          if (i.key === 'nutrition-plans' && pathname?.includes('/nutrition-plans/')) {
+            if (pathname?.includes('/builder')) {
+              active = true // Highlight "Nutrition Plans" when building a plan
+            } else {
+              active = false // Don't highlight "Nutrition Plans" when viewing a specific plan
+            }
+          }
+          if (i.key === 'nutrition' && pathname?.includes('/nutrition-plans/')) {
+            if (pathname?.includes('/builder')) {
+              active = false // Don't highlight "Nutrition" when building a plan
+            } else {
+              active = true // Highlight "Nutrition" when viewing a specific plan
+            }
+          }
           const Icon = i.icon as any
           const content = (
             <div className={`px-3 py-2 rounded-md flex items-center gap-2 text-gray-900 dark:text-white ${active ? 'bg-black/5 dark:bg-white/10' : 'hover:bg-black/5 dark:hover:bg-white/10'}`}>
@@ -116,6 +134,24 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
                 }
                 if (i.key === 'my-workouts' && !isAdmin && (pathname?.includes('/workouts/') || pathname?.includes('/my-workouts/'))) {
                   active = true // Highlight "My Workouts" for non-admin users viewing plans
+                }
+                
+                // Special logic for nutrition plans: when viewing a nutrition plan, 
+                // it should be considered as "Nutrition" active, not "Nutrition Plans"
+                // But when building a nutrition plan, it should be "Nutrition Plans" active
+                if (i.key === 'nutrition-plans' && pathname?.includes('/nutrition-plans/')) {
+                  if (pathname?.includes('/builder')) {
+                    active = true // Highlight "Nutrition Plans" when building a plan
+                  } else {
+                    active = false // Don't highlight "Nutrition Plans" when viewing a specific plan
+                  }
+                }
+                if (i.key === 'nutrition' && pathname?.includes('/nutrition-plans/')) {
+                  if (pathname?.includes('/builder')) {
+                    active = false // Don't highlight "Nutrition" when building a plan
+                  } else {
+                    active = true // Highlight "Nutrition" when viewing a specific plan
+                  }
                 }
                 const Icon = i.icon as any
                 const content = (
