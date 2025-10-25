@@ -382,7 +382,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
                   if (seconds < 60) return `${seconds}s`
                   const minutes = Math.floor(seconds / 60)
                   const remainingSeconds = seconds % 60
-                  return remainingSeconds > 0 ? `${minutes}:${remainingSeconds.toString().padStart(2, '0')}` : `${minutes}m`
+                  return remainingSeconds > 0 ? `${minutes}m:${remainingSeconds.toString().padStart(2, '0')}s` : `${minutes}m`
                 }
                 
                 return (
