@@ -72,8 +72,6 @@ export async function GET(req: NextRequest) {
 				}
 			})
 
-		console.log(subscriptionReceipts)
-
 		return NextResponse.json({
 			accessPasses: [
 				{

@@ -10,10 +10,11 @@ import { createPlanMutation, plansQuery, updatePlanMutation, deletePlanMutation,
 import { generateWorkoutPlanPDF } from "~/lib/pdf-generator";
 import toast from 'react-hot-toast';
 import { CardSkeleton, StatsSkeleton, Skeleton } from '~/components/ui/Skeleton';
+import { WhopAccess } from '~/types/whop';
 
 export default function WorkoutsPage() {
   const { experience, user, access } = useWhop();
-  const isAdmin = (access as any).accessLevel === "admin";
+  const isAdmin = (access as WhopAccess)?.accessLevel === "admin";
   const [newPlanOpen, setNewPlanOpen] = useState(false);
   const [newPlanTitle, setNewPlanTitle] = useState("");
   const [editPlanId, setEditPlanId] = useState<string | null>(null);

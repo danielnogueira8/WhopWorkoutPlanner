@@ -17,10 +17,11 @@ import { useWhop } from '~/components/whop-context'
 import { nutritionPlansQuery } from '~/components/nutrition/queries'
 import { plansQuery, userAssignmentsQuery, workoutHistoryQuery, recentActivityQuery } from '~/components/workouts/queries'
 import { StatsSkeleton } from '~/components/ui/Skeleton'
+import { WhopAccess } from '~/types/whop'
 
 export default function UserDashboardPage() {
   const { access, experience, user } = useWhop()
-  const isAdmin = (access as any).accessLevel === 'admin'
+  const isAdmin = (access as WhopAccess)?.accessLevel === 'admin'
   
   // If admin, redirect to admin dashboard
   if (isAdmin) {

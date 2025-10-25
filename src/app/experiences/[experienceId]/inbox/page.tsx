@@ -6,10 +6,11 @@ import { useState, useEffect, useRef } from 'react'
 import { Send, Search, MessageSquare, Clock, Check, CheckCheck, User, Users, Bell } from 'lucide-react'
 import { useWhop } from '~/components/whop-context'
 import { inboxQuery, sendMessageMutation, usersQuery, conversationsQuery, markMessagesReadMutation, ConversationSummary } from '~/components/workouts/queries'
+import { WhopAccess } from '~/types/whop'
 
 export default function InboxPage() {
   const { access, experience, user } = useWhop()
-  const isAdmin = (access as any).accessLevel === 'admin'
+  const isAdmin = (access as WhopAccess)?.accessLevel === 'admin'
   const [selectedUserId, setSelectedUserId] = useState<string>('')
   const [message, setMessage] = useState('')
   const [search, setSearch] = useState('')
@@ -24,15 +25,19 @@ export default function InboxPage() {
   const { data: conversations, error: conversationsError } = useQuery({ ...conversationsQuery(experience.id) })
   const { data: messages, isLoading: isLoadingMessages, error: messagesError } = useQuery({
     ...inboxQuery(experience.id, isAdmin ? (selectedUserId || undefined) : undefined),
-    refetchInterval: 5000, // Poll every 5 seconds for real-time updates
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    staleTime: 0,
   })
 
-  // Log errors for debugging
-  if (conversationsError) {
-    console.error('💬 Conversations query error:', conversationsError)
-  }
-  if (messagesError) {
-    console.error('📨 Messages query error:', messagesError)
+  // Log errors for debugging (only in development)
+  if (process.env.NODE_ENV === 'development') {
+    if (conversationsError) {
+      console.error('💬 Conversations query error:', conversationsError)
+    }
+    if (messagesError) {
+      console.error('📨 Messages query error:', messagesError)
+    }
   }
 
   const markMessagesRead = useMutation({
@@ -166,14 +171,15 @@ export default function InboxPage() {
   
   const visibleUsers = usersWithUnread.slice(0, visibleCount)
 
-  // Debug logging
-  console.log('🔍 Inbox Debug Info:')
-  console.log('  - users:', users?.length || 0)
-  console.log('  - conversations:', conversations?.length || 0)
-  console.log('  - conversations data:', conversations)
-  console.log('  - messages:', messages?.length || 0)
-  console.log('  - selectedUserId:', selectedUserId)
-  console.log('  - usersWithUnread:', usersWithUnread.map(u => ({ id: u.id, name: u.name, unreadCount: u.unreadCount })))
+  // Debug logging (only in development)
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🔍 Inbox Debug Info:')
+    console.log('  - users:', users?.length || 0)
+    console.log('  - conversations:', conversations?.length || 0)
+    console.log('  - messages:', messages?.length || 0)
+    console.log('  - selectedUserId:', selectedUserId)
+    console.log('  - usersWithUnread:', usersWithUnread.map(u => ({ id: u.id, name: u.name, unreadCount: u.unreadCount })))
+  }
 
   return (
     <div className="p-4 md:p-6">

@@ -8,10 +8,11 @@ import { useWhop } from '~/components/whop-context'
 import { plansQuery, planDetailQuery, workoutHistoryQuery } from '~/components/workouts/queries'
 import { generateWorkoutPlanPDF } from '~/lib/pdf-generator'
 import { StatsSkeleton, CardSkeleton } from '~/components/ui/Skeleton'
+import { WhopAccess } from '~/types/whop'
 
 export default function MyWorkoutsPage() {
   const { experience, user, access } = useWhop()
-  const isAdmin = (access as any).accessLevel === 'admin'
+  const isAdmin = (access as WhopAccess)?.accessLevel === 'admin'
   const { data: plans, isLoading } = useQuery(plansQuery(experience.id))
   const { data: workoutHistory, isLoading: isLoadingHistory } = useQuery(workoutHistoryQuery(experience.id))
 
