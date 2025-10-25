@@ -67,7 +67,7 @@ export async function POST(
     const access = await whop.access.checkIfUserHasAccessToExperience({ experienceId, userId })
     if (!access) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     const body = await request.json()
-    const { name, reps, sets, currentWeight, maxWeight, orderIndex } = body
+    const { name, reps, sets, currentWeight, maxWeight, weightUnit, restTime, orderIndex } = body
 
     if (!name) {
       return NextResponse.json({ error: 'Exercise name is required' }, { status: 400 })
@@ -101,6 +101,8 @@ export async function POST(
         sets: sets ?? 0,
         currentWeight: currentWeight ?? 0,
         maxWeight: maxWeight ?? 0,
+        weightUnit: weightUnit ?? 'lbs',
+        restTime: restTime ?? 60,
         orderIndex: orderIndex ?? 0,
       })
       .returning()
