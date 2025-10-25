@@ -178,14 +178,14 @@ export default function NutritionBuilderPage({ params }: NutritionBuilderProps) 
             {plan.title}
           </Link>
           <ChevronRight className="w-4 h-4 text-gray-400" />
-          <span className="text-gray-900 font-medium">Builder</span>
+          <span className="text-gray-900 font-medium">Manage</span>
         </div>
       </nav>
 
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Nutrition Plan Builder</h1>
-        <p className="text-gray-600">Upload a PDF for your nutrition plan</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{plan?.title || 'Nutrition Plan'}</h1>
+        <p className="text-gray-600">Manage your nutrition plan content</p>
       </div>
 
       {/* Content Area */}

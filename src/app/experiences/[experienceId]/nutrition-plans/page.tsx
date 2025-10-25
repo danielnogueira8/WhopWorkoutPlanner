@@ -107,7 +107,7 @@ export default function NutritionPlansPage() {
             ) : (
               <div className="space-y-2">
                 {userPlans.map((p: any) => {
-                  const href = `/experiences/${experience.id}/nutrition-plans/${String(p.id)}` as any
+                  const href = `/experiences/${experience.id}/nutrition-plans/${String(p.id)}/builder` as any
                   return (
                     <div key={p.id} className="flex items-center justify-between">
                       <div className="flex-1">
@@ -135,7 +135,7 @@ export default function NutritionPlansPage() {
                     <div className="flex gap-2">
                       <Button variant="solid" asChild className="!bg-accent hover:!bg-accent/90 !text-white">
                         <Link href={`/experiences/${experience.id}/nutrition-plans/${p.id}/builder` as any}>
-                          Build
+                          Manage
                         </Link>
                       </Button>
                       <Button variant="solid" onClick={() => { setEditPlanId(p.id); setEditPlanTitle(p.title); }} className="!bg-accent hover:!bg-accent/90 !text-white">
