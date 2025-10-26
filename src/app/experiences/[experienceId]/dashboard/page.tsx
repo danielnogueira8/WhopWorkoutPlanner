@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { Card, Button, Dialog, TextField } from 'frosted-ui'
-import { Users, BookOpen, CheckCircle, UserPlus, Plus, UserCheck, Eye, Settings, MessageSquare, Clock, UserCheck as UserCheckIcon } from 'lucide-react'
+import { Users, BookOpen, CheckCircle, UserPlus, Plus, UserCheck, Eye, Settings, MessageSquare, Clock, UserCheck as UserCheckIcon, Apple } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useWhop } from '~/components/whop-context'
@@ -233,19 +233,23 @@ export default function DashboardPage() {
               <EmptyState
                 icon={UserCheckIcon}
                 title="No Recent Assignments"
-                description="Assignments will appear here when you assign workout plans to clients."
+                description="Assignments will appear here when you assign workout plans or nutrition plans to clients."
               />
             ) : (
               <div className="space-y-3 max-h-64 overflow-y-auto">
                 {assignmentsData?.assignments.slice(0, 5).map((assignment) => (
                   <div key={assignment.id} className="flex items-start space-x-3 p-3 rounded-lg transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800">
                     <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center mt-0.5">
-                      <UserCheckIcon className="w-4 h-4 text-emerald-600" />
+                      {assignment.type === 'workout' ? (
+                        <UserCheckIcon className="w-4 h-4 text-emerald-600" />
+                      ) : (
+                        <Apple className="w-4 h-4 text-emerald-600" />
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium">{assignment.user.name}</p>
                       <p className="text-xs opacity-70">
-                        Assigned "{assignment.planTitle}" by {assignment.assignedBy.name}
+                        Assigned "{assignment.planTitle}" ({assignment.type}) by {assignment.assignedBy.name}
                       </p>
                       <p className="text-xs opacity-50">
                         {new Date(assignment.assignedAt).toLocaleDateString()}

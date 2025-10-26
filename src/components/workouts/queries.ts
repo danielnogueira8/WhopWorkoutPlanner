@@ -353,6 +353,7 @@ export interface RecentAssignment {
 	id: string
 	planTitle: string
 	assignedAt: string
+	type: 'workout' | 'nutrition'
 	user: {
 		id: string
 		name: string

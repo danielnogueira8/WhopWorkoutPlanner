@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { db } from '~/db'
-import { workoutPlans, workoutAssignments } from '~/db/schema'
-import { eq, desc } from 'drizzle-orm'
+import { workoutPlans, workoutAssignments, nutritionPlans, nutritionAssignments } from '~/db/schema'
+import { eq, desc, union } from 'drizzle-orm'
 import { verifyUserToken } from '@whop/api'
 import { whop } from '~/lib/whop'
 
@@ -21,13 +21,14 @@ export async function GET(
     if (!access) return Response.json({ error: 'Forbidden' }, { status: 403 })
 
     // Get recent workout plan assignments (last 10)
-    const recentAssignments = await db
+    const workoutAssignmentsData = await db
       .select({
         id: workoutAssignments.id,
         planTitle: workoutPlans.title,
         whopUserId: workoutAssignments.whopUserId,
         assignedByWhopUserId: workoutAssignments.assignedByWhopUserId,
         assignedAt: workoutAssignments.assignedAt,
+        type: 'workout' as const,
       })
       .from(workoutAssignments)
       .innerJoin(workoutPlans, eq(workoutAssignments.planId, workoutPlans.id))
@@ -35,9 +36,30 @@ export async function GET(
       .orderBy(desc(workoutAssignments.assignedAt))
       .limit(10)
 
+    // Get recent nutrition plan assignments (last 10)
+    const nutritionAssignmentsData = await db
+      .select({
+        id: nutritionAssignments.id,
+        planTitle: nutritionPlans.title,
+        whopUserId: nutritionAssignments.whopUserId,
+        assignedByWhopUserId: nutritionAssignments.assignedByWhopUserId,
+        assignedAt: nutritionAssignments.assignedAt,
+        type: 'nutrition' as const,
+      })
+      .from(nutritionAssignments)
+      .innerJoin(nutritionPlans, eq(nutritionAssignments.planId, nutritionPlans.id))
+      .where(eq(nutritionPlans.experienceId, experienceId))
+      .orderBy(desc(nutritionAssignments.assignedAt))
+      .limit(10)
+
+    // Combine and sort by assignedAt date
+    const allAssignments = [...workoutAssignmentsData, ...nutritionAssignmentsData]
+      .sort((a, b) => new Date(b.assignedAt).getTime() - new Date(a.assignedAt).getTime())
+      .slice(0, 10)
+
     // Get user details for each assignment
     const assignmentsWithUsers = await Promise.all(
-      recentAssignments.map(async (assignment) => {
+      allAssignments.map(async (assignment) => {
         try {
           // Get user details for the assigned user
           const user = await whop.users.getUser({ userId: assignment.whopUserId })
@@ -48,6 +70,7 @@ export async function GET(
             id: assignment.id,
             planTitle: assignment.planTitle,
             assignedAt: assignment.assignedAt,
+            type: assignment.type,
             user: {
               id: user.id,
               name: user.name || user.username,
@@ -65,6 +88,7 @@ export async function GET(
             id: assignment.id,
             planTitle: assignment.planTitle,
             assignedAt: assignment.assignedAt,
+            type: assignment.type,
             user: {
               id: assignment.whopUserId,
               name: 'Unknown User',
