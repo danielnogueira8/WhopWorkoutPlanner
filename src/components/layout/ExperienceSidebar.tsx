@@ -4,16 +4,18 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Button, IconButton, Tooltip } from 'frosted-ui'
-import { LayoutDashboard, MessageSquare, Users, BookOpen, Dumbbell, Apple, Utensils } from 'lucide-react'
+import { LayoutDashboard, MessageSquare, Users, BookOpen, Dumbbell, Apple, Utensils, HelpCircle } from 'lucide-react'
 import { useWhop } from '~/components/whop-context'
 import { useQuery } from '@tanstack/react-query'
 import { conversationsQuery } from '~/components/workouts/queries'
+import { useOnboardingTrigger } from '~/components/onboarding/OnboardingTrigger'
 
 interface SidebarProps {
   experienceId: string
 }
 
 export function ExperienceSidebar({ experienceId }: SidebarProps) {
+  const { setShowOnboarding } = useOnboardingTrigger()
   const { access, user, experience } = useWhop()
   const isAdmin = (access as any).accessLevel === 'admin'
   const pathname = usePathname()
@@ -228,8 +230,30 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
                 )
               })}
             </nav>
-            <div className="mt-auto p-3 text-xs text-gray-600 dark:text-gray-300">
-              Signed in as {user.username}
+            <div className="mt-auto p-3 space-y-2">
+              {!collapsed && (
+                <Button
+                  variant="ghost"
+                  onClick={() => setShowOnboarding(true)}
+                  className="w-full justify-start text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-black/5 dark:hover:bg-white/10"
+                >
+                  <HelpCircle className="w-4 h-4 mr-2" />
+                  <span className="text-xs">Restart Tutorial</span>
+                </Button>
+              )}
+              {collapsed && (
+                <Tooltip content="Restart Tutorial">
+                  <IconButton 
+                    onClick={() => setShowOnboarding(true)}
+                    aria-label="Restart Tutorial"
+                  >
+                    <HelpCircle size={18} />
+                  </IconButton>
+                </Tooltip>
+              )}
+              <div className="text-xs text-gray-600 dark:text-gray-300">
+                Signed in as {user.username}
+              </div>
             </div>
           </div>
         </div>

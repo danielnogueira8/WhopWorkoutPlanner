@@ -7,6 +7,7 @@ import {
   whopUserQuery,
 } from "~/components/whop-context/whop-queries";
 import { ExperienceSidebar } from "~/components/layout/ExperienceSidebar";
+import { OnboardingProvider } from "~/components/onboarding/OnboardingTrigger";
 
 export const experimental_ppr = true;
 
@@ -25,12 +26,14 @@ export default async function ExperienceLayout({
         state={dehydrate(serverQueryClient)}
         experienceId={experienceId}
       >
-        <div className="min-h-screen w-full flex">
-          <ExperienceSidebar experienceId={experienceId} />
-          <div className="flex-1 pb-16 md:pb-0">
-            {children}
+        <OnboardingProvider>
+          <div className="min-h-screen w-full flex">
+            <ExperienceSidebar experienceId={experienceId} />
+            <div className="flex-1 pb-16 md:pb-0">
+              {children}
+            </div>
           </div>
-        </div>
+        </OnboardingProvider>
       </WhopProvider>
     </WhopIframeSdkProvider>
   );

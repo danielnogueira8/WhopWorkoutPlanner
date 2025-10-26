@@ -15,6 +15,9 @@ const client = postgres(connectionString, {
 })
 export const db = drizzle(client, { schema })
 
+// Re-export schema tables for convenience
+export * from './schema'
+
 // Supabase client for Auth, Storage, Realtime
 export const supabase = createClient(
 	env.NEXT_PUBLIC_SUPABASE_URL,

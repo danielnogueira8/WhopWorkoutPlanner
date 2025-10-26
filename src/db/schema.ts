@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid, integer } from 'drizzle-orm/pg-core'
+import { pgTable, text, timestamp, uuid, integer, boolean } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 
 export const tasks = pgTable('tasks', {
@@ -178,3 +178,14 @@ export const nutritionPlanContentRelations = relations(nutritionPlanContent, ({ 
 export const nutritionPlanDaysRelations = relations(nutritionPlanDays, ({ many }) => ({
 	meals: many(nutritionMeals),
 }))
+
+// User preferences for onboarding and other settings
+export const userPreferences = pgTable('user_preferences', {
+	id: uuid('id').defaultRandom().primaryKey(),
+	whopUserId: text('whop_user_id').notNull().unique(),
+	experienceId: text('experience_id').notNull(),
+	onboardingCompleted: boolean('onboarding_completed').notNull().default(false),
+	onboardingCompletedAt: timestamp('onboarding_completed_at'),
+	createdAt: timestamp('created_at').defaultNow().notNull(),
+	updatedAt: timestamp('updated_at').defaultNow().notNull(),
+})

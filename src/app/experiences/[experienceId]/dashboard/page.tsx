@@ -100,12 +100,12 @@ export default function DashboardPage() {
 
   return (
     <div className="p-4 md:p-6 space-y-6">
-      <div className="border-b border-gray-200 dark:border-gray-800 pb-6">
-        <h1 className="text-xl md:text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mt-2">
-          Overview of your fitness coaching business
-        </p>
-      </div>
+        <div className="border-b border-gray-200 dark:border-gray-800 pb-6">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Dashboard</h1>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mt-2">
+            Overview of your fitness coaching business
+          </p>
+        </div>
 
       {/* Clean Metrics Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
