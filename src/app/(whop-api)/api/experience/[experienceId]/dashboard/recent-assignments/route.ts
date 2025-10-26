@@ -9,8 +9,10 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ experienceId: string }> }
 ) {
+  console.log('🔍 Recent Assignments API called')
   try {
     const { experienceId } = await params
+    console.log('🔍 Experience ID:', experienceId)
     if (!experienceId)
       return Response.json({ error: 'Missing params' }, { status: 400 })
 
@@ -128,6 +130,7 @@ export async function GET(
     }
 
     console.log('Final assignments with users:', assignmentsWithUsers.length)
+    console.log('🔍 Returning assignments:', assignmentsWithUsers)
     return Response.json({ assignments: assignmentsWithUsers })
   } catch (error) {
     console.error('Error fetching recent assignments:', error)

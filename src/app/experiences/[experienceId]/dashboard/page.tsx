@@ -22,7 +22,14 @@ export default function DashboardPage() {
 
   const { data: stats, isLoading, error } = useQuery(dashboardStatsQuery(experience.id))
   const { data: activityData, isLoading: isLoadingActivity } = useQuery(recentActivityQuery(experience.id))
-  const { data: assignmentsData, isLoading: isLoadingAssignments } = useQuery(recentAssignmentsQuery(experience.id))
+  const { data: assignmentsData, isLoading: isLoadingAssignments, error: assignmentsError } = useQuery(recentAssignmentsQuery(experience.id))
+  
+  console.log('Assignments query state:', { 
+    isLoading: isLoadingAssignments, 
+    data: assignmentsData, 
+    error: assignmentsError,
+    experienceId: experience.id 
+  })
 
   const formatActivity = (activity: RecentActivity) => {
     const timeAgo = new Date(activity.createdAt).toLocaleDateString()
