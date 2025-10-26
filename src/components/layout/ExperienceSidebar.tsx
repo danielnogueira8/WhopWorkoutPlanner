@@ -45,16 +45,16 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
   }
 
   const items = [
-    // User tabs first
-    { key: 'user-dashboard', label: 'Dashboard', href: `/experiences/${experienceId}`, admin: false, icon: LayoutDashboard },
-    { key: 'inbox', label: 'Inbox', href: `/experiences/${experienceId}/inbox`, admin: false, icon: MessageSquare },
-    { key: 'my-workouts', label: 'My Workouts', href: `/experiences/${experienceId}/my-workouts`, admin: false, icon: Dumbbell },
-    { key: 'nutrition', label: 'Nutrition', href: `/experiences/${experienceId}/nutrition`, admin: false, icon: Apple },
-    // Admin tabs grouped together
+    // Admin tabs first
     { key: 'dashboard', label: 'Dashboard', href: `/experiences/${experienceId}/dashboard`, admin: true, icon: LayoutDashboard },
     { key: 'clients', label: 'Clients', href: `/experiences/${experienceId}/clients`, admin: true, icon: Users },
     { key: 'workouts', label: 'Workout Plans', href: `/experiences/${experienceId}/workouts`, admin: true, icon: BookOpen },
     { key: 'nutrition-plans', label: 'Nutrition Plans', href: `/experiences/${experienceId}/nutrition-plans`, admin: true, icon: Utensils },
+    // User tabs after
+    { key: 'user-dashboard', label: 'Dashboard', href: `/experiences/${experienceId}`, admin: false, icon: LayoutDashboard },
+    { key: 'inbox', label: 'Inbox', href: `/experiences/${experienceId}/inbox`, admin: false, icon: MessageSquare },
+    { key: 'my-workouts', label: 'My Workouts', href: `/experiences/${experienceId}/my-workouts`, admin: false, icon: Dumbbell },
+    { key: 'nutrition', label: 'Nutrition', href: `/experiences/${experienceId}/nutrition`, admin: false, icon: Apple },
   ] as const
   // Show appropriate items based on admin status
   const visible = items.filter((i) => {
