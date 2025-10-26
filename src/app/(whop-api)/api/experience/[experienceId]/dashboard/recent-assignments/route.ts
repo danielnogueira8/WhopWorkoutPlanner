@@ -36,6 +36,8 @@ export async function GET(
       .orderBy(desc(workoutAssignments.assignedAt))
       .limit(10)
 
+    console.log('Workout assignments found:', workoutAssignmentsData.length)
+
     // Get recent nutrition plan assignments (last 10)
     const nutritionAssignmentsData = await db
       .select({
@@ -52,10 +54,14 @@ export async function GET(
       .orderBy(desc(nutritionAssignments.assignedAt))
       .limit(10)
 
+    console.log('Nutrition assignments found:', nutritionAssignmentsData.length)
+
     // Combine and sort by assignedAt date
     const allAssignments = [...workoutAssignmentsData, ...nutritionAssignmentsData]
       .sort((a, b) => new Date(b.assignedAt).getTime() - new Date(a.assignedAt).getTime())
       .slice(0, 10)
+
+    console.log('Total assignments to process:', allAssignments.length)
 
     // Get user details for each assignment
     const assignmentsWithUsers = await Promise.all(
@@ -104,6 +110,7 @@ export async function GET(
       })
     )
 
+    console.log('Final assignments with users:', assignmentsWithUsers.length)
     return Response.json({ assignments: assignmentsWithUsers })
   } catch (error) {
     console.error('Error fetching recent assignments:', error)
