@@ -13,6 +13,19 @@ export async function GET(
   try {
     const { experienceId } = await params
     console.log('🔍 Experience ID:', experienceId)
+    
+    // Test: Check if there are ANY assignments in the database at all
+    try {
+      const allWorkoutAssignments = await db.select().from(workoutAssignments).limit(5)
+      const allNutritionAssignments = await db.select().from(nutritionAssignments).limit(5)
+      console.log('🔍 All workout assignments in DB:', allWorkoutAssignments.length)
+      console.log('🔍 All nutrition assignments in DB:', allNutritionAssignments.length)
+      console.log('🔍 Sample workout assignment:', allWorkoutAssignments[0])
+      console.log('🔍 Sample nutrition assignment:', allNutritionAssignments[0])
+    } catch (error) {
+      console.error('🔍 Error checking all assignments:', error)
+    }
+    
     if (!experienceId)
       return Response.json({ error: 'Missing params' }, { status: 400 })
 
