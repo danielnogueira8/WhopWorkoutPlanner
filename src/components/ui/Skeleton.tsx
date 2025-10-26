@@ -5,14 +5,14 @@ interface SkeletonProps {
 export function Skeleton({ className }: SkeletonProps) {
   return (
     <div
-      className={`animate-pulse rounded-md bg-gray-200 dark:bg-gray-700 ${className || ''}`}
+      className={`animate-pulse rounded-md bg-gray-200 dark:bg-gray-700 animate-in fade-in duration-300 ${className || ''}`}
     />
   )
 }
 
 export function CardSkeleton() {
   return (
-    <div className="p-4 md:p-5">
+    <div className="p-4 md:p-5 animate-in fade-in duration-300">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex-1">
           <Skeleton className="h-6 w-32 mb-2" />
@@ -33,7 +33,7 @@ export function CardSkeleton() {
 
 export function StatsSkeleton() {
   return (
-    <div className="p-3 md:p-4">
+    <div className="p-3 md:p-4 animate-in fade-in duration-300">
       <div className="flex justify-between items-start mb-2">
         <Skeleton className="h-4 w-20" />
         <Skeleton className="h-4 w-4" />

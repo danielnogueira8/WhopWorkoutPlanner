@@ -17,6 +17,7 @@ import { useWhop } from '~/components/whop-context'
 import { nutritionPlansQuery } from '~/components/nutrition/queries'
 import { plansQuery, userAssignmentsQuery, workoutHistoryQuery, recentActivityQuery } from '~/components/workouts/queries'
 import { StatsSkeleton } from '~/components/ui/Skeleton'
+import { EmptyState } from '~/components/ui/EmptyState'
 import { WhopAccess } from '~/types/whop'
 
 export default function UserDashboardPage() {
@@ -115,35 +116,45 @@ export default function UserDashboardPage() {
   ]
 
   return (
-    <div className="p-4 md:p-6">
+    <div className="p-4 md:p-6 space-y-6">
       {/* Welcome Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+      <div className="border-b border-gray-200 dark:border-gray-800 pb-6">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
           Welcome back, {user.name}!
         </h1>
-        <p className="text-gray-600">
+        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
           Ready to continue your fitness journey? Let's make today count.
         </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         {assignmentsLoading ? (
           <>
-            <Card><StatsSkeleton /></Card>
-            <Card><StatsSkeleton /></Card>
-            <Card><StatsSkeleton /></Card>
-            <Card><StatsSkeleton /></Card>
+            <Card className="border border-gray-100 dark:border-gray-800 transition-all duration-200 hover:shadow-md hover:scale-[1.01]">
+              <StatsSkeleton />
+            </Card>
+            <Card className="border border-gray-100 dark:border-gray-800 transition-all duration-200 hover:shadow-md hover:scale-[1.01]">
+              <StatsSkeleton />
+            </Card>
+            <Card className="border border-gray-100 dark:border-gray-800 transition-all duration-200 hover:shadow-md hover:scale-[1.01]">
+              <StatsSkeleton />
+            </Card>
+            <Card className="border border-gray-100 dark:border-gray-800 transition-all duration-200 hover:shadow-md hover:scale-[1.01]">
+              <StatsSkeleton />
+            </Card>
           </>
         ) : (
           stats.map((stat, index) => {
             const Icon = stat.icon
             const content = (
-              <Card key={index} className="hover:shadow-md transition-shadow">
+              <Card key={index} className="border border-gray-100 dark:border-gray-800 transition-all duration-200 hover:shadow-md hover:scale-[1.01]">
                 <div className="p-4">
                   <div className="flex justify-between items-start mb-3">
-                    <p className="text-sm opacity-70">{stat.label}</p>
-                    <Icon className="w-5 h-5 text-accent" />
+                    <p className="text-xs opacity-70">{stat.label}</p>
+                    <div className={`w-8 h-8 ${stat.bgColor} rounded-full flex items-center justify-center`}>
+                      <Icon className="w-4 h-4 text-emerald-600" />
+                    </div>
                   </div>
                   <p className="text-2xl font-bold">{stat.value}</p>
                 </div>
@@ -151,7 +162,7 @@ export default function UserDashboardPage() {
             )
             
             return stat.href ? (
-              <Link key={index} href={stat.href as any}>
+              <Link key={index} href={stat.href as any} className="transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg">
                 {content}
               </Link>
             ) : content
@@ -160,50 +171,50 @@ export default function UserDashboardPage() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 mt-8">
+      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
         
         {/* My Workouts */}
-        <Card>
-          <div className="p-6">
+        <Card className="border border-gray-100 dark:border-gray-800">
+          <div className="p-4 md:p-6">
             <div className="flex justify-between items-start mb-6">
               <h2 className="text-lg font-semibold text-gray-900">My Workouts</h2>
-              <Dumbbell className="w-5 h-5 text-accent" />
+              <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center">
+                <Dumbbell className="w-4 h-4 text-emerald-600" />
+              </div>
             </div>
             
             {totalWorkoutPlans === 0 ? (
-              <div className="text-center py-8">
-                <Dumbbell className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No Workouts Yet</h3>
-                <p className="text-gray-600 mb-8">Your trainer hasn't assigned any workout plans yet.</p>
-                <Link href={`/experiences/${experience.id}/inbox`} className="mt-12 inline-block">
-                  <Button variant="soft" size="2" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
-                    <MessageSquare className="w-4 h-4 mr-2" />
-                    Contact Trainer
-                  </Button>
-                </Link>
-              </div>
+              <EmptyState
+                icon={Dumbbell}
+                title="No Workouts Yet"
+                description="Your trainer hasn't assigned any workout plans yet."
+                action={{
+                  label: "Contact Trainer",
+                  onClick: () => window.location.href = `/experiences/${experience.id}/inbox`
+                }}
+              />
             ) : (
               <div className="space-y-3">
                 {userWorkoutPlans.slice(0, 3).map((plan: any) => (
-                  <div key={plan.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div key={plan.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-accent/10 rounded-full flex items-center justify-center">
-                        <Dumbbell className="w-5 h-5 text-accent" />
+                      <div className="w-10 h-10 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center">
+                        <Dumbbell className="w-5 h-5 text-emerald-600" />
                       </div>
                       <div>
-                        <h4 className="font-medium text-sm">{plan.title}</h4>
+                        <h4 className="text-sm font-medium">{plan.title}</h4>
                         <p className="text-xs opacity-70">{plan.daysCount || 0} days</p>
                       </div>
                     </div>
                     <div className="flex gap-2">
                       <Link href={`/experiences/${experience.id}/my-workouts/${plan.id}`}>
-                        <Button variant="soft" size="1" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
+                        <Button variant="soft" size="1" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950 transition-colors duration-200">
                           <Target className="w-3 h-3 mr-1" />
                           View
                         </Button>
                       </Link>
                       <Link href={`/experiences/${experience.id}/my-workouts/${plan.id}/track`}>
-                        <Button size="1">
+                        <Button size="1" className="transition-colors duration-200">
                           <Play className="w-3 h-3 mr-1" />
                           Start
                         </Button>
@@ -213,7 +224,7 @@ export default function UserDashboardPage() {
                 ))}
                 {totalWorkoutPlans > 3 && (
                   <Link href={`/experiences/${experience.id}/my-workouts`}>
-                    <Button variant="ghost" className="w-full">
+                    <Button variant="ghost" className="w-full transition-colors duration-200">
                       View All Workouts
                     </Button>
                   </Link>
@@ -224,47 +235,47 @@ export default function UserDashboardPage() {
         </Card>
 
         {/* My Nutrition Plans */}
-        <Card>
-          <div className="p-6">
+        <Card className="border border-gray-100 dark:border-gray-800">
+          <div className="p-4 md:p-6">
             <div className="flex justify-between items-start mb-6">
               <h2 className="text-lg font-semibold text-gray-900">My Nutrition Plans</h2>
-              <Apple className="w-5 h-5 text-accent" />
+              <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center">
+                <Apple className="w-4 h-4 text-emerald-600" />
+              </div>
             </div>
             
             {totalNutritionPlans === 0 ? (
-              <div className="text-center py-8">
-                <Apple className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No Nutrition Plans Yet</h3>
-                <p className="text-gray-600 mb-8">Your trainer hasn't assigned any nutrition plans yet.</p>
-                <Link href={`/experiences/${experience.id}/inbox`} className="mt-12 inline-block">
-                  <Button variant="soft" size="2" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
-                    <MessageSquare className="w-4 h-4 mr-2" />
-                    Contact Trainer
-                  </Button>
-                </Link>
-              </div>
+              <EmptyState
+                icon={Apple}
+                title="No Nutrition Plans Yet"
+                description="Your trainer hasn't assigned any nutrition plans yet."
+                action={{
+                  label: "Contact Trainer",
+                  onClick: () => window.location.href = `/experiences/${experience.id}/inbox`
+                }}
+              />
             ) : (
               <div className="space-y-3">
                 {userNutritionPlans.slice(0, 3).map((plan: any) => (
-                  <div key={plan.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div key={plan.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-accent/10 rounded-full flex items-center justify-center">
-                        <Apple className="w-5 h-5 text-accent" />
+                      <div className="w-10 h-10 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center">
+                        <Apple className="w-5 h-5 text-emerald-600" />
                       </div>
                       <div>
-                        <h4 className="font-medium text-sm">{plan.title}</h4>
+                        <h4 className="text-sm font-medium">{plan.title}</h4>
                         <p className="text-xs opacity-70">{plan.daysCount || 0} days</p>
                       </div>
                     </div>
                     <div className="flex gap-2">
                       <Link href={`/experiences/${experience.id}/nutrition-plans/${plan.id}`}>
-                        <Button variant="soft" size="1" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
+                        <Button variant="soft" size="1" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950 transition-colors duration-200">
                           <Target className="w-3 h-3 mr-1" />
                           View
                         </Button>
                       </Link>
                       {plan.content?.contentType === 'pdf' && (
-                        <Button variant="soft" size="1" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
+                        <Button variant="soft" size="1" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950 transition-colors duration-200">
                           <Download className="w-3 h-3 mr-1" />
                           PDF
                         </Button>
@@ -274,7 +285,7 @@ export default function UserDashboardPage() {
                 ))}
                 {totalNutritionPlans > 3 && (
                   <Link href={`/experiences/${experience.id}/nutrition`}>
-                    <Button variant="ghost" className="w-full">
+                    <Button variant="ghost" className="w-full transition-colors duration-200">
                       View All Nutrition Plans
                     </Button>
                   </Link>
@@ -286,92 +297,94 @@ export default function UserDashboardPage() {
       </div>
 
       {/* Recent Activity */}
-      <div className="mt-6">
-        <Card>
-          <div className="p-6">
-            <div className="flex justify-between items-start mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
-              <Clock className="w-5 h-5 text-accent" />
+      <Card className="border border-gray-100 dark:border-gray-800">
+        <div className="p-4 md:p-6">
+          <div className="flex justify-between items-start mb-6">
+            <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
+            <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center">
+              <Clock className="w-4 h-4 text-emerald-600" />
             </div>
-            {historyLoading || activityLoading ? (
-              <div className="space-y-3">
-                {[...Array(3)].map((_, i) => (
-                  <div key={i} className="flex items-center space-x-3">
-                    <div className="w-4 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                    <div className="flex-1">
-                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1"></div>
-                      <div className="h-2 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                    </div>
+          </div>
+          {historyLoading || activityLoading ? (
+            <div className="space-y-3">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="flex items-center space-x-3">
+                  <div className="w-4 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                  <div className="flex-1">
+                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1"></div>
+                    <div className="h-2 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
                   </div>
-                ))}
-              </div>
-            ) : (workoutHistory && workoutHistory.length > 0) || (activityData?.activities && activityData.activities.length > 0) ? (
-              <div className="space-y-3 max-h-64 overflow-y-auto">
-                {workoutHistory?.slice(0, 5).map((session) => (
-                  <div key={session.id} className="flex items-start space-x-3">
-                    <CheckCircle className="w-4 h-4 mt-0.5 text-green-600" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{session.planTitle} - {session.dayName}</p>
-                      <p className="text-xs opacity-70">
-                        Completed {new Date(session.completedAt).toLocaleDateString()}
-                      </p>
-                      <p className="text-xs opacity-50">
-                        {session.exerciseCount} exercises
-                      </p>
-                    </div>
-                    <Link href={`/experiences/${experience.id}/my-workouts/sessions/${session.id}`}>
-                      <Button variant="soft" size="1" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
-                        <Target className="w-3 h-3 mr-1" />
-                        View
-                      </Button>
-                    </Link>
+                </div>
+              ))}
+            </div>
+          ) : (workoutHistory && workoutHistory.length > 0) || (activityData?.activities && activityData.activities.length > 0) ? (
+            <div className="space-y-3 max-h-64 overflow-y-auto">
+              {workoutHistory?.slice(0, 5).map((session) => (
+                <div key={session.id} className="flex items-start space-x-3 p-3 rounded-lg transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800">
+                  <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center mt-0.5">
+                    <CheckCircle className="w-4 h-4 text-emerald-600" />
                   </div>
-                ))}
-                
-                {/* Show general activity including messages (excluding own messages) */}
-                {activityData?.activities
-                  ?.filter((activity) => {
-                    // Filter out user's own messages from recent activity
-                    if (activity.type === 'message' && activity.whopUserId === user.id) {
-                      return false
-                    }
-                    return true
-                  })
-                  ?.slice(0, 2)
-                  ?.map((activity) => {
-                    const formatted = formatActivity(activity)
-                    const Icon = formatted.icon
-                    return (
-                      <div key={activity.id} className="flex items-start space-x-3">
-                        <Icon className="w-4 h-4 mt-0.5 text-accent" />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm">{formatted.description}</p>
-                          <p className="text-xs opacity-70">{formatted.time}</p>
-                        </div>
-                      </div>
-                    )
-                  })}
-                
-                {workoutHistory && workoutHistory.length > 5 && (
-                  <Link href={`/experiences/${experience.id}/my-workouts`}>
-                    <Button variant="ghost" className="w-full">
-                      View All Workout History
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium">{session.planTitle} - {session.dayName}</p>
+                    <p className="text-xs opacity-70">
+                      Completed {new Date(session.completedAt).toLocaleDateString()}
+                    </p>
+                    <p className="text-xs opacity-50">
+                      {session.exerciseCount} exercises
+                    </p>
+                  </div>
+                  <Link href={`/experiences/${experience.id}/my-workouts/sessions/${session.id}`}>
+                    <Button variant="soft" size="1" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950 transition-colors duration-200">
+                      <Target className="w-3 h-3 mr-1" />
+                      View
                     </Button>
                   </Link>
-                )}
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <Clock className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No Recent Activity</h3>
-                <p className="text-gray-600">
-                  Your workout and nutrition activity will appear here.
-                </p>
-              </div>
-            )}
-          </div>
-        </Card>
-      </div>
+                </div>
+              ))}
+              
+              {/* Show general activity including messages (excluding own messages) */}
+              {activityData?.activities
+                ?.filter((activity) => {
+                  // Filter out user's own messages from recent activity
+                  if (activity.type === 'message' && activity.whopUserId === user.id) {
+                    return false
+                  }
+                  return true
+                })
+                ?.slice(0, 2)
+                ?.map((activity) => {
+                  const formatted = formatActivity(activity)
+                  const Icon = formatted.icon
+                  return (
+                    <div key={activity.id} className="flex items-start space-x-3 p-3 rounded-lg transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800">
+                      <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center mt-0.5">
+                        <Icon className="w-4 h-4 text-emerald-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm">{formatted.description}</p>
+                        <p className="text-xs opacity-70">{formatted.time}</p>
+                      </div>
+                    </div>
+                  )
+                })}
+              
+              {workoutHistory && workoutHistory.length > 5 && (
+                <Link href={`/experiences/${experience.id}/my-workouts`}>
+                  <Button variant="ghost" className="w-full transition-colors duration-200">
+                    View All Workout History
+                  </Button>
+                </Link>
+              )}
+            </div>
+          ) : (
+            <EmptyState
+              icon={Clock}
+              title="No Recent Activity"
+              description="Your workout and nutrition activity will appear here."
+            />
+          )}
+        </div>
+      </Card>
     </div>
   )
 }

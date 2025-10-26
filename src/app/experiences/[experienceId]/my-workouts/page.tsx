@@ -8,6 +8,7 @@ import { useWhop } from '~/components/whop-context'
 import { plansQuery, planDetailQuery, workoutHistoryQuery } from '~/components/workouts/queries'
 import { generateWorkoutPlanPDF } from '~/lib/pdf-generator'
 import { StatsSkeleton, CardSkeleton } from '~/components/ui/Skeleton'
+import { EmptyState } from '~/components/ui/EmptyState'
 import { WhopAccess } from '~/types/whop'
 
 export default function MyWorkoutsPage() {
@@ -64,90 +65,92 @@ export default function MyWorkoutsPage() {
 
   if (isLoading) {
     return (
-      <div className="p-4 md:p-6">
+      <div className="p-4 md:p-6 space-y-6">
         {/* Header */}
-        <div className="mb-4 md:mb-6">
-          <h1 className="text-xl md:text-2xl font-bold">My Workouts</h1>
-          <p className="text-sm opacity-70 mt-1">Track your fitness journey and progress</p>
+        <div className="border-b border-gray-200 dark:border-gray-800 pb-6">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">My Workouts</h1>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mt-1">Track your fitness journey and progress</p>
         </div>
 
         {/* Stats Overview Skeleton */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
-          <Card><StatsSkeleton /></Card>
-          <Card><StatsSkeleton /></Card>
-          <Card><StatsSkeleton /></Card>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          <Card className="border border-gray-100 dark:border-gray-800"><StatsSkeleton /></Card>
+          <Card className="border border-gray-100 dark:border-gray-800"><StatsSkeleton /></Card>
+          <Card className="border border-gray-100 dark:border-gray-800"><StatsSkeleton /></Card>
         </div>
 
         {/* Workout Plans Skeleton */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold">Your Workout Plans</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Your Workout Plans</h2>
           <div className="grid gap-4">
-            <Card><CardSkeleton /></Card>
-            <Card><CardSkeleton /></Card>
+            <Card className="border border-gray-100 dark:border-gray-800"><CardSkeleton /></Card>
+            <Card className="border border-gray-100 dark:border-gray-800"><CardSkeleton /></Card>
           </div>
         </div>
 
         {/* Workout History Skeleton */}
-        <div className="mt-8">
-          <Card>
-            <div className="p-4 md:p-5">
-              <h3 className="font-semibold mb-4">Recent Workout History</h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
-                    <div>
-                      <div className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1" />
-                      <div className="h-3 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
-                    </div>
+        <Card className="border border-gray-100 dark:border-gray-800">
+          <div className="p-4 md:p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">Recent Workout History</h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+                  <div>
+                    <div className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1" />
+                    <div className="h-3 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
                   </div>
-                  <div className="text-right">
-                    <div className="h-3 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1" />
-                    <div className="h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
-                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="h-3 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1" />
+                  <div className="h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
                 </div>
               </div>
             </div>
-          </Card>
-        </div>
+          </div>
+        </Card>
       </div>
     )
   }
 
   if (userPlans.length === 0) {
     return (
-      <div className="p-4 md:p-6">
-        <div className="text-center py-12">
-          <Dumbbell className="w-16 h-16 mx-auto text-accent mb-4" />
-          <h2 className="text-xl font-semibold mb-2">No Workouts Assigned</h2>
-          <p className="text-sm opacity-70 mb-6">
-            You don't have any workout plans assigned yet. Contact your trainer to get started!
-          </p>
+      <div className="p-4 md:p-6 space-y-6">
+        <div className="border-b border-gray-200 dark:border-gray-800 pb-6">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">My Workouts</h1>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mt-1">Track your fitness journey and progress</p>
         </div>
+        <EmptyState
+          icon={Dumbbell}
+          title="No Workouts Assigned"
+          description="You don't have any workout plans assigned yet. Contact your trainer to get started!"
+        />
       </div>
     )
   }
 
   return (
-    <div className="p-4 md:p-6">
+    <div className="p-4 md:p-6 space-y-6">
       {/* Header */}
-      <div className="mb-4 md:mb-6">
-        <h1 className="text-xl md:text-2xl font-bold">My Workouts</h1>
-        <p className="text-sm opacity-70 mt-1">Track your fitness journey and progress</p>
+      <div className="border-b border-gray-200 dark:border-gray-800 pb-6">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-900">My Workouts</h1>
+        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mt-1">Track your fitness journey and progress</p>
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         {stats.map((stat, index) => {
           const Icon = stat.icon
           return (
-            <Card key={index}>
-              <div className="p-3 md:p-4">
-                <div className="flex justify-between items-start mb-2">
-                  <p className="text-xs md:text-sm opacity-70">{stat.label}</p>
-                  <Icon className="w-4 h-4 text-accent" />
+            <Card key={index} className="border border-gray-100 dark:border-gray-800 transition-all duration-200 hover:shadow-md hover:scale-[1.01]">
+              <div className="p-4">
+                <div className="flex justify-between items-start mb-3">
+                  <p className="text-xs opacity-70">{stat.label}</p>
+                  <div className={`w-8 h-8 ${stat.bgColor} rounded-full flex items-center justify-center`}>
+                    <Icon className="w-4 h-4 text-emerald-600" />
+                  </div>
                 </div>
-                <p className="text-lg md:text-2xl font-bold">{stat.value}</p>
+                <p className="text-2xl font-bold">{stat.value}</p>
               </div>
             </Card>
           )
@@ -156,43 +159,43 @@ export default function MyWorkoutsPage() {
 
       {/* Workout Plans */}
       <div className="space-y-4">
-        <h2 className="text-lg font-semibold">Your Workout Plans</h2>
+        <h2 className="text-lg font-semibold text-gray-900">Your Workout Plans</h2>
         <div className="grid gap-4">
           {userPlans.map((plan) => {
             const isCompleted = false // TODO: Implement completion tracking
             
             return (
-              <Card key={plan.id}>
-                <div className="p-4 md:p-5">
+              <Card key={plan.id} className="border border-gray-100 dark:border-gray-800 transition-all duration-200 hover:shadow-md hover:scale-[1.01]">
+                <div className="p-4 md:p-6">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-semibold">{plan.title}</h3>
+                        <h3 className="text-sm font-medium">{plan.title}</h3>
                         {isCompleted && (
-                          <div className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 text-xs rounded-full">
+                          <div className="px-2 py-1 bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 text-xs rounded-full">
                             Completed
                           </div>
                         )}
                       </div>
-                      <div className="flex items-center gap-4 text-sm opacity-70">
+                      <div className="flex items-center gap-4 text-xs opacity-70">
                         <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4 text-accent" />
+                          <Calendar className="w-4 h-4 text-emerald-600" />
                           {plan.daysCount} days
                         </div>
                       </div>
                       {plan.description && (
-                        <p className="text-sm opacity-70 mt-2">{plan.description}</p>
+                        <p className="text-xs opacity-70 mt-2">{plan.description}</p>
                       )}
                     </div>
                     <div className="flex gap-2">
-                          <Link href={`/experiences/${experience.id}/my-workouts/${plan.id}` as any}>
-                        <Button variant="soft" size="2" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
+                      <Link href={`/experiences/${experience.id}/my-workouts/${plan.id}` as any}>
+                        <Button variant="soft" size="2" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950 transition-colors duration-200">
                           View Plan
                         </Button>
                       </Link>
                       {!isCompleted && (
-                            <Link href={`/experiences/${experience.id}/my-workouts/${plan.id}/track` as any}>
-                          <Button size="2">
+                        <Link href={`/experiences/${experience.id}/my-workouts/${plan.id}/track` as any}>
+                          <Button size="2" className="transition-colors duration-200">
                             Start Workout
                           </Button>
                         </Link>
@@ -201,7 +204,7 @@ export default function MyWorkoutsPage() {
                         variant="soft" 
                         size="2"
                         onClick={() => handleDownloadPDF(plan.id, plan.title)}
-                        className="!bg-accent hover:!bg-accent/90 !text-white"
+                        className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950 transition-colors duration-200"
                       >
                         <Download className="w-3 h-3 mr-1" />
                         PDF
@@ -216,55 +219,58 @@ export default function MyWorkoutsPage() {
       </div>
 
       {/* Workout History */}
-      <div className="mt-8">
-        <Card>
-          <div className="p-4 md:p-5">
-            <h3 className="font-semibold mb-4">Recent Workout History</h3>
-            {isLoadingHistory ? (
-              <div className="text-sm opacity-70">Loading workout history...</div>
-            ) : workoutHistory && workoutHistory.length > 0 ? (
-              <div className="space-y-3">
-                {workoutHistory.map((session) => (
-                  <Link 
-                    key={session.id} 
-                    href={`/experiences/${experience.id}/my-workouts/sessions/${session.id}`}
-                    className="block"
-                  >
-                    <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-accent/10 rounded-full flex items-center justify-center">
-                          <CheckCircle className="w-4 h-4 text-accent" />
-                        </div>
-                        <div>
-                          <div className="font-medium text-sm">{session.planTitle}</div>
-                          <div className="text-xs opacity-70">{session.dayName}</div>
-                        </div>
+      <Card className="border border-gray-100 dark:border-gray-800">
+        <div className="p-4 md:p-6">
+          <div className="flex justify-between items-start mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">Recent Workout History</h3>
+            <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center">
+              <Clock className="w-4 h-4 text-emerald-600" />
+            </div>
+          </div>
+          {isLoadingHistory ? (
+            <div className="text-sm opacity-70">Loading workout history...</div>
+          ) : workoutHistory && workoutHistory.length > 0 ? (
+            <div className="space-y-3">
+              {workoutHistory.map((session) => (
+                <Link 
+                  key={session.id} 
+                  href={`/experiences/${experience.id}/my-workouts/sessions/${session.id}`}
+                  className="block"
+                >
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center">
+                        <CheckCircle className="w-4 h-4 text-emerald-600" />
                       </div>
-                      <div className="flex items-center gap-2">
-                        <div className="text-right">
-                          <div className="text-xs opacity-70">
-                            {new Date(session.completedAt).toLocaleDateString()}
-                          </div>
-                          <div className="text-xs opacity-70">
-                            {session.exerciseCount} exercises logged
-                          </div>
-                        </div>
-                        <ChevronRight className="w-4 h-4 opacity-50" />
+                      <div>
+                        <div className="text-sm font-medium">{session.planTitle}</div>
+                        <div className="text-xs opacity-70">{session.dayName}</div>
                       </div>
                     </div>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <Dumbbell className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                <p className="text-sm opacity-70">No workout history yet</p>
-                <p className="text-xs opacity-50 mt-1">Complete your first workout to see it here</p>
-              </div>
-            )}
-          </div>
-        </Card>
-      </div>
+                    <div className="flex items-center gap-2">
+                      <div className="text-right">
+                        <div className="text-xs opacity-70">
+                          {new Date(session.completedAt).toLocaleDateString()}
+                        </div>
+                        <div className="text-xs opacity-70">
+                          {session.exerciseCount} exercises logged
+                        </div>
+                      </div>
+                      <ChevronRight className="w-4 h-4 opacity-50" />
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              icon={Clock}
+              title="No Workout History"
+              description="Your completed workouts will appear here."
+            />
+          )}
+        </div>
+      </Card>
 
     </div>
   )

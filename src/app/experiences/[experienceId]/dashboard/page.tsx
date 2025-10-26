@@ -7,6 +7,8 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useWhop } from '~/components/whop-context'
 import { dashboardStatsQuery, createPlanMutation, recentActivityQuery, recentAssignmentsQuery, type RecentActivity, type RecentAssignment } from '~/components/workouts/queries'
+import { StatsSkeleton } from '~/components/ui/Skeleton'
+import { EmptyState } from '~/components/ui/EmptyState'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export default function DashboardPage() {
@@ -107,46 +109,68 @@ export default function DashboardPage() {
   ]
 
   return (
-    <div className="p-4 md:p-6">
-      <div className="mb-4 md:mb-6">
-        <h1 className="text-xl md:text-2xl font-bold">Dashboard</h1>
+    <div className="p-4 md:p-6 space-y-6">
+      <div className="border-b border-gray-200 dark:border-gray-800 pb-6">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mt-2">
+          Overview of your fitness coaching business
+        </p>
       </div>
 
       {/* Clean Metrics Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-4 md:mb-6">
-        {metrics.map((metric, index) => {
-          const Icon = metric.icon
-          return (
-            <Card key={index}>
-              <div className="p-3 md:p-4">
-                <div className="flex justify-between items-start mb-2">
-                  <p className="text-xs md:text-sm opacity-70">{metric.label}</p>
-                  <Icon className="w-4 h-4 text-accent" />
-                </div>
-                {isLoading ? (
-                  <div className="h-6 w-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                ) : error ? (
-                  <p className="text-sm text-red-600">Error</p>
-                ) : (
-                  <p className="text-lg md:text-2xl font-bold">{metric.value}</p>
-                )}
-              </div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+        {isLoading ? (
+          <>
+            <Card className="border border-gray-100 dark:border-gray-800 transition-all duration-200 hover:shadow-md hover:scale-[1.01]">
+              <StatsSkeleton />
             </Card>
-          )
-        })}
+            <Card className="border border-gray-100 dark:border-gray-800 transition-all duration-200 hover:shadow-md hover:scale-[1.01]">
+              <StatsSkeleton />
+            </Card>
+            <Card className="border border-gray-100 dark:border-gray-800 transition-all duration-200 hover:shadow-md hover:scale-[1.01]">
+              <StatsSkeleton />
+            </Card>
+            <Card className="border border-gray-100 dark:border-gray-800 transition-all duration-200 hover:shadow-md hover:scale-[1.01]">
+              <StatsSkeleton />
+            </Card>
+          </>
+        ) : (
+          metrics.map((metric, index) => {
+            const Icon = metric.icon
+            return (
+              <Card key={index} className="border border-gray-100 dark:border-gray-800 transition-all duration-200 hover:shadow-md hover:scale-[1.01]">
+                <div className="p-4">
+                  <div className="flex justify-between items-start mb-3">
+                    <p className="text-xs opacity-70">{metric.label}</p>
+                    <div className={`w-8 h-8 ${metric.bgColor} rounded-full flex items-center justify-center`}>
+                      <Icon className="w-4 h-4 text-emerald-600" />
+                    </div>
+                  </div>
+                  {error ? (
+                    <p className="text-sm text-red-600">Error</p>
+                  ) : (
+                    <p className="text-2xl font-bold">{metric.value}</p>
+                  )}
+                </div>
+              </Card>
+            )
+          })
+        )}
       </div>
 
       {/* Recent Activity and Recent Assignments */}
-      <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 mt-6 md:mt-8">
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
 
-        <Card>
-          <div className="p-4 md:p-5">
-            <div className="flex justify-between items-start mb-3">
-              <h2 className="text-base md:text-lg font-semibold">Recent Activity</h2>
-              <Clock className="w-4 h-4 text-accent" />
+        <Card className="border border-gray-100 dark:border-gray-800">
+          <div className="p-4 md:p-6">
+            <div className="flex justify-between items-start mb-6">
+              <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
+              <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center">
+                <Clock className="w-4 h-4 text-emerald-600" />
+              </div>
             </div>
             {isLoadingActivity ? (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {[...Array(3)].map((_, i) => (
                   <div key={i} className="flex items-center space-x-3">
                     <div className="w-4 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
@@ -158,20 +182,21 @@ export default function DashboardPage() {
                 ))}
               </div>
             ) : activityData?.activities.length === 0 ? (
-              <div className="text-sm opacity-70">
-                <p className="mb-2">No recent activity yet.</p>
-                <p className="text-xs">
-                  Activity will appear here when you create plans, assign workouts, or send messages.
-                </p>
-              </div>
+              <EmptyState
+                icon={Clock}
+                title="No Recent Activity"
+                description="Activity will appear here when you create plans, assign workouts, or send messages."
+              />
             ) : (
               <div className="space-y-3 max-h-64 overflow-y-auto">
                 {activityData?.activities.slice(0, 5).map((activity) => {
                   const formatted = formatActivity(activity)
                   const Icon = formatted.icon
                   return (
-                    <div key={activity.id} className="flex items-start space-x-3">
-                      <Icon className="w-4 h-4 mt-0.5 text-accent" />
+                    <div key={activity.id} className="flex items-start space-x-3 p-3 rounded-lg transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800">
+                      <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center mt-0.5">
+                        <Icon className="w-4 h-4 text-emerald-600" />
+                      </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm">{formatted.description}</p>
                         <p className="text-xs opacity-70">{formatted.time}</p>
@@ -184,14 +209,16 @@ export default function DashboardPage() {
           </div>
         </Card>
 
-        <Card>
-          <div className="p-4 md:p-5">
-            <div className="flex justify-between items-start mb-3">
-              <h2 className="text-base md:text-lg font-semibold">Recent Assignments</h2>
-              <UserCheckIcon className="w-4 h-4 text-accent" />
+        <Card className="border border-gray-100 dark:border-gray-800">
+          <div className="p-4 md:p-6">
+            <div className="flex justify-between items-start mb-6">
+              <h2 className="text-lg font-semibold text-gray-900">Recent Assignments</h2>
+              <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center">
+                <UserCheckIcon className="w-4 h-4 text-emerald-600" />
+              </div>
             </div>
             {isLoadingAssignments ? (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {[...Array(3)].map((_, i) => (
                   <div key={i} className="flex items-center space-x-3">
                     <div className="w-4 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
@@ -203,12 +230,18 @@ export default function DashboardPage() {
                 ))}
               </div>
             ) : assignmentsData?.assignments.length === 0 ? (
-              <div className="text-sm opacity-70">No recent assignments</div>
+              <EmptyState
+                icon={UserCheckIcon}
+                title="No Recent Assignments"
+                description="Assignments will appear here when you assign workout plans to clients."
+              />
             ) : (
               <div className="space-y-3 max-h-64 overflow-y-auto">
                 {assignmentsData?.assignments.slice(0, 5).map((assignment) => (
-                  <div key={assignment.id} className="flex items-start space-x-3">
-                    <UserCheckIcon className="w-4 h-4 mt-0.5 text-accent" />
+                  <div key={assignment.id} className="flex items-start space-x-3 p-3 rounded-lg transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center mt-0.5">
+                      <UserCheckIcon className="w-4 h-4 text-emerald-600" />
+                    </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium">{assignment.user.name}</p>
                       <p className="text-xs opacity-70">
@@ -227,52 +260,70 @@ export default function DashboardPage() {
       </div>
 
       {/* Quick Actions */}
-      <div className="mt-4 md:mt-6 grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2">
-        <Card>
-          <div className="p-4 md:p-5">
-            <div className="flex justify-between items-start mb-3">
-              <h2 className="text-base md:text-lg font-semibold">Quick Actions</h2>
-              <Settings className="w-4 h-4 text-accent" />
-            </div>
-            <div className="space-y-3">
-              <Dialog.Root open={newPlanOpen} onOpenChange={setNewPlanOpen}>
-                <Dialog.Trigger>
-                  <Button variant="ghost" className="w-full flex items-center justify-start text-left p-0 h-auto !justify-start">
-                    <Plus className="w-4 h-4 mr-2 text-accent" />
-                    Create New Workout Plan
-                  </Button>
-                </Dialog.Trigger>
-                <Dialog.Content>
-                  <Dialog.Title>Create New Workout Plan</Dialog.Title>
-                  <div className="mt-4">
-                    <TextField.Input
-                      placeholder="Plan title"
-                      value={newPlanTitle}
-                      onChange={(e: any) => setNewPlanTitle(e.target.value)}
-                    />
-                  </div>
-                  <div className="mt-4 flex justify-end">
-                    <Button
-                      disabled={!newPlanTitle || createPlan.isPending}
-                      onClick={() => createPlan.mutate({ title: newPlanTitle })}
-                    >
-                      {createPlan.isPending ? "Creating..." : "Create"}
-                    </Button>
-                  </div>
-                </Dialog.Content>
-              </Dialog.Root>
-
-              <Link href={`/experiences/${experience.id}/clients`}>
-                <Button variant="ghost" className="w-full flex items-center justify-start text-left p-0 h-auto !justify-start">
-                  <UserCheck className="w-4 h-4 mr-2 text-accent" />
-                  Assign Workout to Client
-                </Button>
-              </Link>
+      <Card className="border border-gray-100 dark:border-gray-800">
+        <div className="p-4 md:p-6">
+          <div className="flex justify-between items-start mb-6">
+            <h2 className="text-lg font-semibold text-gray-900">Quick Actions</h2>
+            <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center">
+              <Settings className="w-4 h-4 text-emerald-600" />
             </div>
           </div>
-        </Card>
-        <div></div>
-      </div>
+          <div className="space-y-4">
+            <Dialog.Root open={newPlanOpen} onOpenChange={setNewPlanOpen}>
+              <Dialog.Trigger>
+                <Button variant="ghost" className="w-full flex items-center justify-start text-left p-3 h-auto !justify-start transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg">
+                  <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center mr-3">
+                    <Plus className="w-4 h-4 text-emerald-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Create New Workout Plan</p>
+                    <p className="text-xs opacity-70">Start building a new workout plan</p>
+                  </div>
+                </Button>
+              </Dialog.Trigger>
+              <Dialog.Content>
+                <Dialog.Title>Create New Workout Plan</Dialog.Title>
+                <div className="mt-4">
+                  <TextField.Input
+                    placeholder="Plan title"
+                    value={newPlanTitle}
+                    onChange={(e: any) => setNewPlanTitle(e.target.value)}
+                    className="focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+                <div className="mt-4 flex justify-end gap-2">
+                  <Button
+                    variant="soft"
+                    onClick={() => setNewPlanOpen(false)}
+                    className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    disabled={!newPlanTitle || createPlan.isPending}
+                    onClick={() => createPlan.mutate({ title: newPlanTitle })}
+                    className="transition-colors duration-200"
+                  >
+                    {createPlan.isPending ? "Creating..." : "Create"}
+                  </Button>
+                </div>
+              </Dialog.Content>
+            </Dialog.Root>
+
+            <Link href={`/experiences/${experience.id}/clients`}>
+              <Button variant="ghost" className="w-full flex items-center justify-start text-left p-3 h-auto !justify-start transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg">
+                <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center mr-3">
+                  <UserCheck className="w-4 h-4 text-emerald-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Assign Workout to Client</p>
+                  <p className="text-xs opacity-70">Manage client assignments</p>
+                </div>
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </Card>
 
     </div>
   )
