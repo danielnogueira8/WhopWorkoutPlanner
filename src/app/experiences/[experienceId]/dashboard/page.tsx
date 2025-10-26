@@ -268,7 +268,7 @@ export default function DashboardPage() {
               <Settings className="w-4 h-4 text-emerald-600" />
             </div>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-6">
             <Dialog.Root open={newPlanOpen} onOpenChange={setNewPlanOpen}>
               <Dialog.Trigger>
                 <Button variant="ghost" className="w-full flex items-center justify-start text-left p-3 h-auto !justify-start transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg">
