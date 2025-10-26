@@ -124,7 +124,7 @@ export default function NutritionPlansPage() {
                           )}
                         </div>
                         <div className="text-xs opacity-70">
-                          {p.daysCount || 0} days • {p.assignedCount} assigned
+                          {p.assignedCount} assigned
                           {p.hasPDF && p.pdfFilename && (
                             <span className="ml-2 text-green-600 dark:text-green-400">
                               • {p.pdfFilename}

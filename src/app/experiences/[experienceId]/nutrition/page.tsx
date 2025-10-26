@@ -92,10 +92,6 @@ export default function NutritionPage() {
                         <h3 className="font-semibold">{plan.title}</h3>
                       </div>
                       <div className="flex items-center gap-4 text-sm opacity-70">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4 text-accent" />
-                          {plan.daysCount || 0} days
-                        </div>
                         {assignedDate && (
                           <div className="flex items-center gap-1">
                             <Clock className="w-4 h-4 text-accent" />
