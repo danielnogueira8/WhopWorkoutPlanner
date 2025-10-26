@@ -1,22 +1,16 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { Card, Button, Dialog, TextField } from 'frosted-ui'
-import { Users, BookOpen, CheckCircle, UserPlus, Plus, UserCheck, Eye, Settings, MessageSquare, Clock, UserCheck as UserCheckIcon, Apple } from 'lucide-react'
-import Link from 'next/link'
-import { useState } from 'react'
+import { Card } from 'frosted-ui'
+import { Users, BookOpen, CheckCircle, UserPlus, Plus, UserCheck, Eye, MessageSquare, Clock, UserCheck as UserCheckIcon, Apple } from 'lucide-react'
 import { useWhop } from '~/components/whop-context'
-import { dashboardStatsQuery, createPlanMutation, recentActivityQuery, recentAssignmentsQuery, type RecentActivity, type RecentAssignment } from '~/components/workouts/queries'
+import { dashboardStatsQuery, recentActivityQuery, recentAssignmentsQuery, type RecentActivity, type RecentAssignment } from '~/components/workouts/queries'
 import { StatsSkeleton } from '~/components/ui/Skeleton'
 import { EmptyState } from '~/components/ui/EmptyState'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export default function DashboardPage() {
   const { access, experience } = useWhop()
   const isAdmin = (access as any).accessLevel === 'admin'
-  const [newPlanOpen, setNewPlanOpen] = useState(false)
-  const [newPlanTitle, setNewPlanTitle] = useState('')
-  const qc = useQueryClient()
   
   if (!isAdmin) {
     return (
@@ -29,17 +23,6 @@ export default function DashboardPage() {
   const { data: stats, isLoading, error } = useQuery(dashboardStatsQuery(experience.id))
   const { data: activityData, isLoading: isLoadingActivity } = useQuery(recentActivityQuery(experience.id))
   const { data: assignmentsData, isLoading: isLoadingAssignments } = useQuery(recentAssignmentsQuery(experience.id))
-
-  const createPlan = useMutation({
-    mutationFn: createPlanMutation(experience.id).mutationFn,
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['dashboard-stats', experience.id] })
-      qc.invalidateQueries({ queryKey: ['workout-plans', experience.id] })
-      qc.invalidateQueries({ queryKey: ['recent-activity', experience.id] })
-      setNewPlanOpen(false)
-      setNewPlanTitle('')
-    },
-  })
 
   const formatActivity = (activity: RecentActivity) => {
     const timeAgo = new Date(activity.createdAt).toLocaleDateString()
@@ -262,72 +245,6 @@ export default function DashboardPage() {
           </div>
         </Card>
       </div>
-
-      {/* Quick Actions */}
-      <Card className="border border-gray-100 dark:border-gray-800">
-        <div className="p-4 md:p-6">
-          <div className="flex justify-between items-start mb-6">
-            <h2 className="text-lg font-semibold text-gray-900">Quick Actions</h2>
-            <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center">
-              <Settings className="w-4 h-4 text-emerald-600" />
-            </div>
-          </div>
-          <div className="space-y-6">
-            <Dialog.Root open={newPlanOpen} onOpenChange={setNewPlanOpen}>
-              <Dialog.Trigger>
-                <Button variant="ghost" className="w-full flex items-center justify-start text-left p-3 h-auto !justify-start transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg">
-                  <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center mr-3">
-                    <Plus className="w-4 h-4 text-emerald-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Create New Workout Plan</p>
-                    <p className="text-xs opacity-70">Start building a new workout plan</p>
-                  </div>
-                </Button>
-              </Dialog.Trigger>
-              <Dialog.Content>
-                <Dialog.Title>Create New Workout Plan</Dialog.Title>
-                <div className="mt-4">
-                  <TextField.Input
-                    placeholder="Plan title"
-                    value={newPlanTitle}
-                    onChange={(e: any) => setNewPlanTitle(e.target.value)}
-                    className="focus:ring-2 focus:ring-emerald-500"
-                  />
-                </div>
-                <div className="mt-4 flex justify-end gap-2">
-                  <Button
-                    variant="soft"
-                    onClick={() => setNewPlanOpen(false)}
-                    className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    disabled={!newPlanTitle || createPlan.isPending}
-                    onClick={() => createPlan.mutate({ title: newPlanTitle })}
-                    className="transition-colors duration-200"
-                  >
-                    {createPlan.isPending ? "Creating..." : "Create"}
-                  </Button>
-                </div>
-              </Dialog.Content>
-            </Dialog.Root>
-
-            <Link href={`/experiences/${experience.id}/clients`}>
-              <Button variant="ghost" className="w-full flex items-center justify-start text-left p-3 h-auto !justify-start transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg">
-                <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center mr-3">
-                  <UserCheck className="w-4 h-4 text-emerald-600" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Assign Workout to Client</p>
-                  <p className="text-xs opacity-70">Manage client assignments</p>
-                </div>
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </Card>
 
     </div>
   )
