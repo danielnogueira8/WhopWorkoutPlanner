@@ -276,7 +276,7 @@ export default function DashboardPage() {
                     <Plus className="w-4 h-4 text-emerald-600" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium">Create New Workout Plan</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Create New Workout Plan</p>
                     <p className="text-xs opacity-70">Start building a new workout plan</p>
                   </div>
                 </Button>
@@ -316,7 +316,7 @@ export default function DashboardPage() {
                   <UserCheck className="w-4 h-4 text-emerald-600" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium">Assign Workout to Client</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Assign Workout to Client</p>
                   <p className="text-xs opacity-70">Manage client assignments</p>
                 </div>
               </Button>
