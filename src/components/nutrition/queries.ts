@@ -67,6 +67,18 @@ export const removeNutritionPlanAssignmentMutation = (experienceId: string, plan
   },
 })
 
+export const bulkAssignNutritionPlanMutation = (experienceId: string, planId: string) => ({
+  mutationFn: async (whopUserIds: string[]) => {
+    const res = await fetch(`/api/experience/${experienceId}/nutrition/${planId}/assign/bulk`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ whopUserIds }),
+    })
+    if (!res.ok) throw new Error('Failed to bulk assign nutrition plan')
+    return res.json()
+  },
+})
+
 // Nutrition plan detail query
 export const nutritionPlanDetailQuery = (experienceId: string, planId: string) => ({
   queryKey: ['nutrition-plan-detail', experienceId, planId],
