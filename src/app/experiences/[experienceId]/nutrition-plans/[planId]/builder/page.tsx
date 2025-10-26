@@ -163,14 +163,6 @@ export default function NutritionBuilderPage({ params }: NutritionBuilderProps) 
       <nav className="mb-6">
         <div className="flex items-center space-x-2 text-sm">
           <Link 
-            href={`/experiences/${experienceId}`}
-            className="flex items-center gap-1 text-gray-600 hover:text-accent transition-colors"
-          >
-            <Home className="w-4 h-4" />
-            Home
-          </Link>
-          <ChevronRight className="w-4 h-4 text-gray-400" />
-          <Link 
             href={`/experiences/${experienceId}/nutrition-plans`}
             className="text-gray-600 hover:text-accent transition-colors"
           >
