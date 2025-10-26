@@ -103,8 +103,12 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
           } else if (i.key === 'nutrition') {
             // Nutrition tab logic
             if (isAdmin) {
-              // Admins: Only active on /nutrition page, never on /nutrition-plans/
-              active = pathname?.startsWith(i.href) && !pathname?.includes('/nutrition-plans/')
+              // Admins: Active on /nutrition page OR when viewing nutrition plans (not building)
+              if (pathname?.includes('/nutrition-plans/')) {
+                active = !pathname?.includes('/builder')
+              } else {
+                active = pathname?.startsWith(i.href)
+              }
             } else {
               // Users: Active on nutrition pages OR when viewing nutrition plans (except builder)
               if (pathname?.includes('/nutrition-plans/')) {
@@ -271,8 +275,12 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
               } else if (i.key === 'nutrition') {
                 // Nutrition tab logic
                 if (isAdmin) {
-                  // Admins: Only active on /nutrition page, never on /nutrition-plans/
-                  active = pathname?.startsWith(i.href) && !pathname?.includes('/nutrition-plans/')
+                  // Admins: Active on /nutrition page OR when viewing nutrition plans (not building)
+                  if (pathname?.includes('/nutrition-plans/')) {
+                    active = !pathname?.includes('/builder')
+                  } else {
+                    active = pathname?.startsWith(i.href)
+                  }
                 } else {
                   // Users: Active on nutrition pages OR when viewing nutrition plans (except builder)
                   if (pathname?.includes('/nutrition-plans/')) {
