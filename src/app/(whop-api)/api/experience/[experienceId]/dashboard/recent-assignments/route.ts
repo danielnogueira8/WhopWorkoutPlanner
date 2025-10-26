@@ -38,20 +38,53 @@ export async function GET(
     // Get recent workout plan assignments (last 10)
     let workoutAssignmentsData: any[] = []
     try {
-      workoutAssignmentsData = await db
+      // First get assignments, then get plan titles separately to avoid circular references
+      const assignments = await db
         .select({
           id: workoutAssignments.id,
-          planTitle: workoutPlans.title,
+          planId: workoutAssignments.planId,
           whopUserId: workoutAssignments.whopUserId,
           assignedByWhopUserId: workoutAssignments.assignedByWhopUserId,
           assignedAt: workoutAssignments.assignedAt,
-          type: 'workout' as const,
         })
         .from(workoutAssignments)
-        .innerJoin(workoutPlans, eq(workoutAssignments.planId, workoutPlans.id))
-        .where(eq(workoutPlans.experienceId, experienceId))
-        .orderBy(desc(workoutAssignments.assignedAt))
         .limit(10)
+      
+      console.log('🔍 Raw workout assignments:', assignments.length)
+      
+      // Get plan titles for these assignments
+      if (assignments.length > 0) {
+        const planIds = assignments.map(a => a.planId)
+        const plans = await db
+          .select({
+            id: workoutPlans.id,
+            title: workoutPlans.title,
+            experienceId: workoutPlans.experienceId,
+          })
+          .from(workoutPlans)
+          .where(eq(workoutPlans.experienceId, experienceId))
+        
+        console.log('🔍 Plans for experience:', plans.length)
+        
+        // Match assignments with plans
+        workoutAssignmentsData = assignments
+          .map(assignment => {
+            const plan = plans.find(p => p.id === assignment.planId)
+            if (plan) {
+              return {
+                id: assignment.id,
+                planTitle: plan.title,
+                whopUserId: assignment.whopUserId,
+                assignedByWhopUserId: assignment.assignedByWhopUserId,
+                assignedAt: assignment.assignedAt,
+                type: 'workout' as const,
+              }
+            }
+            return null
+          })
+          .filter(Boolean)
+          .sort((a, b) => new Date(b.assignedAt).getTime() - new Date(a.assignedAt).getTime())
+      }
       
       console.log('Workout assignments found:', workoutAssignmentsData.length)
     } catch (error) {
@@ -61,20 +94,53 @@ export async function GET(
     // Get recent nutrition plan assignments (last 10)
     let nutritionAssignmentsData: any[] = []
     try {
-      nutritionAssignmentsData = await db
+      // First get assignments, then get plan titles separately to avoid circular references
+      const assignments = await db
         .select({
           id: nutritionAssignments.id,
-          planTitle: nutritionPlans.title,
+          planId: nutritionAssignments.planId,
           whopUserId: nutritionAssignments.whopUserId,
           assignedByWhopUserId: nutritionAssignments.assignedByWhopUserId,
           assignedAt: nutritionAssignments.assignedAt,
-          type: 'nutrition' as const,
         })
         .from(nutritionAssignments)
-        .innerJoin(nutritionPlans, eq(nutritionAssignments.planId, nutritionPlans.id))
-        .where(eq(nutritionPlans.experienceId, experienceId))
-        .orderBy(desc(nutritionAssignments.assignedAt))
         .limit(10)
+      
+      console.log('🔍 Raw nutrition assignments:', assignments.length)
+      
+      // Get plan titles for these assignments
+      if (assignments.length > 0) {
+        const planIds = assignments.map(a => a.planId)
+        const plans = await db
+          .select({
+            id: nutritionPlans.id,
+            title: nutritionPlans.title,
+            experienceId: nutritionPlans.experienceId,
+          })
+          .from(nutritionPlans)
+          .where(eq(nutritionPlans.experienceId, experienceId))
+        
+        console.log('🔍 Nutrition plans for experience:', plans.length)
+        
+        // Match assignments with plans
+        nutritionAssignmentsData = assignments
+          .map(assignment => {
+            const plan = plans.find(p => p.id === assignment.planId)
+            if (plan) {
+              return {
+                id: assignment.id,
+                planTitle: plan.title,
+                whopUserId: assignment.whopUserId,
+                assignedByWhopUserId: assignment.assignedByWhopUserId,
+                assignedAt: assignment.assignedAt,
+                type: 'nutrition' as const,
+              }
+            }
+            return null
+          })
+          .filter(Boolean)
+          .sort((a, b) => new Date(b.assignedAt).getTime() - new Date(a.assignedAt).getTime())
+      }
       
       console.log('Nutrition assignments found:', nutritionAssignmentsData.length)
     } catch (error) {
