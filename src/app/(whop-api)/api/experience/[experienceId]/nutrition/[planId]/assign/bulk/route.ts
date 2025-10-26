@@ -1,7 +1,7 @@
 import { verifyUserToken } from '@whop/api'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '~/db'
-import { nutritionPlanAssignments, nutritionPlans } from '~/db/schema'
+import { nutritionAssignments, nutritionPlans } from '~/db/schema'
 import { whop } from '~/lib/whop'
 import { and, eq } from 'drizzle-orm'
 
@@ -45,8 +45,8 @@ export async function POST(
 		// Check for existing assignments to avoid duplicates
 		const existingAssignments = await db
 			.select()
-			.from(nutritionPlanAssignments)
-			.where(eq(nutritionPlanAssignments.planId, plan.id))
+			.from(nutritionAssignments)
+			.where(eq(nutritionAssignments.planId, plan.id))
 
 		// Filter out users who already have this plan assigned
 		const existingUserIds = existingAssignments.map(a => a.whopUserId)
@@ -62,7 +62,7 @@ export async function POST(
 		}
 
 		const inserted = await db
-			.insert(nutritionPlanAssignments)
+			.insert(nutritionAssignments)
 			.values(newAssignments)
 			.returning()
 
