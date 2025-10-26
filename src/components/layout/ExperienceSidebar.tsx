@@ -158,7 +158,7 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
   if (!mounted) {
     return (
       <>
-        <div className="hidden md:block border-r" style={{ width: 240 }}>
+        <div className="hidden md:block border-r w-60">
           <div className="h-full flex flex-col bg-accent-light dark:bg-black">
             <div className="p-3 flex items-center justify-between">
               <div className="truncate">
@@ -242,7 +242,7 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
 
   return (
     <>
-      <div className="hidden md:block border-r" style={{ width: collapsed ? 72 : 240 }}>
+      <div className={`hidden md:block border-r ${collapsed ? 'w-16' : 'w-60'}`}>
         {Nav}
       </div>
       {/* Mobile Bottom Navigation */}

@@ -13,6 +13,8 @@ import {
   Play
 } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import { useWhop } from '~/components/whop-context'
 import { nutritionPlansQuery } from '~/components/nutrition/queries'
 import { plansQuery, userAssignmentsQuery, workoutHistoryQuery, recentActivityQuery } from '~/components/workouts/queries'
@@ -22,20 +24,23 @@ import { WhopAccess } from '~/types/whop'
 
 export default function UserDashboardPage() {
   const { access, experience, user } = useWhop()
+  const router = useRouter()
   const isAdmin = (access as WhopAccess)?.accessLevel === 'admin'
   
-  // If admin, redirect to admin dashboard
+  // If admin, redirect to admin dashboard immediately
+  useEffect(() => {
+    if (isAdmin && experience?.id) {
+      router.replace(`/experiences/${experience.id}/dashboard`)
+    }
+  }, [isAdmin, experience?.id, router])
+  
+  // Show loading while redirecting
   if (isAdmin) {
     return (
       <div className="p-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Admin Dashboard</h1>
-          <p className="text-gray-600 mb-6">You're viewing the admin dashboard.</p>
-          <Link href={`/experiences/${experience.id}/dashboard`}>
-            <Button variant="solid" className="!bg-accent hover:!bg-accent/90 !text-white">
-              Go to Admin Dashboard
-            </Button>
-          </Link>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Redirecting to admin dashboard...</p>
         </div>
       </div>
     )

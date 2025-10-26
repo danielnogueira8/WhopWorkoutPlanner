@@ -82,7 +82,7 @@ export async function GET(
             }
             return null
           })
-          .filter(Boolean)
+          .filter((item): item is NonNullable<typeof item> => item !== null)
           .sort((a, b) => new Date(b.assignedAt).getTime() - new Date(a.assignedAt).getTime())
       }
       
@@ -138,7 +138,7 @@ export async function GET(
             }
             return null
           })
-          .filter(Boolean)
+          .filter((item): item is NonNullable<typeof item> => item !== null)
           .sort((a, b) => new Date(b.assignedAt).getTime() - new Date(a.assignedAt).getTime())
       }
       
