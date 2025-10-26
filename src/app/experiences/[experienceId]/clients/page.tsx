@@ -175,7 +175,7 @@ export default function ClientsPage() {
                         <div>
                           <div className="font-medium">{p.title}</div>
                           <div className="text-xs opacity-70">
-                            {p.daysCount || 0} days • {p.assignedCount} assigned
+                            {p.assignedCount} assigned
                           </div>
                         </div>
                         {isAssigned ? (
