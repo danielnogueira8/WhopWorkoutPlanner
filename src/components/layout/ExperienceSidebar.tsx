@@ -57,8 +57,8 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
   // Show appropriate items based on admin status
   const visible = items.filter((i) => {
     if (isAdmin) {
-      // Admins see everything
-      return true
+      // Admins see everything EXCEPT the user dashboard
+      return i.key !== 'user-dashboard'
     }
     // Users see Dashboard, My Workouts, Inbox, and Nutrition
     return i.key === 'user-dashboard' || i.key === 'my-workouts' || i.key === 'inbox' || i.key === 'nutrition'
