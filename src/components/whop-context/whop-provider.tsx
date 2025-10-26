@@ -25,6 +25,7 @@ export function WhopProvider({ children, experienceId, state }: WhopProviderProp
           queries: {
             staleTime: 60 * 1000, // 1 minute
             retry: 1,
+            throwOnError: false, // Don't throw errors during hydration
           },
         },
       }),

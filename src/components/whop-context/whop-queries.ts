@@ -9,8 +9,11 @@ export const serverQueryClient = new QueryClient({
 			retry: 1,
 		},
 		dehydrate: {
-			shouldDehydrateQuery: (query) =>
-				defaultShouldDehydrateQuery(query) || query.state.status === 'pending',
+			shouldDehydrateQuery: (query) => {
+				// Only dehydrate successful queries or pending queries that haven't errored
+				if (query.state.error) return false
+				return defaultShouldDehydrateQuery(query) || query.state.status === 'pending'
+			},
 		},
 	},
 })
