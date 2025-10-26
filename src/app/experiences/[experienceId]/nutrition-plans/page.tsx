@@ -109,8 +109,8 @@ export default function NutritionPlansPage() {
                 {userPlans.map((p: any) => {
                   const href = `/experiences/${experience.id}/nutrition-plans/${String(p.id)}/builder` as any
                   return (
-                    <div key={p.id} className="flex items-center justify-between">
-                      <div className="flex-1">
+                    <div key={p.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                           <Link href={href} className="font-medium hover:underline">
                             {p.title}
@@ -132,13 +132,13 @@ export default function NutritionPlansPage() {
                           )}
                         </div>
                       </div>
-                    <div className="flex gap-2">
-                      <Button variant="solid" asChild className="!bg-accent hover:!bg-accent/90 !text-white">
+                    <div className="flex flex-wrap gap-2 sm:flex-nowrap">
+                      <Button variant="solid" asChild className="!bg-accent hover:!bg-accent/90 !text-white text-sm">
                         <Link href={`/experiences/${experience.id}/nutrition-plans/${p.id}/builder` as any}>
                           Manage
                         </Link>
                       </Button>
-                      <Button variant="solid" onClick={() => { setEditPlanId(p.id); setEditPlanTitle(p.title); }} className="!bg-accent hover:!bg-accent/90 !text-white">
+                      <Button variant="solid" onClick={() => { setEditPlanId(p.id); setEditPlanTitle(p.title); }} className="!bg-accent hover:!bg-accent/90 !text-white text-sm">
                         Rename
                       </Button>
                       <Button 
@@ -149,7 +149,7 @@ export default function NutritionPlansPage() {
                         }}
                         className="text-red-600 border-red-600 hover:bg-red-50 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-950"
                       >
-                        <Trash2 className="w-4 h-4 text-accent" />
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>

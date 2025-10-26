@@ -164,8 +164,8 @@ export default function WorkoutsPage() {
             ) : (
               <div className="space-y-2">
                 {userPlans.map((p) => (
-                  <div key={p.id} className="flex items-center justify-between">
-                    <div>
+                  <div key={p.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex-1 min-w-0">
                       <Link href={`/experiences/${experience.id}/workouts/${p.id}` as any} className="font-medium hover:underline">
                         {p.title}
                       </Link>
@@ -174,20 +174,20 @@ export default function WorkoutsPage() {
                       </div>
                     </div>
                     {isAdmin && (
-                      <div className="flex gap-2">
-                        <Button variant="solid" asChild className="!bg-accent hover:!bg-accent/90 !text-white">
+                      <div className="flex flex-wrap gap-2 sm:flex-nowrap">
+                        <Button variant="solid" asChild className="!bg-accent hover:!bg-accent/90 !text-white text-sm">
                           <Link href={`/experiences/${experience.id}/workouts/${p.id}/builder` as any}>
                             Build
                           </Link>
                         </Button>
-                        <Button variant="solid" onClick={() => { setAssignPlanId(p.id); setAssignPlanTitle(p.title); }} className="!bg-accent hover:!bg-accent/90 !text-white">
+                        <Button variant="solid" onClick={() => { setAssignPlanId(p.id); setAssignPlanTitle(p.title); }} className="!bg-accent hover:!bg-accent/90 !text-white text-sm">
                           <Users className="w-4 h-4 mr-1" />
                           Assign
                         </Button>
                         <Button 
                           variant="soft" 
                           onClick={() => handleDownloadPDF(p.id, p.title)}
-                          className="!bg-accent hover:!bg-accent/90 !text-white"
+                          className="!bg-accent hover:!bg-accent/90 !text-white text-sm"
                         >
                           <Download className="w-4 h-4 mr-1" />
                           PDF
