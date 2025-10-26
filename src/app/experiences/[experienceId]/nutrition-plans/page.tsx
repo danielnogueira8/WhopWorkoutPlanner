@@ -168,7 +168,7 @@ export default function NutritionPlansPage() {
             <TextField.Input value={editPlanTitle} onChange={(e: any) => setEditPlanTitle(e.target.value)} />
           </div>
           <div className="mt-4 flex justify-end gap-2">
-            <Button variant="soft" onClick={() => { setEditPlanId(null); setEditPlanTitle(""); }}>Cancel</Button>
+            <Button variant="soft" onClick={() => { setEditPlanId(null); setEditPlanTitle(""); }} className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">Cancel</Button>
             <Button disabled={!editPlanTitle || updatePlan.isPending} onClick={() => updatePlan.mutate()} className="!bg-accent hover:!bg-accent/90 !text-white">
               {updatePlan.isPending ? "Saving..." : "Save"}
             </Button>
@@ -185,7 +185,7 @@ export default function NutritionPlansPage() {
             </p>
           </div>
           <div className="mt-4 flex justify-end gap-2">
-            <Button variant="soft" onClick={() => { setDeletePlanId(null); setDeletePlanTitle(""); }}>Cancel</Button>
+            <Button variant="soft" onClick={() => { setDeletePlanId(null); setDeletePlanTitle(""); }} className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">Cancel</Button>
             <Button 
               variant="solid" 
               disabled={deletePlan.isPending} 

@@ -31,7 +31,7 @@ export default function WorkoutSessionDetailPage({ params }: WorkoutSessionDetai
       <div className="p-4 md:p-6">
         <div className="text-sm text-red-600">Failed to load workout session</div>
         <Link href={`/experiences/${experienceId}/my-workouts`}>
-          <Button variant="soft" className="mt-4">
+          <Button variant="soft" className="mt-4 text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to My Workouts
           </Button>

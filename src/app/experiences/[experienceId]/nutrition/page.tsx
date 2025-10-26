@@ -105,7 +105,7 @@ export default function NutritionPage() {
                     </div>
                     <div className="flex gap-2">
                       <Link href={`/experiences/${experience.id}/nutrition-plans/${plan.id}` as any}>
-                        <Button variant="soft" size="2">
+                        <Button variant="soft" size="2" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
                           View Plan
                         </Button>
                       </Link>
@@ -125,7 +125,7 @@ export default function NutritionPage() {
             <h3 className="font-semibold mb-3">Quick Actions</h3>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link href={`/experiences/${experience.id}/nutrition-plans`}>
-                <Button variant="soft" className="w-full sm:w-auto">
+                <Button variant="soft" className="w-full sm:w-auto text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
                   <Apple className="w-4 h-4 mr-2 text-accent" />
                   View All Plans
                 </Button>

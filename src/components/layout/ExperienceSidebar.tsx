@@ -224,7 +224,7 @@ export function ExperienceSidebar({ experienceId }: SidebarProps) {
           </div>
         </div>
         <div className="md:hidden p-2">
-          <Button variant="soft">Menu</Button>
+          <Button variant="soft" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">Menu</Button>
         </div>
       </>
     )

@@ -517,7 +517,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
             />
           </div>
           <div className="mt-4 flex justify-end gap-2">
-            <Button variant="soft" onClick={() => setNewDayOpen(false)}>
+            <Button variant="soft" onClick={() => setNewDayOpen(false)} className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
               Cancel
             </Button>
             <Button
@@ -555,7 +555,7 @@ export default function WorkoutBuilderPage({ params }: WorkoutBuilderProps) {
             <Button variant="soft" onClick={() => {
               setEditingDay(null)
               setEditingDayName('')
-            }}>
+            }} className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
               Cancel
             </Button>
             <Button
@@ -787,7 +787,7 @@ function ExerciseForm({ exercise, onSave, onCancel, isLoading }: ExerciseFormPro
       </div>
 
       <div className="flex justify-end gap-2">
-        <Button variant="soft" onClick={onCancel}>
+        <Button variant="soft" onClick={onCancel} className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
           Cancel
         </Button>
         <Button

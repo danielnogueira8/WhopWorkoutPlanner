@@ -176,7 +176,7 @@ export default function UserDashboardPage() {
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No Workouts Yet</h3>
                 <p className="text-gray-600 mb-8">Your trainer hasn't assigned any workout plans yet.</p>
                 <Link href={`/experiences/${experience.id}/inbox`} className="mt-12 inline-block">
-                  <Button variant="soft" size="2">
+                  <Button variant="soft" size="2" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
                     <MessageSquare className="w-4 h-4 mr-2" />
                     Contact Trainer
                   </Button>
@@ -197,7 +197,7 @@ export default function UserDashboardPage() {
                     </div>
                     <div className="flex gap-2">
                       <Link href={`/experiences/${experience.id}/my-workouts/${plan.id}`}>
-                        <Button variant="soft" size="1">
+                        <Button variant="soft" size="1" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
                           <Target className="w-3 h-3 mr-1" />
                           View
                         </Button>
@@ -237,7 +237,7 @@ export default function UserDashboardPage() {
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No Nutrition Plans Yet</h3>
                 <p className="text-gray-600 mb-8">Your trainer hasn't assigned any nutrition plans yet.</p>
                 <Link href={`/experiences/${experience.id}/inbox`} className="mt-12 inline-block">
-                  <Button variant="soft" size="2">
+                  <Button variant="soft" size="2" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
                     <MessageSquare className="w-4 h-4 mr-2" />
                     Contact Trainer
                   </Button>
@@ -258,13 +258,13 @@ export default function UserDashboardPage() {
                     </div>
                     <div className="flex gap-2">
                       <Link href={`/experiences/${experience.id}/nutrition-plans/${plan.id}`}>
-                        <Button variant="soft" size="1">
+                        <Button variant="soft" size="1" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
                           <Target className="w-3 h-3 mr-1" />
                           View
                         </Button>
                       </Link>
                       {plan.content?.contentType === 'pdf' && (
-                        <Button variant="soft" size="1">
+                        <Button variant="soft" size="1" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
                           <Download className="w-3 h-3 mr-1" />
                           PDF
                         </Button>
@@ -320,7 +320,7 @@ export default function UserDashboardPage() {
                       </p>
                     </div>
                     <Link href={`/experiences/${experience.id}/my-workouts/sessions/${session.id}`}>
-                      <Button variant="soft" size="1">
+                      <Button variant="soft" size="1" className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950">
                         <Target className="w-3 h-3 mr-1" />
                         View
                       </Button>
