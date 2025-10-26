@@ -230,14 +230,14 @@ export default function InboxPage() {
                         key={u.id} 
                         className={`px-3 py-3 rounded-lg cursor-pointer transition-colors ${
                           selectedUserId === u.id 
-                            ? 'bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800' 
+                            ? 'bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800' 
                             : 'hover:bg-gray-50 dark:hover:bg-gray-800 border border-transparent'
                         }`} 
                         onClick={() => setSelectedUserId(u.id)}
                       >
                         <div className="flex items-center gap-3">
                           <div className="relative">
-                            <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                            <div className="w-8 h-8 bg-emerald-100 dark:bg-emerald-900 rounded-full flex items-center justify-center">
                               <User className="w-4 h-4 text-accent" />
                             </div>
                             {u.unreadCount > 0 && (
@@ -277,7 +277,7 @@ export default function InboxPage() {
               <div className="flex items-center gap-3">
                 {chatPartner ? (
                   <>
-                    <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 bg-emerald-100 dark:bg-emerald-900 rounded-full flex items-center justify-center">
                       <User className="w-4 h-4 text-accent" />
                     </div>
                     <div>
@@ -336,11 +336,11 @@ export default function InboxPage() {
                       <div key={m.id} className="flex flex-col items-end mb-3">
                         <div className="flex items-end gap-2 max-w-[75%]">
                           {/* Message bubble */}
-                          <div className="px-4 py-2 bg-blue-500 text-white rounded-2xl rounded-br-md shadow-sm">
+                          <div className="px-4 py-2 bg-emerald-500 text-white rounded-2xl rounded-br-md shadow-sm">
                             <div className="text-sm leading-relaxed">{m.content}</div>
                           </div>
                           {/* Avatar */}
-                          <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                          <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">
                             <User className="w-3 h-3 text-white" />
                           </div>
                         </div>
@@ -398,7 +398,7 @@ export default function InboxPage() {
                   disabled={!message.trim() || (isAdmin && !isChatActive) || sendMessage.isPending} 
                   onClick={() => sendMessage.mutate()}
                   variant="soft"
-                  className="rounded-lg px-4 h-10 transition-all duration-200 hover:bg-blue-100 dark:hover:bg-blue-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="rounded-lg px-4 h-10 transition-all duration-200 hover:bg-emerald-100 dark:hover:bg-emerald-900 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send className="w-4 h-4 text-accent" />
                 </Button>

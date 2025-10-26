@@ -167,7 +167,7 @@ export default function WorkoutTrackPage({ params }: WorkoutTrackProps) {
                     onClick={() => setSelectedDayId(day.id)}
                     className={`w-full text-left p-3 rounded-md border transition-colors ${
                       selectedDayId === day.id
-                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-950'
+                        ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950'
                         : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
                     }`}
                   >

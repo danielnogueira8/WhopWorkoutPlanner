@@ -22,8 +22,8 @@ export default function NutritionPage() {
       icon: Apple,
       label: 'Assigned Plans',
       value: totalPlans,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50 dark:bg-blue-950'
+      color: 'text-emerald-600',
+      bgColor: 'bg-emerald-50 dark:bg-emerald-950'
     }
   ]
 

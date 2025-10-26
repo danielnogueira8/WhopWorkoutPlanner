@@ -43,8 +43,8 @@ export default function MyWorkoutsPage() {
       icon: Dumbbell,
       label: 'Assigned Plans',
       value: totalWorkouts,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50 dark:bg-blue-950'
+      color: 'text-emerald-600',
+      bgColor: 'bg-emerald-50 dark:bg-emerald-950'
     },
     {
       icon: CheckCircle,

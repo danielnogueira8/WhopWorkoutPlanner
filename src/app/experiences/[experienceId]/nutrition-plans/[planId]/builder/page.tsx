@@ -275,20 +275,20 @@ export default function NutritionBuilderPage({ params }: NutritionBuilderProps) 
           ) : (
             <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
               isUploading 
-                ? 'border-blue-300 dark:border-blue-600 bg-blue-50 dark:bg-blue-950' 
+                ? 'border-emerald-300 dark:border-emerald-600 bg-emerald-50 dark:bg-emerald-950' 
                 : uploadError 
                   ? 'border-red-300 dark:border-red-600 bg-red-50 dark:bg-red-950'
                   : 'border-gray-300 dark:border-gray-600 hover:border-accent dark:hover:border-accent'
             }`}>
               {isUploading ? (
                 <>
-                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Upload className="w-6 h-6 text-blue-600 dark:text-blue-400 animate-pulse" />
+                  <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Upload className="w-6 h-6 text-emerald-600 dark:text-emerald-400 animate-pulse" />
                   </div>
-                  <h4 className="text-lg font-medium text-blue-800 dark:text-blue-200 mb-2">Uploading PDF...</h4>
-                  <p className="text-blue-600 dark:text-blue-400 mb-4">Please wait while your file is being uploaded</p>
-                  <div className="w-full bg-blue-200 dark:bg-blue-800 rounded-full h-2 mb-4">
-                    <div className="bg-blue-600 dark:bg-blue-400 h-2 rounded-full animate-pulse" style={{ width: '60%' }}></div>
+                  <h4 className="text-lg font-medium text-emerald-800 dark:text-emerald-200 mb-2">Uploading PDF...</h4>
+                  <p className="text-emerald-600 dark:text-emerald-400 mb-4">Please wait while your file is being uploaded</p>
+                  <div className="w-full bg-emerald-200 dark:bg-emerald-800 rounded-full h-2 mb-4">
+                    <div className="bg-emerald-600 dark:bg-emerald-400 h-2 rounded-full animate-pulse" style={{ width: '60%' }}></div>
                   </div>
                 </>
               ) : uploadError ? (

@@ -195,7 +195,7 @@ export default function WorkoutsPage() {
                         <Button 
                           variant="soft" 
                           onClick={() => { setEditPlanId(p.id); setEditPlanTitle(p.title); }}
-                          className="text-blue-600 border-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-950"
+                          className="text-emerald-600 border-emerald-600 hover:bg-emerald-50 dark:text-emerald-400 dark:border-emerald-400 dark:hover:bg-emerald-950"
                         >
                           <Edit3 className="w-4 h-4" />
                         </Button>
