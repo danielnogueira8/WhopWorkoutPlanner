@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Card } from 'frosted-ui'
 import { Users, BookOpen, CheckCircle, UserPlus, Plus, UserCheck, Eye, MessageSquare, Clock, UserCheck as UserCheckIcon, Apple } from 'lucide-react'
 import { useWhop } from '~/components/whop-context'
-import { dashboardStatsQuery, recentActivityQuery, recentAssignmentsQuery, type RecentActivity, type RecentAssignment } from '~/components/workouts/queries'
+import { dashboardStatsQuery, recentActivityQuery, type RecentActivity } from '~/components/workouts/queries'
 import { StatsSkeleton } from '~/components/ui/Skeleton'
 import { EmptyState } from '~/components/ui/EmptyState'
 
@@ -22,7 +22,6 @@ export default function DashboardPage() {
 
   const { data: stats, isLoading, error } = useQuery(dashboardStatsQuery(experience.id))
   const { data: activityData, isLoading: isLoadingActivity } = useQuery(recentActivityQuery(experience.id))
-  const { data: assignmentsData, isLoading: isLoadingAssignments } = useQuery(recentAssignmentsQuery(experience.id))
 
   const formatActivity = (activity: RecentActivity) => {
     const timeAgo = new Date(activity.createdAt).toLocaleDateString()
@@ -88,6 +87,13 @@ export default function DashboardPage() {
       value: stats?.recentAssignments ?? 0,
       color: 'text-orange-600',
       bgColor: 'bg-orange-50 dark:bg-orange-950'
+    },
+    {
+      icon: Apple,
+      label: 'Nutrition Plans',
+      value: stats?.nutritionPlans ?? 0,
+      color: 'text-emerald-600',
+      bgColor: 'bg-emerald-50 dark:bg-emerald-950'
     }
   ]
 
@@ -191,60 +197,6 @@ export default function DashboardPage() {
             )}
           </div>
         </Card>
-
-        <Card className="border border-gray-100 dark:border-gray-800">
-          <div className="p-4 md:p-6">
-            <div className="flex justify-between items-start mb-6">
-              <h2 className="text-lg font-semibold text-gray-900">Recent Assignments</h2>
-              <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center">
-                <UserCheckIcon className="w-4 h-4 text-emerald-600" />
-              </div>
-            </div>
-            {isLoadingAssignments ? (
-              <div className="space-y-3">
-                {[...Array(3)].map((_, i) => (
-                  <div key={i} className="flex items-center space-x-3">
-                    <div className="w-4 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                    <div className="flex-1">
-                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1"></div>
-                      <div className="h-2 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : assignmentsData?.assignments.length === 0 ? (
-              <EmptyState
-                icon={UserCheckIcon}
-                title="No Recent Assignments"
-                description="Assignments will appear here when you assign workout plans or nutrition plans to clients."
-              />
-            ) : (
-              <div className="space-y-3 max-h-64 overflow-y-auto">
-                {assignmentsData?.assignments.slice(0, 5).map((assignment) => (
-                  <div key={assignment.id} className="flex items-start space-x-3 p-3 rounded-lg transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <div className="w-8 h-8 bg-emerald-50 dark:bg-emerald-950 rounded-full flex items-center justify-center mt-0.5">
-                      {assignment.type === 'workout' ? (
-                        <UserCheckIcon className="w-4 h-4 text-emerald-600" />
-                      ) : (
-                        <Apple className="w-4 h-4 text-emerald-600" />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{assignment.user.name}</p>
-                      <p className="text-xs opacity-70">
-                        Assigned "{assignment.planTitle}" ({assignment.type}) by {assignment.assignedBy.name}
-                      </p>
-                      <p className="text-xs opacity-50">
-                        {new Date(assignment.assignedAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </Card>
-      </div>
 
     </div>
   )
