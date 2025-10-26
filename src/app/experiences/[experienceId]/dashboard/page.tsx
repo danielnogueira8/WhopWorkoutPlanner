@@ -76,18 +76,18 @@ export default function DashboardPage() {
       bgColor: 'bg-green-50 dark:bg-green-950'
     },
     {
-      icon: CheckCircle,
-      label: 'Total Assignments',
-      value: stats?.totalAssignments ?? 0,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50 dark:bg-purple-950'
-    },
-    {
       icon: Apple,
       label: 'Nutrition Plans',
       value: stats?.totalNutritionPlans ?? 0,
       color: 'text-emerald-600',
       bgColor: 'bg-emerald-50 dark:bg-emerald-950'
+    },
+    {
+      icon: CheckCircle,
+      label: 'Total Assignments',
+      value: stats?.totalAssignments ?? 0,
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-50 dark:bg-purple-950'
     }
   ]
 
