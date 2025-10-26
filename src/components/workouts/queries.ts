@@ -320,6 +320,7 @@ export type DashboardStats = {
 	totalPlans: number
 	totalAssignments: number
 	recentAssignments: number
+	totalNutritionPlans: number
 }
 
 export const dashboardStatsQuery = (experienceId: string) => ({

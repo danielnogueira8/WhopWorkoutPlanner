@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { db } from '~/db'
 import { workoutPlans, workoutAssignments, nutritionPlans, nutritionAssignments } from '~/db/schema'
-import { eq, desc, union } from 'drizzle-orm'
+import { eq, desc } from 'drizzle-orm'
 import { verifyUserToken } from '@whop/api'
 import { whop } from '~/lib/whop'
 

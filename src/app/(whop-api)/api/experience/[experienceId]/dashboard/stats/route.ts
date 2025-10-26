@@ -1,7 +1,7 @@
 import { verifyUserToken } from '@whop/api'
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '~/db'
-import { workoutPlans, workoutAssignments } from '~/db/schema'
+import { workoutPlans, workoutAssignments, nutritionPlans } from '~/db/schema'
 import { whop } from '~/lib/whop'
 import { eq, and, gte, sql } from 'drizzle-orm'
 
@@ -48,6 +48,12 @@ export async function GET(
         )
       )
 
+    // Get total nutrition plans count
+    const [totalNutritionPlansResult] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(nutritionPlans)
+      .where(eq(nutritionPlans.experienceId, experienceId))
+
     // Get unique clients count (users who have been assigned workouts)
     const [totalClientsResult] = await db
       .select({ count: sql<number>`count(distinct ${workoutAssignments.whopUserId})` })
@@ -60,6 +66,7 @@ export async function GET(
       totalPlans: totalPlansResult.count,
       totalAssignments: totalAssignmentsResult.count,
       recentAssignments: recentAssignmentsResult.count,
+      totalNutritionPlans: totalNutritionPlansResult.count,
     }
 
     return NextResponse.json(stats)
